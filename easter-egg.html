@@ -1072,9 +1072,17 @@
         const startOverlay = document.getElementById('startOverlay');
         const startBtn = document.getElementById('startBtn');
 
-        startBtn.addEventListener('click', () => {
+        function startGame(e) {
+            if (e) e.stopPropagation();
             startOverlay.classList.add('hidden');
             setTimeout(pitch, 500);
+        }
+
+        startBtn.addEventListener('click', startGame);
+        startBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            startGame();
         });
 
         // Initialize
