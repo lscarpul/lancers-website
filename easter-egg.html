@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Easter Egg - Lancers Baseball</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .credits {
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .credits h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #ed8936, #f6ad55, #ed8936);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .credits p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .credits .emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* GAME CONTAINER */
+        .game-wrapper {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .game-container {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #f6ad55;
+        }
+
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 60%, #228B22 60%, #228B22 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            width: 200px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .leaderboard h3 {
+            color: #ffd700;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 0.5rem;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .leaderboard-item:nth-child(1) {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.3), transparent);
+            border-left: 3px solid gold;
+        }
+
+        .leaderboard-item:nth-child(2) {
+            background: linear-gradient(90deg, rgba(192, 192, 192, 0.3), transparent);
+            border-left: 3px solid silver;
+        }
+
+        .leaderboard-item:nth-child(3) {
+            background: linear-gradient(90deg, rgba(205, 127, 50, 0.3), transparent);
+            border-left: 3px solid #cd7f32;
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .leaderboard-score {
+            color: #f6ad55;
+            font-weight: 700;
+        }
+
+        /* Stadium elements */
+        .diamond {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 150px;
+        }
+
+        .base {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: white;
+            transform: rotate(45deg);
+        }
+
+        .home-plate {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            background: white;
+        }
+
+        .first-base {
+            bottom: 50%;
+            right: 0;
+        }
+
+        .second-base {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .third-base {
+            bottom: 50%;
+            left: 0;
+        }
+
+        /* Batter */
+        .batter {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            transition: transform 0.1s;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .batter::after {
+            content: '';
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="wood" x1="0%25" y1="0%25" x2="100%25" y2="0%25"><stop offset="0%25" style="stop-color:%23D4A574"/><stop offset="25%25" style="stop-color:%23E8C99B"/><stop offset="50%25" style="stop-color:%23D4A574"/><stop offset="75%25" style="stop-color:%23C4956A"/><stop offset="100%25" style="stop-color:%23B8895E"/></linearGradient><linearGradient id="handle" x1="0%25" y1="0%25" x2="100%25" y2="0%25"><stop offset="0%25" style="stop-color:%235D4037"/><stop offset="50%25" style="stop-color:%238D6E63"/><stop offset="100%25" style="stop-color:%234E342E"/></linearGradient></defs><path d="M12 88 Q8 92 10 94 Q12 96 16 92 L28 80" fill="url(%23handle)" stroke="%233E2723" stroke-width="1"/><path d="M28 80 L75 33" stroke="url(%23wood)" stroke-width="10" stroke-linecap="round"/><ellipse cx="80" cy="28" rx="15" ry="8" fill="url(%23wood)" stroke="%23A1887F" stroke-width="1" transform="rotate(-45 80 28)"/></svg>') no-repeat center;
+            background-size: contain;
+            transform: rotate(45deg);
+            margin-left: -8px;
+        }
+
+        .batter.swing::after {
+            animation: swingBat 0.3s ease;
+        }
+
+        @keyframes swingBat {
+            0% { transform: rotate(45deg); }
+            50% { transform: rotate(0deg); }
+            100% { transform: rotate(45deg); }
+        }
+
+        /* Start Overlay */
+        .start-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            border-radius: 15px;
+        }
+
+        .start-overlay.hidden {
+            display: none;
+        }
+
+        .start-overlay h2 {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .start-overlay p {
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.6);
+        }
+
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+
+        .batter.swing {
+            animation: swing 0.3s ease;
+        }
+
+        @keyframes swing {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            50% { transform: translateX(-50%) rotate(-10deg); }
+            100% { transform: translateX(-50%) rotate(0deg); }
+        }
+
+        /* Ball */
+        .ball {
+            position: absolute;
+            font-size: 1.5rem;
+            transition: all 0.05s linear;
+            z-index: 5;
+        }
+
+        /* Pitcher */
+        .pitcher {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+        }
+
+        .pitcher.throwing {
+            animation: throwAnim 0.3s ease;
+        }
+
+        @keyframes throwAnim {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.2) rotate(-10deg); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        /* Score */
+        .scoreboard {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .score-item {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .score-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f6ad55;
+        }
+
+        /* Count indicators container */
+        .count-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .ball-indicators,
+        .strike-indicators {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .indicator-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-right: 0.3rem;
+            opacity: 0.7;
+        }
+
+        .ball-dot,
+        .strike-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .strike-dot.active {
+            background: #ff6b6b;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 10px #ff6b6b;
+        }
+
+        .ball-dot.active {
+            background: #48bb78;
+            border-color: #48bb78;
+            box-shadow: 0 0 10px #48bb78;
+        }
+
+        .ball-item .score-value {
+            color: #48bb78;
+        }
+
+        .strike-item .score-value {
+            color: #ff6b6b;
+        }
+
+        /* Walk message */
+        .walk { color: #48bb78; }
+
+        /* Messages */
+        .game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .game-message.show {
+            animation: popMessage 1s ease forwards;
+        }
+
+        @keyframes popMessage {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) translateY(-50px); }
+        }
+
+        .home-run { color: #ffd700; }
+        .strike { color: #ff6b6b; }
+        .hit { color: #48bb78; }
+
+        /* Game Over */
+        .game-over-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+            border-radius: 15px;
+        }
+
+        .game-over-overlay h2 {
+            font-size: 2rem;
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+
+        .game-over-overlay .final-score {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-over-overlay input {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .game-over-overlay button {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            background: #ed8936;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .game-over-overlay button:hover {
+            background: #dd6b20;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Instructions */
+        .instructions {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+
+        .instructions h3 {
+            color: #f6ad55;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Back button */
+        .back-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: #ed8936;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+        }
+
+        /* Flying ball animation */
+        .flying-ball {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        /* Hit zone indicator */
+        .hit-zone {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 80px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .game-wrapper {
+                flex-direction: column;
+            }
+            
+            .leaderboard {
+                width: 100%;
+                order: -1;
+            }
+            
+            .leaderboard-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                max-height: none;
+            }
+            
+            .leaderboard-item {
+                flex: 1;
+                min-width: 100px;
+            }
+            
+            .game-area {
+                height: 350px;
+            }
+            
+            .credits h1 {
+                font-size: 1.8rem;
+            }
+            
+            .scoreboard {
+                gap: 0.5rem;
+            }
+            
+            .score-item {
+                padding: 0.5rem 0.75rem;
+                min-width: 70px;
+            }
+            
+            .score-value {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="credits">
+            <div class="emoji">🎉⚾🎉</div>
+            <h1>Hai trovato l'Easter Egg!</h1>
+            <p>Sito web realizzato da <strong>Lorenzo Scarpulla</strong></p>
+        </div>
+
+        <div class="game-wrapper">
+            <div class="game-container">
+                <h2 class="game-title">⚾ Home Run Derby ⚾</h2>
+                
+                <div class="game-area" id="gameArea">
+                    <!-- Start Overlay -->
+                    <div class="start-overlay" id="startOverlay">
+                        <h2>⚾ Home Run Derby ⚾</h2>
+                        <p>Colpisci la palla quando è nella zona!<br>3 Strike = OUT | 4 Ball = WALK (+1 HR)</p>
+                        <button class="start-btn" id="startBtn">▶️ GIOCA!</button>
+                    </div>
+
+                    <div class="diamond">
+                        <div class="base home-plate"></div>
+                        <div class="base first-base"></div>
+                        <div class="base second-base"></div>
+                        <div class="base third-base"></div>
+                    </div>
+                    <div class="hit-zone"></div>
+                    <div class="pitcher" id="pitcher">🧑‍🦱</div>
+                    <div class="batter" id="batter">🧑‍🦱</div>
+                    <div class="ball" id="ball" style="display: none;">⚾</div>
+                    <div class="game-message" id="gameMessage"></div>
+                    
+                    <!-- Game Over Overlay -->
+                    <div class="game-over-overlay hidden" id="gameOverOverlay">
+                        <h2>⚾ GAME OVER ⚾</h2>
+                        <div class="final-score">
+                            <span id="finalHomeRuns">0</span> Home Run
+                        </div>
+                        <input type="text" id="playerName" placeholder="Il tuo nome..." maxlength="15">
+                        <button id="saveScoreBtn">💾 Salva Punteggio</button>
+                    </div>
+                </div>
+
+                <div class="scoreboard">
+                    <div class="score-item">
+                        <div class="score-label">Home Run</div>
+                        <div class="score-value" id="homeRuns">0</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Colpite</div>
+                        <div class="score-value" id="hits">0</div>
+                    </div>
+                    <div class="score-item ball-item">
+                        <div class="score-label">Ball</div>
+                        <div class="score-value" id="balls">0/4</div>
+                    </div>
+                    <div class="score-item strike-item">
+                        <div class="score-label">Strike</div>
+                        <div class="score-value" id="strikes">0/3</div>
+                    </div>
+                </div>
+
+                <div class="count-indicators">
+                    <div class="ball-indicators">
+                        <span class="indicator-label">B</span>
+                        <div class="ball-dot" id="ball1"></div>
+                        <div class="ball-dot" id="ball2"></div>
+                        <div class="ball-dot" id="ball3"></div>
+                        <div class="ball-dot" id="ball4"></div>
+                    </div>
+                    <div class="strike-indicators">
+                        <span class="indicator-label">S</span>
+                        <div class="strike-dot" id="strike1"></div>
+                        <div class="strike-dot" id="strike2"></div>
+                        <div class="strike-dot" id="strike3"></div>
+                    </div>
+                </div>
+
+                <div class="instructions">
+                    <h3>🎮 Come giocare</h3>
+                    <p>La palla parte in automatico! Clicca/Tocca quando è nella zona per colpirla!<br>
+                    ⚡ Devi essere PRECISO per fare Home Run!<br>
+                    ❌ 3 Strike e sei OUT! 🟢 4 Ball = WALK (bonus home run!)</p>
+                </div>
+            </div>
+
+            <div class="leaderboard">
+                <h3>🏆 Classifica</h3>
+                <ul class="leaderboard-list" id="leaderboardList">
+                    <li class="leaderboard-item">
+                        <span class="leaderboard-name">-</span>
+                        <span class="leaderboard-score">0</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">← Torna al sito</a>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            homeRuns: 0,
+            hits: 0,
+            strikes: 0,
+            balls: 0,
+            ballActive: false,
+            ballX: 0,
+            ballY: 0,
+            canSwing: false,
+            gameOver: false,
+            pitchSpeed: 600, // più basso = più veloce
+            pitchIsInZone: false // traccia se il lancio è nella zona strike
+        };
+
+        const gameArea = document.getElementById('gameArea');
+        const ball = document.getElementById('ball');
+        const batter = document.getElementById('batter');
+        const pitcher = document.getElementById('pitcher');
+        const gameMessage = document.getElementById('gameMessage');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const saveScoreBtn = document.getElementById('saveScoreBtn');
+        const playerNameInput = document.getElementById('playerName');
+
+        // Load leaderboard from localStorage
+        function loadLeaderboard() {
+            const scores = JSON.parse(localStorage.getItem('lancersLeaderboard') || '[]');
+            const list = document.getElementById('leaderboardList');
+            
+            if (scores.length === 0) {
+                list.innerHTML = '<li class="leaderboard-item"><span class="leaderboard-name">Nessun record</span><span class="leaderboard-score">-</span></li>';
+                return;
+            }
+            
+            list.innerHTML = scores
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10)
+                .map((entry, i) => `
+                    <li class="leaderboard-item">
+                        <span class="leaderboard-name">${i + 1}. ${entry.name}</span>
+                        <span class="leaderboard-score">${entry.score}</span>
+                    </li>
+                `).join('');
+        }
+
+        // Save score to leaderboard
+        function saveScore(name, score) {
+            const scores = JSON.parse(localStorage.getItem('lancersLeaderboard') || '[]');
+            scores.push({ name: name || 'Anonimo', score: score, date: new Date().toISOString() });
+            localStorage.setItem('lancersLeaderboard', JSON.stringify(scores));
+            loadLeaderboard();
+        }
+
+        // Start pitching automatically
+        function pitch() {
+            if (gameState.ballActive || gameState.gameOver) return;
+            
+            gameState.ballActive = true;
+            
+            // Pitcher animation
+            pitcher.classList.add('throwing');
+            setTimeout(() => pitcher.classList.remove('throwing'), 300);
+
+            // Ball starts from pitcher
+            const gameRect = gameArea.getBoundingClientRect();
+            gameState.ballX = gameRect.width / 2 - 12;
+            gameState.ballY = gameRect.height * 0.45;
+            
+            ball.style.display = 'block';
+            ball.style.left = gameState.ballX + 'px';
+            ball.style.top = gameState.ballY + 'px';
+
+            // Animate ball towards batter - MORE DIFFICULT
+            const targetY = gameRect.height - 50;
+            // Velocità più alta (valore più basso = più veloce)
+            const duration = gameState.pitchSpeed + Math.random() * 300;
+            const startTime = Date.now();
+            const startY = gameState.ballY;
+
+            // Random horizontal variation - MORE variation = harder
+            // Aumenta la variazione per avere più lanci fuori zona
+            const horizontalVariation = (Math.random() - 0.5) * 140;
+            const targetX = gameRect.width / 2 - 12 + horizontalVariation;
+            
+            // Determina se il lancio sarà nella strike zone
+            const hitZoneCenter = gameRect.width / 2;
+            gameState.pitchIsInZone = Math.abs(horizontalVariation) < 50;
+
+            gameState.canSwing = false;
+
+            function animateBall() {
+                if (gameState.gameOver) return;
+                
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Curva più irregolare
+                const curve = Math.sin(progress * Math.PI) * 20;
+                gameState.ballY = startY + (targetY - startY) * progress;
+                gameState.ballX = (gameRect.width / 2 - 12) + (horizontalVariation * progress) + curve;
+                
+                ball.style.top = gameState.ballY + 'px';
+                ball.style.left = gameState.ballX + 'px';
+
+                // Enable swing when ball is closer (harder timing)
+                if (progress > 0.7) {
+                    gameState.canSwing = true;
+                }
+
+                if (progress < 1 && gameState.ballActive) {
+                    requestAnimationFrame(animateBall);
+                } else if (gameState.ballActive) {
+                    // Ball passed without swing - check if it's a strike or ball
+                    if (gameState.pitchIsInZone) {
+                        strike(); // Nella zona e non hai swingato = Strike
+                    } else {
+                        ballCall(); // Fuori zona e non hai swingato = Ball
+                    }
+                }
+            }
+
+            requestAnimationFrame(animateBall);
+        }
+
+        // Handle swing
+        function swing(e) {
+            if (gameState.gameOver) return;
+            
+            if (!gameState.ballActive) {
+                return; // Ball will pitch automatically
+            }
+
+            // Swing animation
+            batter.classList.add('swing');
+            setTimeout(() => batter.classList.remove('swing'), 300);
+
+            if (!gameState.canSwing) {
+                // Swung too early - miss
+                return;
+            }
+
+            // Calculate hit quality based on ball position - MUCH SMALLER hit zone
+            const gameRect = gameArea.getBoundingClientRect();
+            const hitZoneTop = gameRect.height - 120;
+            const hitZoneBottom = gameRect.height - 50;
+            const hitZoneCenter = gameRect.width / 2;
+            
+            // Distance from center
+            const distanceFromCenter = Math.abs(gameState.ballX - hitZoneCenter);
+            const distanceFromOptimalY = Math.abs(gameState.ballY - (gameRect.height - 85));
+
+            const inZoneY = gameState.ballY >= hitZoneTop && gameState.ballY <= hitZoneBottom;
+            const perfectX = distanceFromCenter < 15; // Very small sweet spot
+            const goodX = distanceFromCenter < 40;
+
+            if (inZoneY && perfectX && distanceFromOptimalY < 20) {
+                // Perfect hit - HOME RUN! (must be very precise)
+                homeRun();
+            } else if (inZoneY && goodX) {
+                // Partial hit
+                hit();
+            } else {
+                // Miss - counts as strike
+                strike();
+            }
+        }
+
+        function homeRun() {
+            gameState.ballActive = false;
+            gameState.homeRuns++;
+            // Reset count after hit
+            gameState.balls = 0;
+            gameState.strikes = 0;
+            updateScore();
+            updateBallIndicators();
+            updateStrikeIndicators();
+            showMessage('HOME RUN! 🎉', 'home-run');
+            
+            // Animate ball flying away
+            flyBall(true);
+            
+            // Speed up slightly after each home run
+            gameState.pitchSpeed = Math.max(400, gameState.pitchSpeed - 20);
+            
+            setTimeout(() => {
+                resetBall();
+                pitch(); // Auto pitch next ball
+            }, 1500);
+        }
+
+        function hit() {
+            gameState.ballActive = false;
+            gameState.hits++;
+            // Reset count after hit
+            gameState.balls = 0;
+            gameState.strikes = 0;
+            updateScore();
+            updateBallIndicators();
+            updateStrikeIndicators();
+            showMessage('COLPITA! ⚾', 'hit');
+            
+            flyBall(false);
+            
+            setTimeout(() => {
+                resetBall();
+                pitch(); // Auto pitch next ball
+            }, 1500);
+        }
+
+        function strike() {
+            gameState.ballActive = false;
+            gameState.strikes++;
+            updateScore();
+            updateStrikeIndicators();
+            
+            if (gameState.strikes >= 3) {
+                showMessage('SEI OUT! 💀', 'strike');
+                setTimeout(gameOver, 1000);
+            } else {
+                showMessage('STRIKE! ❌', 'strike');
+                setTimeout(() => {
+                    resetBall();
+                    pitch(); // Auto pitch next ball
+                }, 1200);
+            }
+        }
+
+        function updateStrikeIndicators() {
+            document.getElementById('strike1').classList.toggle('active', gameState.strikes >= 1);
+            document.getElementById('strike2').classList.toggle('active', gameState.strikes >= 2);
+            document.getElementById('strike3').classList.toggle('active', gameState.strikes >= 3);
+        }
+
+        function updateBallIndicators() {
+            document.getElementById('ball1').classList.toggle('active', gameState.balls >= 1);
+            document.getElementById('ball2').classList.toggle('active', gameState.balls >= 2);
+            document.getElementById('ball3').classList.toggle('active', gameState.balls >= 3);
+            document.getElementById('ball4').classList.toggle('active', gameState.balls >= 4);
+        }
+
+        function ballCall() {
+            gameState.ballActive = false;
+            gameState.balls++;
+            updateScore();
+            updateBallIndicators();
+            
+            if (gameState.balls >= 4) {
+                // WALK! 4 balls = free base = bonus home run
+                walk();
+            } else {
+                showMessage('BALL! 🟢', 'walk');
+                setTimeout(() => {
+                    resetBall();
+                    pitch(); // Auto pitch next ball
+                }, 1000);
+            }
+        }
+
+        function walk() {
+            gameState.homeRuns++;
+            gameState.balls = 0;
+            gameState.strikes = 0;
+            updateScore();
+            updateBallIndicators();
+            updateStrikeIndicators();
+            showMessage('WALK! 🚶 +1 HR!', 'walk');
+            
+            setTimeout(() => {
+                resetBall();
+                pitch(); // Auto pitch next ball
+            }, 1500);
+        }
+
+        function gameOver() {
+            gameState.gameOver = true;
+            ball.style.display = 'none';
+            
+            document.getElementById('finalHomeRuns').textContent = gameState.homeRuns;
+            gameOverOverlay.classList.remove('hidden');
+            playerNameInput.focus();
+        }
+
+        function flyBall(isHomeRun) {
+            const gameRect = gameArea.getBoundingClientRect();
+            const flyingBall = document.createElement('div');
+            flyingBall.className = 'flying-ball';
+            flyingBall.textContent = '⚾';
+            flyingBall.style.left = gameState.ballX + 'px';
+            flyingBall.style.top = gameState.ballY + 'px';
+            gameArea.appendChild(flyingBall);
+
+            ball.style.display = 'none';
+
+            // Animate
+            const angle = isHomeRun ? -70 + Math.random() * 20 : -45 + Math.random() * 30;
+            const distance = isHomeRun ? 400 : 150 + Math.random() * 100;
+            const rad = angle * Math.PI / 180;
+            
+            flyingBall.style.transition = 'all 1s ease-out';
+            setTimeout(() => {
+                flyingBall.style.left = (gameState.ballX + Math.cos(rad) * distance * (Math.random() > 0.5 ? 1 : -1)) + 'px';
+                flyingBall.style.top = (gameState.ballY + Math.sin(rad) * distance) + 'px';
+                flyingBall.style.opacity = '0';
+                flyingBall.style.transform = 'scale(0.3)';
+            }, 50);
+
+            setTimeout(() => flyingBall.remove(), 1100);
+        }
+
+        function resetBall() {
+            ball.style.display = 'none';
+            gameState.ballActive = false;
+            gameState.canSwing = false;
+        }
+
+        function resetGame() {
+            gameState = {
+                homeRuns: 0,
+                hits: 0,
+                strikes: 0,
+                balls: 0,
+                ballActive: false,
+                ballX: 0,
+                ballY: 0,
+                canSwing: false,
+                gameOver: false,
+                pitchSpeed: 600,
+                pitchIsInZone: false
+            };
+            
+            updateScore();
+            updateStrikeIndicators();
+            updateBallIndicators();
+            gameOverOverlay.classList.add('hidden');
+            startOverlay.classList.remove('hidden');
+        }
+
+        function showMessage(text, className) {
+            gameMessage.textContent = text;
+            gameMessage.className = 'game-message show ' + className;
+            setTimeout(() => {
+                gameMessage.className = 'game-message';
+            }, 1000);
+        }
+
+        function updateScore() {
+            document.getElementById('homeRuns').textContent = gameState.homeRuns;
+            document.getElementById('hits').textContent = gameState.hits;
+            document.getElementById('balls').textContent = gameState.balls + '/4';
+            document.getElementById('strikes').textContent = gameState.strikes + '/3';
+        }
+
+        // Event listeners
+        gameArea.addEventListener('click', swing);
+        gameArea.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            swing(e);
+        });
+
+        // Save score button
+        saveScoreBtn.addEventListener('click', () => {
+            const name = playerNameInput.value.trim() || 'Anonimo';
+            saveScore(name, gameState.homeRuns);
+            resetGame();
+        });
+
+        // Enter key to save
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveScoreBtn.click();
+            }
+        });
+
+        // Start button
+        const startOverlay = document.getElementById('startOverlay');
+        const startBtn = document.getElementById('startBtn');
+
+        startBtn.addEventListener('click', () => {
+            startOverlay.classList.add('hidden');
+            setTimeout(pitch, 500);
+        });
+
+        // Initialize
+        loadLeaderboard();
+    </script>
+</body>
+</html>

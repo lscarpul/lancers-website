@@ -23,6 +23,7 @@
             <li><a href="documento.html">Documento</a></li>
             <li><a href="calendario.html">Partite</a></li>
             <li><a href="allenamenti.html">Allenamenti</a></li>
+            <li><a href="calendario-completo.html">Tutto</a></li>
         </ul>
         <div class="hamburger">
             <span></span>
@@ -33,38 +34,57 @@
 
     <main class="hero">
         <div class="hero-content">
-            <h1>Benvenuti nel nostro sito!</h1>
-            <p>Scopri il nostro documento ufficiale e il calendario delle partite della stagione 2026.</p>
+            <h1>⚾ Lancers Baseball Club</h1>
+            <p>Benvenuti nella nostra area riservata! Qui trovi tutto ciò che serve per la stagione 2026: documenti, calendari, allenamenti e partite.</p>
             <div class="hero-buttons">
-                <a href="documento.html" class="btn btn-primary">📄 Documento</a>
-                <a href="calendario.html" class="btn btn-secondary">📅 Calendario</a>
+                <a href="calendario-completo.html" class="btn btn-primary">📅 Calendario Completo</a>
+                <a href="documento.html" class="btn btn-secondary">📄 Documento</a>
             </div>
         </div>
     </main>
 
+    <!-- EVENTI SETTIMANA CORRENTE -->
+    <section class="weekly-events">
+        <div class="weekly-header">
+            <h2>📅 Questa Settimana</h2>
+            <p class="week-dates" id="weekDates"></p>
+        </div>
+        <div class="events-list" id="eventsList">
+            <!-- Eventi generati dinamicamente da JavaScript -->
+        </div>
+        <a href="allenamenti.html" class="view-all-btn">Vedi tutti gli allenamenti →</a>
+    </section>
+
     <section class="features">
         <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Calendario Completo</h3>
+            <p>📆 Tutto in un'unica vista: allenamenti, amichevoli e partite di campionato.</p>
+            <a href="calendario-completo.html" class="feature-link">Vedi tutto →</a>
+        </div>
+        <div class="feature-card">
             <div class="feature-icon">📄</div>
-            <h3>Documento Ufficiale</h3>
-            <p>Consulta il documento con tutti i capitoli e le informazioni importanti.</p>
+            <h3>Documento Tecnico</h3>
+            <p>📋 Piano di sviluppo, programmazione allenamenti, obiettivi e regolamento.</p>
             <a href="documento.html" class="feature-link">Vai al documento →</a>
         </div>
         <div class="feature-card">
-            <div class="feature-icon">📅</div>
-            <h3>Calendario Partite</h3>
-            <p>Tutte le date delle partite della stagione 2026, casa e trasferta.</p>
-            <a href="calendario.html" class="feature-link">Vedi calendario →</a>
+            <div class="feature-icon">⚾</div>
+            <h3>Campionato Serie B</h3>
+            <p>🏆 Calendario completo delle partite: andata, ritorno e amichevoli pre-stagione.</p>
+            <a href="calendario.html" class="feature-link">Vedi partite →</a>
         </div>
         <div class="feature-card">
             <div class="feature-icon">🏋️</div>
             <h3>Allenamenti</h3>
-            <p>Calendario allenamenti e amichevoli da Dicembre 2025 a Marzo 2026.</p>
+            <p>💪 Sessioni di preparazione da Gennaio a Marzo: atletica, tecnica e specifici.</p>
             <a href="allenamenti.html" class="feature-link">Vedi allenamenti →</a>
         </div>
     </section>
 
     <footer>
-        <p>© 2026 Lancers Baseball. Tutti i diritti riservati.</p>
+        <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
+        <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
 
     <script src="script.js"></script>

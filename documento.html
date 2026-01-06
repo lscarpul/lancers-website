@@ -6,6 +6,176 @@
     <title>Documento - Lancers Baseball</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Table of Contents */
+        .toc {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .toc h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.5rem;
+        }
+        
+        .toc-list li {
+            margin: 0;
+        }
+        
+        .toc-list a {
+            display: block;
+            padding: 0.75rem 1rem;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .toc-list a:hover {
+            background: var(--primary-color);
+            color: white;
+            border-left-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+        
+        /* Document specific styles */
+        .doc-header-banner {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .doc-header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .doc-header-banner .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+        
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .doc-table th, .doc-table td {
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        .doc-table th {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .doc-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        
+        .doc-table tr:hover {
+            background: #e2e8f0;
+        }
+        
+        .exercise-block {
+            background: #f0fff4;
+            border-left: 4px solid var(--home-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .exercise-block h4 {
+            color: #276749;
+            margin-bottom: 0.5rem;
+        }
+        
+        .workout-section {
+            background: #fff5f5;
+            border-left: 4px solid var(--friendly-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .workout-section h4 {
+            color: #c53030;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-box {
+            background: #ebf8ff;
+            border-left: 4px solid var(--away-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .info-box h4 {
+            color: #2b6cb0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-to-top {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+        }
+
+        .chapter-content h3 {
+            margin-top: 1.5rem;
+        }
+
+        .chapter-content ul, .chapter-content ol {
+            margin-left: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .doc-header-banner h1 {
+                font-size: 1.8rem;
+            }
+            
+            .doc-table {
+                font-size: 0.75rem;
+            }
+            
+            .doc-table th, .doc-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <script>
@@ -23,6 +193,7 @@
             <li><a href="documento.html" class="active">Documento</a></li>
             <li><a href="calendario.html">Partite</a></li>
             <li><a href="allenamenti.html">Allenamenti</a></li>
+            <li><a href="calendario-completo.html">Tutto</a></li>
         </ul>
         <div class="hamburger">
             <span></span>
@@ -31,26 +202,752 @@
         </div>
     </nav>
 
-    <main class="page-content">
-        <div class="page-header">
-            <h1>📄 Documento Ufficiale</h1>
-            <p>Consulta il documento con tutti i capitoli</p>
+    <main class="page-content" id="top">
+        <!-- Header Banner -->
+        <div class="doc-header-banner">
+            <h1>⚾ LANCERS B.C.</h1>
+            <p class="subtitle">SERIE B – STAGIONE 2026</p>
+            <a href="https://docs.google.com/document/d/141yUUcVApZp93libWYQBCntqbQOfF9wQ/edit?usp=sharing" target="_blank" class="open-external-btn" style="margin-top: 1rem;">
+                📄 Apri documento originale in Google Docs
+            </a>
         </div>
 
-        <div class="document-container">
-            <iframe 
-                src="https://docs.google.com/document/d/141yUUcVApZp93libWYQBCntqbQOfF9wQ/preview" 
-                class="google-doc-frame"
-                frameborder="0"
-                allowfullscreen>
-            </iframe>
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h3>📑 Sommario - Clicca per navigare</h3>
+            <ul class="toc-list">
+                <li><a href="#cap0">📝 0. Piano di Sviluppo Tecnico</a></li>
+                <li><a href="#cap1">🏗 1. Struttura organizzativa</a></li>
+                <li><a href="#cap2">🧭 2. Pianificazione tecnica</a></li>
+                <li><a href="#cap3">🧠 3. Programmazione allenamenti</a></li>
+                <li><a href="#cap4">🧍‍♂️ 4. Obiettivi individuali</a></li>
+                <li><a href="#cap5">🧳 5. Gestione logistica</a></li>
+                <li><a href="#cap6">🧠 6. Cultura e mentalità</a></li>
+                <li><a href="#cap7">🪜 7. Fasi di implementazione</a></li>
+                <li><a href="#cap8">🗓 8. Programmazione Allenamenti</a></li>
+                <li><a href="#cap8-1">↳ 8.1 Preseason Nov/Dic 2025</a></li>
+                <li><a href="#cap8-2">↳ 8.2 Preseason Gen/Feb 2026</a></li>
+                <li><a href="#test">📈 Test di valutazione</a></li>
+                <li><a href="#lezioni">🧠 Lezioni teoriche</a></li>
+                <li><a href="#orari">⏰ Orari allenamenti</a></li>
+            </ul>
+        </div>
+
+        <div class="document-content">
+            
+            <!-- CAPITOLO 0 -->
+            <section class="doc-chapter" id="cap0">
+                <h2 class="chapter-title">📝 0. Piano di Sviluppo Tecnico e Organizzativo</h2>
+                <div class="chapter-content">
+                    <p>Il presente piano ha l'obiettivo di far crescere la squadra a 360°, sia dal punto di vista tecnico-atletico che mentale e organizzativo.</p>
+                    <p>L'obiettivo è creare una struttura solida, chiara e condivisa fin dall'inizio della stagione, così che ogni atleta e ogni membro dello staff sappia esattamente:</p>
+                    <ul>
+                        <li>quali sono i programmi e le tappe della stagione;</li>
+                        <li>quali sono le aspettative tecniche e comportamentali;</li>
+                        <li>quali sono i ruoli e le responsabilità operative;</li>
+                        <li>quali strumenti utilizzeremo per monitorare i progressi.</li>
+                    </ul>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 1 -->
+            <section class="doc-chapter" id="cap1">
+                <h2 class="chapter-title">🏗 1. Struttura organizzativa</h2>
+                <div class="chapter-content">
+                    <h3>📅 Calendario stagionale:</h3>
+                    <ul>
+                        <li><strong>Off-season:</strong> da Novembre a Gennaio (lavoro di preparazione atletica, aspetti mentali, Fondamentali)</li>
+                        <li><strong>Pre-season:</strong> da Febbraio a Marzo (Atletica, Fondamentali, Tecnica)</li>
+                        <li><strong>Season:</strong> Aprile – Settembre (Tattica, situazioni di gioco, lavoro mentale, gestione carichi)</li>
+                        <li><strong>Off-season:</strong> Ottobre (scarico)</li>
+                    </ul>
+                    
+                    <h3>👥 Definizione ruoli:</h3>
+                    <table class="doc-table">
+                        <tr>
+                            <th>Ruolo</th>
+                            <th>Nome</th>
+                        </tr>
+                        <tr>
+                            <td>Manager</td>
+                            <td>Carlos</td>
+                        </tr>
+                        <tr>
+                            <td>Pitching Coach</td>
+                            <td>In attesa nuovo inserimento</td>
+                        </tr>
+                        <tr>
+                            <td>Allenatori</td>
+                            <td>Baratella, Parrini, Geri</td>
+                        </tr>
+                        <tr>
+                            <td>Dirigenti</td>
+                            <td>Leonardo Biondi, Marcello Mastroianni</td>
+                        </tr>
+                    </table>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 2 -->
+            <section class="doc-chapter" id="cap2">
+                <h2 class="chapter-title">🧭 2. Pianificazione tecnica stagionale</h2>
+                <div class="chapter-content">
+                    <p>La stagione verrà suddivisa in fasi ben definite, ognuna con obiettivi tecnici e mentali specifici.</p>
+                    
+                    <table class="doc-table">
+                        <tr>
+                            <th>Fase</th>
+                            <th>Obiettivi principali</th>
+                            <th>Attività chiave</th>
+                        </tr>
+                        <tr>
+                            <td>1. Preparazione Generale</td>
+                            <td>Condizione atletica, fondamentali base, routine mentali</td>
+                            <td>Lavori di base difensivi/offensivi, sviluppo forza e mobilità</td>
+                        </tr>
+                        <tr>
+                            <td>2. Preseason Tecnica</td>
+                            <td>Tecnica, ritmo, amichevoli</td>
+                            <td>Allenamenti situazionali, simulazioni gara, amichevoli</td>
+                        </tr>
+                        <tr>
+                            <td>3. Regular Season</td>
+                            <td>Consolidamento performance, Tattica, gestione carichi</td>
+                            <td>Allenamenti mirati, extra per reparti, Schemi di gioco</td>
+                        </tr>
+                        <tr>
+                            <td>4. Off-season / Sviluppo Individuale</td>
+                            <td>Scarico/Crescita tecnica mirata</td>
+                            <td>Programmi individuali, sviluppo mentale, clinics</td>
+                        </tr>
+                    </table>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 3 -->
+            <section class="doc-chapter" id="cap3">
+                <h2 class="chapter-title">🧠 3. Programmazione allenamenti</h2>
+                <div class="chapter-content">
+                    <p>Ogni allenamento avrà:</p>
+                    <ul>
+                        <li><strong>Struttura predefinita</strong>, con divisione in blocchi (attivazione – fondamentali – stazioni – situazionale – stretching) e tempistiche ben precise;</li>
+                        <li><strong>Piano alternativo in caso di pioggia</strong> (per tutti gli allenamenti), con attività indoor, teoriche o di preparazione mentale;</li>
+                        <li><strong>Obiettivi tecnici e mentali dichiarati</strong> - ogni giocatore avrà obiettivi tecnici ben definiti e parte dell'allenamento sarà specifico per ogni obiettivo assegnato. Analisi durante la stagione del raggiungimento degli obiettivi;</li>
+                        <li><strong>Monitoraggio KPI</strong> per valutare i progressi.</li>
+                    </ul>
+                    
+                    <div class="info-box">
+                        <h4>👉 Allenamenti Extra</h4>
+                        <p>Verranno programmati anche allenamenti extra individuali o per reparti (es. catcher, infield, particolari situazioni di gioco) per lavorare su punti specifici. Questi allenamenti si svolgeranno il mercoledì durante la stagione.</p>
+                        <p><strong>Impegno indicativo:</strong> per ogni giocatore un mercoledì ogni 3 settimane.</p>
+                    </div>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 4 -->
+            <section class="doc-chapter" id="cap4">
+                <h2 class="chapter-title">🧍‍♂️ 4. Obiettivi individuali e sviluppo giocatori</h2>
+                <div class="chapter-content">
+                    <p>Ogni atleta avrà un <strong>colloquio iniziale</strong> per:</p>
+                    <ul>
+                        <li>definire obiettivi tecnici e fisici stagionali (es. migliorare % battute, aumento distanza tiro, routine mentale solida);</li>
+                        <li>definire le aspettative del giocatore e dello staff tecnico per quel giocatore;</li>
+                        <li>ricevere un piano di sviluppo personalizzato (allenamenti extra, drill consigliati, KPI da monitorare);</li>
+                        <li>fissare momenti periodici di verifica (intermedi e finali).</li>
+                    </ul>
+                    <p>Questa impostazione permette di <strong>responsabilizzare il singolo giocatore</strong>, motivarlo e dare direzione precisa al lavoro tecnico dello staff.</p>
+                    
+                    <h3>📅 CALENDARIO COLLOQUI</h3>
+                    <p>A partire dall'8 gennaio inizieranno i colloqui personali con una durata circa di 15 minuti, il primo alle ore 19 ed il secondo post allenamento.</p>
+                    <p><em>Le modifiche possono essere gestite tra giocatori, tali modifiche devono essere comunicate.</em></p>
+                    
+                    <table class="doc-table">
+                        <tr>
+                            <th>Data</th>
+                            <th>Giocatore 1</th>
+                            <th>Giocatore 2</th>
+                        </tr>
+                        <tr><td>8/1</td><td>Scarpulla Lorenzo</td><td>Beudean</td></tr>
+                        <tr><td>13/1</td><td>Paperini</td><td>Albano</td></tr>
+                        <tr><td>15/1</td><td>Grassi</td><td>Rrethatori</td></tr>
+                        <tr><td>20/1</td><td>Della Nave</td><td>Rinaldi</td></tr>
+                        <tr><td>22/1</td><td>Biondi</td><td>Scarpulla Leonardo</td></tr>
+                        <tr><td>27/1</td><td>Panichi</td><td>da definire</td></tr>
+                        <tr><td>3/2</td><td>Silvestri</td><td>Ferrini</td></tr>
+                    </table>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 5 -->
+            <section class="doc-chapter" id="cap5">
+                <h2 class="chapter-title">🧳 5. Gestione logistica e operativa</h2>
+                <div class="chapter-content">
+                    <p>Per evitare improvvisazioni e disorganizzazione:</p>
+                    <ul>
+                        <li><strong>Ogni trasferta</strong> avrà un piano standardizzato: ritrovo, mezzi, orari, referenti, comunicazioni;</li>
+                        <li><strong>Ogni allenamento</strong> avrà materiale e campo predisposti con anticipo (chi prepara cosa è stabilito a inizio stagione e si deve ritrovare 15 minuti prima al campo);</li>
+                        <li>Verrà definita una <strong>catena di comunicazione chiara</strong> per decisioni operative, annullamenti, modifiche e convocazioni.</li>
+                    </ul>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 6 -->
+            <section class="doc-chapter" id="cap6">
+                <h2 class="chapter-title">🧠 6. Cultura e mentalità di squadra</h2>
+                <div class="chapter-content">
+                    <p>Uno dei punti centrali sarà lo sviluppo di una <strong>mentalità vincente</strong>, costruita giorno per giorno:</p>
+                    <ul>
+                        <li>Routine pre-pitch e reset mentali;</li>
+                        <li>Obiettivi settimanali di squadra (tecnici e comportamentali);</li>
+                        <li>Comunicazione interna trasparente e costruttiva;</li>
+                        <li>Valorizzazione dei ruoli e rispetto reciproco.</li>
+                    </ul>
+                    <p>L'obiettivo è far crescere la squadra non solo tecnicamente, ma anche nella consapevolezza e professionalità.</p>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 7 -->
+            <section class="doc-chapter" id="cap7">
+                <h2 class="chapter-title">🪜 7. Fasi di implementazione</h2>
+                <div class="chapter-content">
+                    <p>Ad inizio stagione verrà stabilito insieme alla società quelli che devono essere gli <strong>obiettivi di risultati</strong>, crescita dei giocatori e impiego sulla base degli accordi con le altre società.</p>
+                    <p>Successivamente verranno condivisi con la squadra.</p>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 8 -->
+            <section class="doc-chapter" id="cap8">
+                <h2 class="chapter-title">🗓 8. Programmazione Allenamenti</h2>
+                <div class="chapter-content">
+                    <p>Questa sezione contiene il programma dettagliato degli allenamenti per la stagione 2026.</p>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 8.1 -->
+            <section class="doc-chapter" id="cap8-1">
+                <h2 class="chapter-title">📅 8.1 Preseason — Novembre / Dicembre 2025</h2>
+                <div class="chapter-content">
+                    
+                    <h3>🎯 8.1.1 Obiettivi generali</h3>
+                    <p>Costruire le fondamenta fisiche, tecniche e mentali per la stagione 2026, attraverso:</p>
+                    <ul>
+                        <li>sviluppo della resistenza generale e forza di base;</li>
+                        <li>consolidamento dei fondamentali difensivi e offensivi;</li>
+                        <li>introduzione graduale di routine mentali e concetti teorici;</li>
+                        <li>definizione di parametri misurabili per valutare e motivare i giocatori.</li>
+                    </ul>
+
+                    <h3>📋 8.1.2 Struttura allenamenti settimanali</h3>
+                    <ul>
+                        <li><strong>2 allenamenti in campo/palestra</strong> – Martedì e Giovedì (2 ore ciascuno)</li>
+                        <li><strong>2 sessioni individuali a casa</strong> – Corpo libero + stretching (30–40 min)</li>
+                    </ul>
+
+                    <h3>📊 Struttura allenamento campo OFF-SEASON</h3>
+                    <table class="doc-table">
+                        <tr>
+                            <th>Fase</th>
+                            <th>Durata</th>
+                            <th>Contenuto</th>
+                            <th>Obiettivo</th>
+                        </tr>
+                        <tr>
+                            <td>1. Riscaldamento + corsa</td>
+                            <td>35'</td>
+                            <td>Lavori di resistenza, corsa lunga, circuiti, esercizi di gamba</td>
+                            <td>Costruzione fiato e base atletica</td>
+                        </tr>
+                        <tr>
+                            <td>2. Rest e organizza</td>
+                            <td>5'</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>3. Drill tecnici</td>
+                            <td>40'</td>
+                            <td>Esercizi sui fondamentali difensivi o battuta</td>
+                            <td>Riaffinare meccanica e concentrazione</td>
+                        </tr>
+                        <tr>
+                            <td>4. Rest e organizza</td>
+                            <td>5'</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>5. Palestra / circuito forza</td>
+                            <td>35'</td>
+                            <td>Allenamento funzionale + stretching</td>
+                            <td>Rinforzo generale e prevenzione infortuni</td>
+                        </tr>
+                    </table>
+
+                    <h3>📈 Struttura Generale Progressione</h3>
+                    <table class="doc-table">
+                        <tr>
+                            <th>Settimane</th>
+                            <th>Focus corsa</th>
+                            <th>Focus palestra</th>
+                        </tr>
+                        <tr>
+                            <td>1–2</td>
+                            <td>Riattivazione, resistenza base, ritmo costante</td>
+                            <td>Full body generale, apprendimento tecnica</td>
+                        </tr>
+                        <tr>
+                            <td>3–4</td>
+                            <td>Resistenza + variazioni ritmo e salite</td>
+                            <td>Split body, carichi leggeri medi</td>
+                        </tr>
+                        <tr>
+                            <td>5–6</td>
+                            <td>Potenza e cambi direzione, competizione</td>
+                            <td>Circuiti forza + esplosività</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Test + simulazioni competitive</td>
+                            <td>Circuito misto, test progressi</td>
+                        </tr>
+                    </table>
+
+                    <p><strong>📅 Periodo:</strong> 13 novembre → 30 dicembre</p>
+
+                    <!-- SETTIMANE 1-2 -->
+                    <div class="workout-section">
+                        <h4>🏃‍♂️ Settimane 1–2 (13–27 novembre) - CORSA (35')</h4>
+                        <p><strong>Obiettivo:</strong> recuperare fiato, tono, ritmo.</p>
+                        <p><strong>Ambiente:</strong> asfalto/parcheggio pianeggiante.</p>
+                        <ul>
+                            <li>5' corsa blanda + mobilità</li>
+                            <li>1 blocco da 10' corsa continua con ritmo crescente ogni 2'</li>
+                            <li>6' "fartlek leggero": 30'' corsa veloce / 60'' corsa lenta × 4</li>
+                            <li>10' defaticamento + esercizi propriocettivi</li>
+                        </ul>
+                    </div>
+
+                    <div class="exercise-block">
+                        <h4>💪 Settimane 1–2 - PALESTRA (35')</h4>
+                        <p><strong>🦵 Stazione 1 – Parte inferiore:</strong> Squat – Affondi – Ponte glutei</p>
+                        <p><strong>💪 Stazione 2 – Parte superiore:</strong> Push-up – alzate bilancere – Dips</p>
+                        <p><strong>🦴 Stazione 3 – Schiena e core:</strong> Superman – Plank – rematore</p>
+                        <p><strong>⚡ Stazione 4 – Circuito esplosivo:</strong> (Jumping jack x10 – Skip alto x20 – Push-up to jump x10) x3</p>
+                    </div>
+
+                    <!-- SETTIMANE 3-4 -->
+                    <div class="workout-section">
+                        <h4>🏃‍♂️ Settimane 3–4 (28 novembre – 10 dicembre) - CORSA (35')</h4>
+                        <p><strong>Obiettivo:</strong> migliorare resistenza specifica e iniziare cambio ritmo/salita.</p>
+                        <ul>
+                            <li>5' warm-up durante corsa lenta</li>
+                            <li>6' corsa continua con sprint salita 20m</li>
+                            <li>6' recupero e stretching</li>
+                            <li>10' esercizi cambi direzione (cone drill, navette, zig-zag, suicida)</li>
+                            <li>8' esercizi con pallina per core e balance</li>
+                        </ul>
+                    </div>
+
+                    <div class="exercise-block">
+                        <h4>💪 Settimane 3–4 - PALESTRA (35') - Lavoro massimale</h4>
+                        <p><strong>🦵 Stazione 1:</strong> squat - bulgarian split squat (3xmax)</p>
+                        <p><strong>💪 Stazione 2:</strong> trazioni (push press) - croci con manubri panca inclinata (3xmax)</p>
+                        <p><strong>🦴 Stazione 3:</strong> Rematore – superman con elastico (3xmax-3x12)</p>
+                        <p><strong>⚡ Stazione 4 – Addominali:</strong> plank 3x30 - pallof elastico (3x15/lato) - russian twist (3x30)</p>
+                    </div>
+
+                    <!-- SETTIMANE 5-6 -->
+                    <div class="workout-section">
+                        <h4>🏃‍♂️ Settimane 5–6 (11 dicembre – 23 dicembre) - CORSA (35')</h4>
+                        <p><strong>Obiettivo:</strong> Costruire forza specifica arti inferiori e resistenza alla fatica.</p>
+                        <ul>
+                            <li>5' warm-up corsa lenta</li>
+                            <li>8' corsa continua: sprint salita 20m + 10 squat jump + 10 affondi</li>
+                            <li>3' recupero corsa lenta</li>
+                            <li>6' fartlek (1' lento + 30" veloce)</li>
+                            <li>6' stretching</li>
+                            <li>5' esercizio propriocettivo con balance</li>
+                        </ul>
+                    </div>
+
+                    <div class="exercise-block">
+                        <h4>💪 Settimane 5–6 - PALESTRA (35') - Incremento forza baseball</h4>
+                        <p><strong>🦵 Stazione 1:</strong> bulgarian split squat (3x10/lato) - deadlift (3xmax)</p>
+                        <p><strong>💪 Stazione 2:</strong> fune 3x20" - panca con manubri (3xmax)</p>
+                        <p><strong>🦴 Stazione 3:</strong> trazioni presa larga (3xmax) - lancio palla medica (3x12)</p>
+                        <p><strong>⚡ Stazione 4:</strong> plank 3x30 - pallof elastico (2x15/lato)</p>
+                    </div>
+
+                    <!-- SETTIMANE 7-8 -->
+                    <div class="workout-section">
+                        <h4>🏃‍♂️ Settimane 7–8 (30 dicembre – 6 gennaio) - CORSA (35')</h4>
+                        <ul>
+                            <li>5' warm-up corsa lenta</li>
+                            <li>6' fartlek (1' lento + 30" veloce)</li>
+                            <li>10' 6 suicida in salita + 6 frog jump in salita 10m</li>
+                            <li>3' recupero corsa lenta</li>
+                            <li>6' stretching</li>
+                            <li>5' esercizio propriocettivo avanzato</li>
+                        </ul>
+                    </div>
+
+                    <div class="exercise-block">
+                        <h4>💪 Settimane 7–8 - PALESTRA (35')</h4>
+                        <p><strong>🦵 Stazione 1:</strong> bulgarian split squat con salto (3x10/lato) - deadlift (3xmax)</p>
+                        <p><strong>💪 Stazione 2:</strong> fune 3x(10"+10"+10") - panca con manubri (3xmax)</p>
+                        <p><strong>🦴 Stazione 3:</strong> trazioni presa larga (3xmax) - lancio palla medica (3x12)</p>
+                        <p><strong>⚡ Stazione 4:</strong> russian twist 3x30 - pallof elastico (2x15/lato)</p>
+                    </div>
+
+                    <!-- PROGRAMMA TECNICO INTERNI -->
+                    <h3>⚾ Programma INTERNI (Nov-Dic)</h3>
+                    <p><strong>Parole chiave:</strong> FONDAMENTALI - TEMPO - SPAZIO - POSIZIONE</p>
+                    
+                    <div class="info-box">
+                        <h4>Lavoro a coppie - Mano nuda (3 metri)</h4>
+                        <ul>
+                            <li>10 x frontale</li>
+                            <li>10 x lato guanto</li>
+                            <li>10 x backhand</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Lavoro a coppie - Con guanto (3/4 metri)</h4>
+                        <ul>
+                            <li>10 x frontale</li>
+                            <li>10 x lato guanto</li>
+                            <li>10 x backhand</li>
+                            <li>10 x backhand inverso</li>
+                            <li>20 x frontale con piede guanto sul tallone</li>
+                            <li>20 x frontale con gamba che scende al rilascio</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Da Gennaio:</strong> inizio del lavoro di rapidità gambe, rapidità di mani estrazione e shuffle con mano palla alta e mano guanto rivolta verso l'obiettivo del tiro. Inizio del palleggio con focus su numero di tiri.</p>
+
+                    <!-- PROGRAMMA BATTUTA -->
+                    <h3>🏏 Programma BATTUTA (Nov-Dic)</h3>
+                    <p><strong>Focus:</strong> fondamentali dello swing con focus su separazione</p>
+
+                    <div class="info-box">
+                        <h4>Esercizi base</h4>
+                        <ul>
+                            <li>Swing solo mano dx prendere palla a mano nuda x10</li>
+                            <li>Con tee, swing a toccare soltanto la palla con palo su spalle x10</li>
+                            <li>Con tee + mano sx che tiene 1 palla sopra tee, mazza piccola su mano dx x10</li>
+                            <li>Con tee, campo opposto x10</li>
+                            <li>Con tee, versione scomoda interna x10</li>
+                            <li>Con tee, con rete lontana a cercare centro-dx</li>
+                            <li>Con tee, mazza piccola 5x mano</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Esercizi con palla alzata</h4>
+                        <ul>
+                            <li>Presa larga, swing solo mani senza girare busto e piede x10</li>
+                            <li>Presa larga, swing utilizzando anche piede e fianchi x10</li>
+                            <li>Presa larga, passo dietro e swing x10</li>
+                            <li>Presa larga, passo incrociato avanti e swing x10</li>
+                            <li>Presa larga, 10x rapide</li>
+                            <li>Presa stretta, 10x rapide</li>
+                            <li>Frontale con avvicinamento dell'alzatore, battuta al centro</li>
+                            <li>Laterale su 5 punti, da laterale davanti fino quasi dietro</li>
+                        </ul>
+                    </div>
+
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- CAPITOLO 8.2 -->
+            <section class="doc-chapter" id="cap8-2">
+                <h2 class="chapter-title">📅 8.2 Preseason — Gennaio / Febbraio 2026</h2>
+                <div class="chapter-content">
+                    
+                    <h3>📊 Struttura Allenamento</h3>
+                    <ul>
+                        <li><strong>Parte atletica:</strong> 25" + 5"</li>
+                        <li><strong>Parte tecnica:</strong> 60" + 5"</li>
+                        <li><strong>Palestra/Stretching:</strong> 25" + 5"</li>
+                    </ul>
+
+                    <h3>🏃‍♂️ Settimana 1-2 (8 - 22 gennaio) - PARTE ATLETICA</h3>
+                    <div class="workout-section">
+                        <ul>
+                            <li>5" corsa lenta</li>
+                            <li>4 suicida (4 cinesini) in salita con corsa avanti e ritorno indietro + 6 frog jump in salita 10m</li>
+                            <li>stretching</li>
+                        </ul>
+                        <h4>Alternativa in caso di pioggia (Palestra)</h4>
+                        <ul>
+                            <li>10 giri di corsa</li>
+                            <li>3x - 2 cinesini avanti e uno indietro</li>
+                            <li>1 skip, 1 calciata</li>
+                            <li>3x balzi laterali</li>
+                            <li>Skip laterale</li>
+                            <li>3x - 10" squat isometrico per cinesino</li>
+                            <li>3x - salti piedi uniti da cinesino a cinesino</li>
+                            <li>3x - salti una gamba (alternata)</li>
+                            <li>3x - affondo affondo corsa</li>
+                            <li>6 suicida con ritorno al primo cinesino</li>
+                        </ul>
+                    </div>
+
+                    <h3>⚾ PARTE TECNICA</h3>
+                    <div class="info-box">
+                        <h4>Palleggio (15")</h4>
+                        <p>Iniziamo allungando leggermente il braccio. Con il passare delle settimane dovremo registrare la <strong>massima distanza raggiunta</strong> e di volta in volta provare a superarla.</p>
+                        <p><strong>Carico di lavoro ideale:</strong> 70 palleggi</p>
+                        <p><strong>NOTA 1:</strong> finito il palleggio facciamo alcuni esercizi di tiro in movimento (20-30 palleggi)</p>
+                        <p><strong>NOTA 2:</strong> Se dopo il palleggio non è previsto grosso lavoro di braccio, cercare di arrivare anche intorno ai 110 palleggi</p>
+                        <p><strong>🎯 OBIETTIVO PER INIZIO FEBBRAIO:</strong> almeno 220 lanci in un allenamento</p>
+                    </div>
+
+                    <h3>🏃 Corsa sulle basi (1 volta a settimana - 20")</h3>
+                    <ul>
+                        <li>2 volte corsa casa prima (si contano i passi)</li>
+                        <li>2 volte corsa casa seconda (si contano i passi)</li>
+                        <li>3 volte corsa casa prima con battuta valida all'esterno</li>
+                        <li>3 volte rubata prima seconda con tiro per terra del lanciatore</li>
+                        <li>3 volte corsa seconda casa</li>
+                        <li>3 volte pesta e corri terza casa</li>
+                    </ul>
+
+                    <h3>📋 SCHEMI OFFENSIVI</h3>
+                    <div class="info-box">
+                        <ul>
+                            <li>batti e corri</li>
+                            <li>bunt di sacrificio uomo in prima</li>
+                            <li>bunt di sacrificio uomo in prima e seconda</li>
+                            <li>uomo di sacrificio uomo in prima e terza</li>
+                            <li>squeeze bunt suicida</li>
+                            <li>squeeze bunt safety</li>
+                            <li>rubata uomo in prima e seconda</li>
+                            <li>rubata uomo in prima e terza (anticipata - normale - ritardata)</li>
+                            <li>uomo in seconda e terza - pickoff in seconda</li>
+                            <li>uomo in terza - BB</li>
+                            <li>uomo in seconda - BB + lancio pazzo</li>
+                            <li>uomo in seconda - singolo (avanzamento verso casa e stop in terza)</li>
+                            <li>rubata su lancio a terra</li>
+                            <li>rubata terza base</li>
+                            <li>uomo in prima - bunt spinto</li>
+                            <li>pickoff</li>
+                        </ul>
+                    </div>
+
+                    <h3>💪 PALESTRA - Lavoro massimale</h3>
+                    <div class="exercise-block">
+                        <ul>
+                            <li>3x max - jump bulgarian split squat</li>
+                            <li>3x max - deadlift</li>
+                            <li>2x 15/lato - palloff press (addominali)</li>
+                            <li>3x max - push press + lunge</li>
+                            <li>3x max/lato - landmine press</li>
+                            <li>3x30 - russian twist</li>
+                        </ul>
+                    </div>
+
+                    <h3>🏡 Scheda "home workout" (2 giorni aggiuntivi)</h3>
+                    <p><strong>Durata:</strong> 30–40 minuti — corpo libero.</p>
+                    <p><strong>Obiettivi:</strong> migliorare tono generale, stabilità, flessibilità.</p>
+                    <ul>
+                        <li><strong>Giorno A:</strong> Core + gambe</li>
+                        <li><strong>Giorno B:</strong> Forza braccia + mobilità</li>
+                    </ul>
+                    <p><em>Ogni settimana verrà fornita una scheda riepilogativa con le presenze e il carico totale svolto.</em></p>
+
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- TEST VALUTAZIONE -->
+            <section class="doc-chapter" id="test">
+                <h2 class="chapter-title">📈 Test di valutazione giocatori (Novembre e Marzo)</h2>
+                <div class="chapter-content">
+                    <p><strong>Finalità:</strong> definire una classifica di performance generale che contribuirà al punteggio per le scelte in campo, in combinazione con presenza e comportamento.</p>
+
+                    <table class="doc-table">
+                        <tr>
+                            <th>Test</th>
+                            <th>Descrizione</th>
+                            <th>Obiettivo misurato</th>
+                        </tr>
+                        <tr>
+                            <td>1. Scatto 30 m</td>
+                            <td>Cronometrato Casa–1ª base</td>
+                            <td>Esplosività gambe, reattività</td>
+                        </tr>
+                        <tr>
+                            <td>2. Salto verticale</td>
+                            <td>Da fermo, misura altezza</td>
+                            <td>Potenza arti inferiori</td>
+                        </tr>
+                        <tr>
+                            <td>3. Push-up jump</td>
+                            <td>Stacco da terra</td>
+                            <td>Forza esplosiva totale</td>
+                        </tr>
+                        <tr>
+                            <td>4. RBI stagione 2025</td>
+                            <td>Dati statistici</td>
+                            <td>Produzione offensiva</td>
+                        </tr>
+                        <tr>
+                            <td>5. OBP</td>
+                            <td>Statistiche 2025</td>
+                            <td>Capacità offensiva</td>
+                        </tr>
+                        <tr>
+                            <td>6. ERA (pitchers)</td>
+                            <td>Statistiche 2025</td>
+                            <td>Efficienza lanciatori</td>
+                        </tr>
+                        <tr>
+                            <td>7. Test conoscenza</td>
+                            <td>Quiz regole e tattiche</td>
+                            <td>Comprensione baseball</td>
+                        </tr>
+                        <tr>
+                            <td>8. Gestione stress</td>
+                            <td>Esercizio valutato</td>
+                            <td>Controllo emotivo e focus</td>
+                        </tr>
+                        <tr>
+                            <td>9. Presenze</td>
+                            <td>Numero allenamenti</td>
+                            <td>Costanza</td>
+                        </tr>
+                    </table>
+
+                    <div class="info-box">
+                        <h4>📊 Valutazione</h4>
+                        <p>Ogni prova assegna <strong>1–10 punti</strong> → somma finale genera <strong>Classifica di Valutazione Atleta (CVA)</strong>.</p>
+                        <p><strong>CVA =</strong> (Presenze x1,5 + Performance x2 + Comportamento x1,5 + Test x1) → Media ponderata per ranking generale.</p>
+                        <p>La classifica sarà aggiornata a <strong>Marzo 2026</strong> per misurare progressi.</p>
+                    </div>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- LEZIONI TEORICHE -->
+            <section class="doc-chapter" id="lezioni">
+                <h2 class="chapter-title">🧠 Lezioni teoriche e mentali</h2>
+                <div class="chapter-content">
+                    <p>Ogni 2–3 settimane si sostituirà un allenamento pratico con un <strong>incontro teorico di 90–120 minuti</strong>, in aula o club house.</p>
+                    
+                    <h3>📚 Temi proposti:</h3>
+                    <ul>
+                        <li>Approccio alla battuta e gestione del turno</li>
+                        <li>Come rubare basi e leggere il lanciatore</li>
+                        <li>Gestione del conto</li>
+                        <li>Schedi difensivi e offensivi</li>
+                        <li>Mental coach</li>
+                        <li>Gestione del carico di lavoro durante la stagione</li>
+                    </ul>
+                    <p><strong>Obiettivo:</strong> allenare la mente come il corpo, costruendo abitudini di focus e autocontrollo.</p>
+
+                    <h3>📈 Monitoraggio e motivazione</h3>
+                    <ul>
+                        <li>Tabella punteggi individuali visibile in spogliatoio</li>
+                        <li>Abituare la squadra alla competizione e alla gestione dello stress</li>
+                        <li>Inserimento regolo per valutazione oggettiva comportamento</li>
+                    </ul>
+
+                    <div class="info-box">
+                        <h4>📎 Risultato atteso a fine dicembre</h4>
+                        <ul>
+                            <li>aver raggiunto una base atletica solida e uniforme;</li>
+                            <li>aver consolidato i fondamentali difensivi e offensivi;</li>
+                            <li>aver stabilito una classifica motivante e meritocratica;</li>
+                            <li>essere pronta a iniziare la preseason tecnica di gennaio con coordinazione e spirito di squadra già consolidati.</li>
+                        </ul>
+                    </div>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <!-- ORARI -->
+            <section class="doc-chapter" id="orari">
+                <h2 class="chapter-title">⏰ Orari Allenamenti</h2>
+                <div class="chapter-content">
+                    <table class="doc-table">
+                        <tr>
+                            <th>Giorno</th>
+                            <th>Orario</th>
+                            <th>Note</th>
+                        </tr>
+                        <tr>
+                            <td>Martedì</td>
+                            <td>19:30 – 21:30</td>
+                            <td>Tutto l'anno</td>
+                        </tr>
+                        <tr>
+                            <td>Giovedì</td>
+                            <td>19:30 – 21:30</td>
+                            <td>Tutto l'anno</td>
+                        </tr>
+                        <tr>
+                            <td>Mercoledì</td>
+                            <td>Orario flessibile</td>
+                            <td>Da Marzo</td>
+                        </tr>
+                        <tr>
+                            <td>Sabato</td>
+                            <td>10:30 – 12:30</td>
+                            <td>Da Febbraio</td>
+                        </tr>
+                    </table>
+
+                    <h3>📋 Regole importanti</h3>
+                    <ul>
+                        <li>La squadra dovrà essere <strong>pronta in campo alle ore 19:15</strong></li>
+                        <li>Gli addetti al materiale dovranno predisporre tutto il necessario prima dell'inizio</li>
+                        <li>L'attrezzatura dovrà essere tenuta sotto i gazebi (inverno) o in panchina (estate)</li>
+                        <li>L'abbigliamento durante tutti gli allenamenti dovrà essere <strong>societario</strong></li>
+                        <li>È <strong>obbligatorio</strong> utilizzare un cappello/cappellino</li>
+                        <li>D'inverno è consentito: pantaloncini corti + calzamaglia</li>
+                        <li>Le assenze devono essere comunicate <strong>la mattina (max ore 13)</strong> del giorno stesso</li>
+                    </ul>
+                    <a href="#top" class="back-to-top">⬆️ Torna al sommario</a>
+                </div>
+            </section>
+
+            <div class="doc-note">
+                <p>💡 <strong>Nota:</strong> Per la versione più aggiornata del documento, clicca il pulsante in alto per aprirlo in Google Docs.</p>
+            </div>
         </div>
     </main>
 
     <footer>
-        <p>© 2026 Lancers Baseball. Tutti i diritti riservati.</p>
+        <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
+        <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
