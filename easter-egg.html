@@ -244,6 +244,7 @@
             align-items: center;
             z-index: 100;
             border-radius: 15px;
+            touch-action: auto;
         }
 
         .start-overlay.hidden {
@@ -276,6 +277,9 @@
             font-family: 'Montserrat', sans-serif;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .start-btn:hover {
@@ -449,6 +453,7 @@
             align-items: center;
             z-index: 30;
             border-radius: 15px;
+            touch-action: auto;
         }
 
         .game-over-overlay h2 {
@@ -472,6 +477,7 @@
             text-align: center;
             margin-bottom: 1rem;
             font-family: 'Montserrat', sans-serif;
+            touch-action: manipulation;
         }
 
         .game-over-overlay button {
@@ -485,6 +491,8 @@
             font-weight: 600;
             font-family: 'Montserrat', sans-serif;
             transition: all 0.3s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .game-over-overlay button:hover {
@@ -1050,15 +1058,26 @@
         // Event listeners
         gameArea.addEventListener('click', swing);
         gameArea.addEventListener('touchstart', (e) => {
+            // Non bloccare se si sta toccando un overlay o un pulsante
+            if (e.target.closest('.start-overlay') || e.target.closest('.game-over-overlay')) {
+                return;
+            }
             e.preventDefault();
             swing(e);
         });
 
         // Save score button
-        saveScoreBtn.addEventListener('click', () => {
+        function saveScoreHandler() {
             const name = playerNameInput.value.trim() || 'Anonimo';
             saveScore(name, gameState.homeRuns);
             resetGame();
+        }
+        
+        saveScoreBtn.addEventListener('click', saveScoreHandler);
+        saveScoreBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            saveScoreHandler();
         });
 
         // Enter key to save
