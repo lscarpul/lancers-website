@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Partite - Lancers Baseball</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <script>
+        if (sessionStorage.getItem('authenticated') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo">⚾</span>
+            <span class="team-name">Lancers Baseball</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="documento.html">Documento</a></li>
+            <li><a href="calendario.html" class="active">Partite</a></li>
+            <li><a href="allenamenti.html">Allenamenti</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="page-header">
+            <h1>📅 Calendario Partite 2026</h1>
+            <p>Tutte le partite della stagione - Andata e Ritorno</p>
+        </div>
+
+        <div class="calendar-container">
+            <!-- ANDATA -->
+            <div class="calendar-section">
+                <h2 class="section-title">🏠 ANDATA</h2>
+                <div class="matches-grid">
+                    <div class="match-card home">
+                        <div class="match-date">
+                            <span class="day">12</span>
+                            <span class="month">APR</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Health & Performance S.S.D</h3>
+                            <span class="location home-badge">🏠 Casa</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card away">
+                        <div class="match-date">
+                            <span class="day">19</span>
+                            <span class="month">APR</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Livorno 1940 Baseball</h3>
+                            <span class="location away-badge">✈️ Trasferta</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card home">
+                        <div class="match-date">
+                            <span class="day">26</span>
+                            <span class="month">APR</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Longbridge 2000 B.C</h3>
+                            <span class="location home-badge">🏠 Casa</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card away">
+                        <div class="match-date">
+                            <span class="day">03</span>
+                            <span class="month">MAG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Colorno B.C.</h3>
+                            <span class="location away-badge">✈️ Trasferta</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card home">
+                        <div class="match-date">
+                            <span class="day">10</span>
+                            <span class="month">MAG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">A.S.D BSC Arezzo</h3>
+                            <span class="location home-badge">🏠 Casa</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card home">
+                        <div class="match-date">
+                            <span class="day">17</span>
+                            <span class="month">MAG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Cali Roma XII</h3>
+                            <span class="location home-badge">🏠 Casa</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card recovery">
+                        <div class="match-date">
+                            <span class="day">24</span>
+                            <span class="month">MAG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 TBD</span>
+                            <h3 class="opponent">Da definire</h3>
+                            <span class="location recovery-badge">🔄 Eventuali Recuperi</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card away">
+                        <div class="match-date">
+                            <span class="day">30</span>
+                            <span class="month">MAG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 15:00</span>
+                            <h3 class="opponent">Padule Baseball A.S.D</h3>
+                            <span class="location away-badge">✈️ Trasferta</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RITORNO -->
+            <div class="calendar-section">
+                <h2 class="section-title">✈️ RITORNO</h2>
+                <div class="matches-grid">
+                    <div class="match-card away">
+                        <div class="match-date">
+                            <span class="day">07</span>
+                            <span class="month">GIU</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Health & Performance S.S.D</h3>
+                            <span class="location away-badge">✈️ Trasferta</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card home">
+                        <div class="match-date">
+                            <span class="day">14</span>
+                            <span class="month">GIU</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Livorno 1940 Baseball</h3>
+                            <span class="location home-badge">🏠 Casa</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card away">
+                        <div class="match-date">
+                            <span class="day">21</span>
+                            <span class="month">GIU</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Longbridge 2000 B.C</h3>
+                            <span class="location away-badge">✈️ Trasferta</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card home">
+                        <div class="match-date">
+                            <span class="day">28</span>
+                            <span class="month">GIU</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Colorno B.C.</h3>
+                            <span class="location home-badge">🏠 Casa</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card away">
+                        <div class="match-date">
+                            <span class="day">05</span>
+                            <span class="month">LUG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">A.S.D BSC Arezzo</h3>
+                            <span class="location away-badge">✈️ Trasferta</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card away">
+                        <div class="match-date">
+                            <span class="day">12</span>
+                            <span class="month">LUG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Cali Roma XII</h3>
+                            <span class="location away-badge">✈️ Trasferta</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card home">
+                        <div class="match-date">
+                            <span class="day">26</span>
+                            <span class="month">LUG</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 11:00</span>
+                            <h3 class="opponent">Padule Baseball A.S.D</h3>
+                            <span class="location home-badge">🏠 Casa</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card recovery">
+                        <div class="match-date">
+                            <span class="day">02</span>
+                            <span class="month">AGO</span>
+                            <span class="year">2026</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="match-time">🕐 TBD</span>
+                            <h3 class="opponent">Da definire</h3>
+                            <span class="location recovery-badge">🔄 Eventuali Recuperi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legenda -->
+        <div class="legend">
+            <h3>Legenda</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <span class="legend-color home-color"></span>
+                    <span>Partita in Casa</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color away-color"></span>
+                    <span>Partita in Trasferta</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color recovery-color"></span>
+                    <span>Eventuali Recuperi</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Lancers Baseball. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
