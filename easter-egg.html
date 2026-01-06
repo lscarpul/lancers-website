@@ -93,65 +93,59 @@
             touch-action: none;
         }
 
-        /* Leaderboard */
-        .leaderboard {
-            width: 200px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .leaderboard h3 {
-            color: #ffd700;
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            border-bottom: 2px solid #ffd700;
-            padding-bottom: 0.5rem;
-        }
-
-        .leaderboard-list {
-            list-style: none;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .leaderboard-item {
+        /* Win overlay */
+        .win-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
-            justify-content: space-between;
-            padding: 0.5rem;
-            margin-bottom: 0.25rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            font-size: 0.85rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
-        .leaderboard-item:nth-child(1) {
-            background: linear-gradient(90deg, rgba(255, 215, 0, 0.3), transparent);
-            border-left: 3px solid gold;
+        .win-overlay.hidden {
+            display: none;
         }
 
-        .leaderboard-item:nth-child(2) {
-            background: linear-gradient(90deg, rgba(192, 192, 192, 0.3), transparent);
-            border-left: 3px solid silver;
+        .win-overlay h1 {
+            font-size: 4rem;
+            color: #ffd700;
+            text-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00;
+            animation: winPulse 1s ease infinite;
+            margin-bottom: 1rem;
         }
 
-        .leaderboard-item:nth-child(3) {
-            background: linear-gradient(90deg, rgba(205, 127, 50, 0.3), transparent);
-            border-left: 3px solid #cd7f32;
+        .win-overlay p {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 2rem;
         }
 
-        .leaderboard-name {
-            font-weight: 600;
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .leaderboard-score {
-            color: #f6ad55;
+        .win-overlay button {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
             font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .win-overlay button:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         /* Stadium elements */
@@ -468,18 +462,6 @@
             margin-bottom: 1.5rem;
         }
 
-        .game-over-overlay input {
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            border: none;
-            border-radius: 8px;
-            width: 200px;
-            text-align: center;
-            margin-bottom: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            touch-action: manipulation;
-        }
-
         .game-over-overlay button {
             padding: 0.75rem 2rem;
             font-size: 1rem;
@@ -562,23 +544,6 @@
                 flex-direction: column;
             }
             
-            .leaderboard {
-                width: 100%;
-                order: -1;
-            }
-            
-            .leaderboard-list {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                max-height: none;
-            }
-            
-            .leaderboard-item {
-                flex: 1;
-                min-width: 100px;
-            }
-            
             .game-area {
                 height: 350px;
             }
@@ -640,8 +605,7 @@
                         <div class="final-score">
                             <span id="finalHomeRuns">0</span> Home Run
                         </div>
-                        <input type="text" id="playerName" placeholder="Il tuo nome..." maxlength="15">
-                        <button id="saveScoreBtn">💾 Salva Punteggio</button>
+                        <button id="retryBtn">🔄 Riprova</button>
                     </div>
                 </div>
 
@@ -688,15 +652,13 @@
                 </div>
             </div>
 
-            <div class="leaderboard">
-                <h3>🏆 Classifica</h3>
-                <ul class="leaderboard-list" id="leaderboardList">
-                    <li class="leaderboard-item">
-                        <span class="leaderboard-name">-</span>
-                        <span class="leaderboard-score">0</span>
-                    </li>
-                </ul>
-            </div>
+        </div>
+
+        <!-- Win Overlay -->
+        <div class="win-overlay hidden" id="winOverlay">
+            <h1>🎉 HAI VINTO! 🎉</h1>
+            <p>Hai raggiunto 100 Home Run!</p>
+            <button id="playAgainBtn">🔄 Gioca Ancora</button>
         </div>
 
         <a href="index.html" class="back-btn">← Torna al sito</a>
@@ -724,36 +686,19 @@
         const pitcher = document.getElementById('pitcher');
         const gameMessage = document.getElementById('gameMessage');
         const gameOverOverlay = document.getElementById('gameOverOverlay');
-        const saveScoreBtn = document.getElementById('saveScoreBtn');
-        const playerNameInput = document.getElementById('playerName');
+        const retryBtn = document.getElementById('retryBtn');
+        const winOverlay = document.getElementById('winOverlay');
+        const playAgainBtn = document.getElementById('playAgainBtn');
 
-        // Load leaderboard from localStorage
-        function loadLeaderboard() {
-            const scores = JSON.parse(localStorage.getItem('lancersLeaderboard') || '[]');
-            const list = document.getElementById('leaderboardList');
-            
-            if (scores.length === 0) {
-                list.innerHTML = '<li class="leaderboard-item"><span class="leaderboard-name">Nessun record</span><span class="leaderboard-score">-</span></li>';
-                return;
+        // Check for win condition (100 home runs)
+        function checkWin() {
+            if (gameState.homeRuns >= 100) {
+                gameState.gameOver = true;
+                ball.style.display = 'none';
+                winOverlay.classList.remove('hidden');
+                return true;
             }
-            
-            list.innerHTML = scores
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 10)
-                .map((entry, i) => `
-                    <li class="leaderboard-item">
-                        <span class="leaderboard-name">${i + 1}. ${entry.name}</span>
-                        <span class="leaderboard-score">${entry.score}</span>
-                    </li>
-                `).join('');
-        }
-
-        // Save score to leaderboard
-        function saveScore(name, score) {
-            const scores = JSON.parse(localStorage.getItem('lancersLeaderboard') || '[]');
-            scores.push({ name: name || 'Anonimo', score: score, date: new Date().toISOString() });
-            localStorage.setItem('lancersLeaderboard', JSON.stringify(scores));
-            loadLeaderboard();
+            return false;
         }
 
         // Start pitching automatically
@@ -881,6 +826,9 @@
             updateStrikeIndicators();
             showMessage('HOME RUN! 🎉', 'home-run');
             
+            // Check if player won
+            if (checkWin()) return;
+            
             // Animate ball flying away
             flyBall(true);
             
@@ -970,6 +918,9 @@
             updateStrikeIndicators();
             showMessage('WALK! 🚶 +1 HR!', 'walk');
             
+            // Check if player won
+            if (checkWin()) return;
+            
             setTimeout(() => {
                 resetBall();
                 pitch(); // Auto pitch next ball
@@ -982,7 +933,6 @@
             
             document.getElementById('finalHomeRuns').textContent = gameState.homeRuns;
             gameOverOverlay.classList.remove('hidden');
-            playerNameInput.focus();
         }
 
         function flyBall(isHomeRun) {
@@ -1066,25 +1016,16 @@
             swing(e);
         });
 
-        // Save score button
-        function saveScoreHandler() {
-            const name = playerNameInput.value.trim() || 'Anonimo';
-            saveScore(name, gameState.homeRuns);
+        // Retry button (after game over)
+        retryBtn.addEventListener('click', () => {
+            gameOverOverlay.classList.add('hidden');
             resetGame();
-        }
-        
-        saveScoreBtn.addEventListener('click', saveScoreHandler);
-        saveScoreBtn.addEventListener('touchstart', (e) => {
+        });
+        retryBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            saveScoreHandler();
-        });
-
-        // Enter key to save
-        playerNameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                saveScoreBtn.click();
-            }
+            gameOverOverlay.classList.add('hidden');
+            resetGame();
         });
 
         // Start button
@@ -1104,8 +1045,17 @@
             startGame();
         });
 
-        // Initialize
-        loadLeaderboard();
+        // Play again button (after winning)
+        playAgainBtn.addEventListener('click', () => {
+            winOverlay.classList.add('hidden');
+            resetGame();
+        });
+        playAgainBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            winOverlay.classList.add('hidden');
+            resetGame();
+        });
     </script>
 </body>
 </html>
