@@ -306,6 +306,7 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         // Numero WhatsApp dello staff (formato internazionale senza +)
         const WHATSAPP_NUMBER = '393331549353';
@@ -394,7 +395,7 @@
         }
 
         // Funzione per inviare messaggio WhatsApp
-        function sendWhatsApp(response) {
+        async function sendWhatsApp(response) {
             const playerData = JSON.parse(sessionStorage.getItem('playerData'));
             const nextEvent = getNextEvent();
             
@@ -423,8 +424,8 @@
             
             const message = `${emoji} *PRESENZA LANCERS*\n\n👤 *Giocatore:* ${playerName}\n📅 *Evento:* ${eventInfo}\n📍 *Risposta:* ${responseText}`;
             
-            // Salva la risposta in localStorage
-            saveResponse(nextEvent.date, response);
+            // Salva la risposta su Firebase
+            await LancersDB.save(playerData.number, nextEvent.date, response);
             
             // Apri WhatsApp con il messaggio pre-compilato
             const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -434,27 +435,12 @@
             showConfirmation(response);
         }
 
-        // Salva la risposta in localStorage
-        function saveResponse(eventDate, response) {
-            const playerData = JSON.parse(sessionStorage.getItem('playerData'));
-            if (!playerData) return;
-            
-            const storageKey = `presence_${playerData.number}`;
-            let responses = JSON.parse(localStorage.getItem(storageKey) || '{}');
-            responses[eventDate] = {
-                response: response,
-                timestamp: new Date().toISOString()
-            };
-            localStorage.setItem(storageKey, JSON.stringify(responses));
-        }
-
-        // Ottieni le risposte salvate da localStorage
-        function getSavedResponses() {
+        // Ottieni le risposte salvate da Firebase
+        async function getSavedResponses() {
             const playerData = JSON.parse(sessionStorage.getItem('playerData'));
             if (!playerData) return {};
             
-            const storageKey = `presence_${playerData.number}`;
-            return JSON.parse(localStorage.getItem(storageKey) || '{}');
+            return await LancersDB.getPlayer(playerData.number);
         }
 
         // Mostra conferma
@@ -493,7 +479,7 @@
         }
 
         // Genera il contenuto della pagina
-        function generateContent() {
+        async function generateContent() {
             const container = document.getElementById('presenceSection');
             const playerData = sessionStorage.getItem('playerData');
             const nextEvent = getNextEvent();
@@ -511,7 +497,19 @@
             }
             
             const player = JSON.parse(playerData);
-            const savedResponses = getSavedResponses();
+            
+            // Mostra loading
+            container.innerHTML = `
+                <div class="player-info">
+                    <h3>#${player.number} ${player.name} ${player.surname}</h3>
+                    <p>${player.role}</p>
+                </div>
+                <div style="text-align: center; padding: 2rem;">
+                    <p>⏳ Caricamento...</p>
+                </div>
+            `;
+            
+            const savedResponses = await getSavedResponses();
             
             if (!nextEvent) {
                 container.innerHTML = `

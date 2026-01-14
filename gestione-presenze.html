@@ -363,12 +363,13 @@
 
     <div id="mainContent">
         <section class="admin-section">
-            <!-- Sezione Sincronizzazione -->
-            <div class="sync-section">
-                <h4>📱 Sincronizzazione tra dispositivi</h4>
-                <p>Le presenze sono salvate localmente. Per condividerle con altri dispositivi, esporta e importa i dati.</p>
+            <!-- Sezione Firebase -->
+            <div class="sync-section" style="border-left-color: #48bb78; background: #f0fff4;">
+                <h4>☁️ Firebase Database Attivo</h4>
+                <p>Le presenze sono sincronizzate automaticamente su tutti i dispositivi tramite Firebase!</p>
                 <div class="action-buttons">
-                    <button class="action-btn export" onclick="exportData()">📤 Esporta Dati</button>
+                    <button class="action-btn refresh" onclick="loadAllData()">🔄 Ricarica da Firebase</button>
+                    <button class="action-btn export" onclick="exportData()">📤 Esporta Backup</button>
                     <button class="action-btn import" onclick="showImportDialog()">📥 Importa Dati</button>
                 </div>
                 <div id="exportCode" style="display: none;">
@@ -377,7 +378,7 @@
                 </div>
                 <div id="importSection" style="display: none;">
                     <textarea class="sync-input" id="importInput" rows="3" placeholder="Incolla qui il codice da importare..."></textarea>
-                    <button class="action-btn sync" onclick="importData()">✅ Importa</button>
+                    <button class="action-btn sync" onclick="importData()">✅ Importa su Firebase</button>
                 </div>
             </div>
 
@@ -449,6 +450,7 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         const STAFF_EMAIL = 'loriscarpulla@gmail.com';
         const WHATSAPP_NUMBER = '393331549353';
@@ -514,22 +516,40 @@
         // Cache per le presenze
         let cachedPresences = {};
 
-        function getAllPresences() {
-            const presences = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('presence_')) {
-                    const playerNumber = key.replace('presence_', '');
-                    presences[playerNumber] = JSON.parse(localStorage.getItem(key) || '{}');
+        async function getAllPresences() {
+            try {
+                // Carica da Firebase
+                cachedPresences = await LancersDB.loadAll();
+                
+                // Converti le chiavi delle date da underscore a trattini
+                const converted = {};
+                Object.entries(cachedPresences).forEach(([playerNum, events]) => {
+                    converted[playerNum] = {};
+                    Object.entries(events).forEach(([dateKey, value]) => {
+                        const normalizedDate = dateKey.replace(/_/g, '-');
+                        converted[playerNum][normalizedDate] = value;
+                    });
+                });
+                cachedPresences = converted;
+                return cachedPresences;
+            } catch (error) {
+                console.error('Errore Firebase:', error);
+                // Fallback a localStorage
+                const presences = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('presence_')) {
+                        const playerNumber = key.replace('presence_', '');
+                        presences[playerNumber] = JSON.parse(localStorage.getItem(key) || '{}');
+                    }
                 }
+                cachedPresences = presences;
+                return presences;
             }
-            cachedPresences = presences;
-            return presences;
         }
 
         function exportData() {
-            const presences = getAllPresences();
-            const dataString = JSON.stringify(presences);
+            const dataString = JSON.stringify(cachedPresences);
             const encoded = btoa(encodeURIComponent(dataString));
             document.getElementById('exportCode').style.display = 'block';
             document.getElementById('importSection').style.display = 'none';
@@ -541,22 +561,21 @@
             document.getElementById('exportCode').style.display = 'none';
         }
 
-        function importData() {
+        async function importData() {
             const encoded = document.getElementById('importInput').value.trim();
             if (!encoded) { alert('Inserisci un codice valido'); return; }
             try {
                 const dataString = decodeURIComponent(atob(encoded));
                 const presences = JSON.parse(dataString);
                 
-                // Salva in localStorage
-                Object.entries(presences).forEach(([playerNumber, playerPresences]) => {
-                    const key = `presence_${playerNumber}`;
-                    const existing = JSON.parse(localStorage.getItem(key) || '{}');
-                    const merged = { ...existing, ...playerPresences };
-                    localStorage.setItem(key, JSON.stringify(merged));
-                });
+                // Salva su Firebase
+                for (const [playerNumber, playerPresences] of Object.entries(presences)) {
+                    for (const [eventDate, data] of Object.entries(playerPresences)) {
+                        await LancersDB.save(playerNumber, eventDate, data.response);
+                    }
+                }
                 
-                alert('✅ Dati importati con successo!');
+                alert('✅ Dati importati su Firebase!');
                 document.getElementById('importInput').value = '';
                 document.getElementById('importSection').style.display = 'none';
                 loadAllData();
@@ -713,8 +732,11 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
-        function loadAllData() {
-            const presences = getAllPresences();
+        async function loadAllData() {
+            // Mostra loading
+            document.getElementById('statsGrid').innerHTML = '<div class="stat-card blue"><div class="stat-value">⏳</div><div class="stat-label">Caricamento da Firebase...</div></div>';
+            
+            const presences = await getAllPresences();
             let totalPresent = 0, totalAbsent = 0, totalMaybe = 0, totalResponses = 0;
 
             Object.values(presences).forEach(playerPresences => {
