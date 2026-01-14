@@ -365,10 +365,9 @@
         <section class="admin-section">
             <!-- Sezione Sincronizzazione -->
             <div class="sync-section">
-                <h4>☁️ Database Online Attivo</h4>
-                <p>Le presenze sono salvate in un database online e sincronizzate automaticamente su tutti i dispositivi. Puoi anche esportare/importare i dati manualmente.</p>
+                <h4>📱 Sincronizzazione tra dispositivi</h4>
+                <p>Le presenze sono salvate localmente. Per condividerle con altri dispositivi, esporta e importa i dati.</p>
                 <div class="action-buttons">
-                    <button class="action-btn refresh" onclick="loadAllData()">🔄 Ricarica dal Database</button>
                     <button class="action-btn export" onclick="exportData()">📤 Esporta Dati</button>
                     <button class="action-btn import" onclick="showImportDialog()">📥 Importa Dati</button>
                 </div>
@@ -450,7 +449,6 @@
     </footer>
 
     <script src="script.js"></script>
-    <script src="database.js"></script>
     <script>
         const STAFF_EMAIL = 'loriscarpulla@gmail.com';
         const WHATSAPP_NUMBER = '393331549353';
@@ -513,30 +511,25 @@
             { date: '2026-07-26', type: 'match-home', title: 'vs Padule Baseball A.S.D', time: '11:00', tag: 'Campionato Casa' }
         ];
 
-        // Cache per le presenze caricate dal database
+        // Cache per le presenze
         let cachedPresences = {};
 
-        async function getAllPresences() {
-            try {
-                cachedPresences = await LancersDB.loadAll();
-                return cachedPresences;
-            } catch (error) {
-                console.error('Errore caricamento database:', error);
-                // Fallback a localStorage
-                const presences = {};
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith('presence_')) {
-                        const playerNumber = key.replace('presence_', '');
-                        presences[playerNumber] = JSON.parse(localStorage.getItem(key) || '{}');
-                    }
+        function getAllPresences() {
+            const presences = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('presence_')) {
+                    const playerNumber = key.replace('presence_', '');
+                    presences[playerNumber] = JSON.parse(localStorage.getItem(key) || '{}');
                 }
-                return presences;
             }
+            cachedPresences = presences;
+            return presences;
         }
 
         function exportData() {
-            const dataString = JSON.stringify(cachedPresences);
+            const presences = getAllPresences();
+            const dataString = JSON.stringify(presences);
             const encoded = btoa(encodeURIComponent(dataString));
             document.getElementById('exportCode').style.display = 'block';
             document.getElementById('importSection').style.display = 'none';
@@ -548,21 +541,22 @@
             document.getElementById('exportCode').style.display = 'none';
         }
 
-        async function importData() {
+        function importData() {
             const encoded = document.getElementById('importInput').value.trim();
             if (!encoded) { alert('Inserisci un codice valido'); return; }
             try {
                 const dataString = decodeURIComponent(atob(encoded));
                 const presences = JSON.parse(dataString);
                 
-                // Salva nel database online
-                for (const [playerNumber, playerPresences] of Object.entries(presences)) {
-                    for (const [eventDate, data] of Object.entries(playerPresences)) {
-                        await LancersDB.save(playerNumber, eventDate, data.response);
-                    }
-                }
+                // Salva in localStorage
+                Object.entries(presences).forEach(([playerNumber, playerPresences]) => {
+                    const key = `presence_${playerNumber}`;
+                    const existing = JSON.parse(localStorage.getItem(key) || '{}');
+                    const merged = { ...existing, ...playerPresences };
+                    localStorage.setItem(key, JSON.stringify(merged));
+                });
                 
-                alert('✅ Dati importati con successo nel database online!');
+                alert('✅ Dati importati con successo!');
                 document.getElementById('importInput').value = '';
                 document.getElementById('importSection').style.display = 'none';
                 loadAllData();
@@ -719,11 +713,8 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
-        async function loadAllData() {
-            // Mostra stato di caricamento
-            document.getElementById('statsGrid').innerHTML = '<div class="stat-card blue"><div class="stat-value">⏳</div><div class="stat-label">Caricamento dal database...</div></div>';
-            
-            const presences = await getAllPresences();
+        function loadAllData() {
+            const presences = getAllPresences();
             let totalPresent = 0, totalAbsent = 0, totalMaybe = 0, totalResponses = 0;
 
             Object.values(presences).forEach(playerPresences => {
