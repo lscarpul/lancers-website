@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferma Presenza - Lancers Baseball</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .presence-hero {
+            min-height: 30vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        .presence-hero h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .presence-hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .presence-section {
+            max-width: 700px;
+            margin: -2rem auto 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .next-event {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid #ed8936;
+        }
+
+        .event-type {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .event-type.training {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .event-type.match {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .event-type.friendly {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        .event-title {
+            font-size: 1.5rem;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-details {
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-date {
+            font-size: 1.2rem;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .presence-question {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .presence-question h2 {
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
+
+        .presence-question p {
+            color: #718096;
+        }
+
+        .presence-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .presence-btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .presence-btn.yes {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .presence-btn.yes:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+
+        .presence-btn.no {
+            background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .presence-btn.no:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(229, 62, 62, 0.3);
+        }
+
+        .presence-btn.maybe {
+            background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%);
+            color: white;
+        }
+
+        .presence-btn.maybe:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(214, 158, 46, 0.3);
+        }
+
+        .whatsapp-note {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f0fff4;
+            border-radius: 10px;
+            color: #276749;
+            font-size: 0.9rem;
+        }
+
+        .whatsapp-note strong {
+            color: #25d366;
+        }
+
+        .player-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #ebf8ff;
+            border-radius: 10px;
+        }
+
+        .player-info h3 {
+            color: #1a365d;
+            margin: 0;
+        }
+
+        .player-info p {
+            color: #4a5568;
+            margin: 0.25rem 0 0;
+            font-size: 0.9rem;
+        }
+
+        .no-event {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+
+        .no-event .emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #1a365d;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #2c5282;
+            transform: translateY(-2px);
+        }
+
+        .history-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .history-section h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-item .event-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .history-item .response {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .history-item .response.yes {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .history-item .response.no {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .history-item .response.maybe {
+            background: #fefcbf;
+            color: #975a16;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        if (sessionStorage.getItem('authenticated') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo">⚾</span>
+            <span class="team-name">Lancers Baseball</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="documento.html">Documento</a></li>
+            <li><a href="calendario.html">Partite</a></li>
+            <li><a href="allenamenti.html">Allenamenti</a></li>
+            <li><a href="presenze.html" class="active">Presenze</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="presence-hero">
+        <div class="hero-content">
+            <h1>📋 Conferma Presenza</h1>
+            <p>Indica se sarai presente al prossimo evento</p>
+        </div>
+    </div>
+
+    <section class="presence-section" id="presenceSection">
+        <!-- Contenuto generato dinamicamente -->
+    </section>
+
+    <footer>
+        <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
+        <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="database.js"></script>
+    <script>
+        // Numero WhatsApp dello staff (formato internazionale senza +)
+        const WHATSAPP_NUMBER = '393331549353';
+
+        // Database eventi (stesso di script.js)
+        const allEvents = [
+            // GENNAIO 2026
+            { date: '2026-01-15', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-20', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-22', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-27', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-29', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            
+            // FEBBRAIO 2026
+            { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-04', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
+            { date: '2026-02-05', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-10', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-11', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
+            { date: '2026-02-12', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-17', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-18', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
+            { date: '2026-02-19', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-24', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-25', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
+            { date: '2026-02-26', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            
+            // MARZO 2026
+            { date: '2026-03-01', type: 'friendly', title: 'Amichevole Interna', time: 'Domenica', tag: 'Amichevole' },
+            { date: '2026-03-03', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-03-08', type: 'friendly', title: 'vs Lucca/Phoenix/Castenaso', time: 'Domenica', tag: 'Amichevole' },
+            { date: '2026-03-14', type: 'friendly', title: '@ Fortitudo', time: 'Sabato', tag: 'Trasferta' },
+            { date: '2026-03-22', type: 'friendly', title: '@ Fiorentina', time: 'Domenica', tag: 'Amichevole' },
+            { date: '2026-03-29', type: 'friendly', title: 'vs Arezzo', time: 'Domenica', tag: 'Amichevole' },
+            
+            // APRILE 2026 - Campionato
+            { date: '2026-04-12', type: 'match-home', title: 'vs Health & Performance S.S.D', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-04-19', type: 'match-away', title: '@ Livorno 1940 Baseball', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-04-26', type: 'match-home', title: 'vs Longbridge 2000 B.C', time: '11:00', tag: 'Campionato Casa' },
+            
+            // MAGGIO 2026
+            { date: '2026-05-03', type: 'match-away', title: '@ Colorno B.C.', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-05-10', type: 'match-home', title: 'vs A.S.D BSC Arezzo', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-05-17', type: 'match-home', title: 'vs Cali Roma XII', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-05-30', type: 'match-away', title: '@ Padule Baseball A.S.D', time: '15:00', tag: 'Campionato Trasferta' },
+            
+            // GIUGNO 2026
+            { date: '2026-06-07', type: 'match-away', title: '@ Health & Performance S.S.D', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-06-14', type: 'match-home', title: 'vs Livorno 1940 Baseball', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-06-21', type: 'match-away', title: '@ Longbridge 2000 B.C', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-06-28', type: 'match-home', title: 'vs Colorno B.C.', time: '11:00', tag: 'Campionato Casa' },
+            
+            // LUGLIO 2026
+            { date: '2026-07-05', type: 'match-away', title: '@ A.S.D BSC Arezzo', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-07-12', type: 'match-away', title: '@ Cali Roma XII', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-07-26', type: 'match-home', title: 'vs Padule Baseball A.S.D', time: '11:00', tag: 'Campionato Casa' },
+        ];
+
+        // Funzione per ottenere il prossimo evento
+        function getNextEvent() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            for (const event of allEvents) {
+                const eventDate = new Date(event.date);
+                if (eventDate >= today) {
+                    return { ...event, dateObj: eventDate };
+                }
+            }
+            return null;
+        }
+
+        // Funzione per formattare la data
+        function formatDate(date) {
+            const days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            
+            return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        }
+
+        // Funzione per ottenere la classe del tipo evento
+        function getEventTypeClass(type) {
+            if (type.includes('match')) return 'match';
+            if (type === 'friendly') return 'friendly';
+            return 'training';
+        }
+
+        // Funzione per inviare messaggio WhatsApp
+        async function sendWhatsApp(response) {
+            const playerData = JSON.parse(sessionStorage.getItem('playerData'));
+            const nextEvent = getNextEvent();
+            
+            if (!playerData || !nextEvent) return;
+            
+            const playerName = `${playerData.name} ${playerData.surname} (#${playerData.number})`;
+            const eventInfo = `${nextEvent.title} - ${formatDate(nextEvent.dateObj)}`;
+            
+            let responseText = '';
+            let emoji = '';
+            
+            switch(response) {
+                case 'yes':
+                    responseText = 'PRESENTE ✅';
+                    emoji = '✅';
+                    break;
+                case 'no':
+                    responseText = 'ASSENTE ❌';
+                    emoji = '❌';
+                    break;
+                case 'maybe':
+                    responseText = 'FORSE/INCERTO ⚠️';
+                    emoji = '⚠️';
+                    break;
+            }
+            
+            const message = `${emoji} *PRESENZA LANCERS*\n\n👤 *Giocatore:* ${playerName}\n📅 *Evento:* ${eventInfo}\n📍 *Risposta:* ${responseText}`;
+            
+            // Salva la risposta nel database online
+            await saveResponse(nextEvent.date, response);
+            
+            // Apri WhatsApp con il messaggio pre-compilato
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            // Aggiorna la UI
+            showConfirmation(response);
+        }
+
+        // Salva la risposta nel database online
+        async function saveResponse(eventDate, response) {
+            const playerData = JSON.parse(sessionStorage.getItem('playerData'));
+            if (!playerData) return;
+            
+            // Salva nel database online
+            await LancersDB.save(playerData.number, eventDate, response);
+        }
+
+        // Ottieni le risposte salvate dal database online
+        async function getSavedResponses() {
+            const playerData = JSON.parse(sessionStorage.getItem('playerData'));
+            if (!playerData) return {};
+            
+            const playerPresences = await LancersDB.getPlayer(playerData.number);
+            return playerPresences;
+        }
+
+        // Mostra conferma
+        function showConfirmation(response) {
+            const container = document.getElementById('presenceSection');
+            const nextEvent = getNextEvent();
+            
+            let responseText = '';
+            let bgColor = '';
+            
+            switch(response) {
+                case 'yes':
+                    responseText = '✅ Presenza confermata!';
+                    bgColor = '#c6f6d5';
+                    break;
+                case 'no':
+                    responseText = '❌ Assenza registrata';
+                    bgColor = '#fed7d7';
+                    break;
+                case 'maybe':
+                    responseText = '⚠️ Risposta incerta registrata';
+                    bgColor = '#fefcbf';
+                    break;
+            }
+            
+            // Aggiorna solo la sezione dei pulsanti
+            const buttonsSection = document.querySelector('.presence-buttons');
+            if (buttonsSection) {
+                buttonsSection.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; background: ${bgColor}; border-radius: 12px; width: 100%;">
+                        <p style="font-size: 1.3rem; font-weight: 600; margin: 0;">${responseText}</p>
+                        <p style="color: #718096; margin-top: 0.5rem;">Il messaggio WhatsApp è stato preparato</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Genera il contenuto della pagina
+        async function generateContent() {
+            const container = document.getElementById('presenceSection');
+            const playerData = sessionStorage.getItem('playerData');
+            const nextEvent = getNextEvent();
+            
+            if (!playerData) {
+                container.innerHTML = `
+                    <div class="no-event">
+                        <div class="emoji">🔒</div>
+                        <h2>Accesso richiesto</h2>
+                        <p>Devi effettuare il login per confermare la presenza</p>
+                        <a href="login.html" class="back-btn">🔒 Vai al Login</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            const player = JSON.parse(playerData);
+            
+            // Mostra loading mentre carica dal database
+            container.innerHTML = `
+                <div class="player-info">
+                    <h3>#${player.number} ${player.name} ${player.surname}</h3>
+                    <p>${player.role}</p>
+                </div>
+                <div style="text-align: center; padding: 2rem;">
+                    <p>⏳ Caricamento dati...</p>
+                </div>
+            `;
+            
+            const savedResponses = await getSavedResponses();
+            
+            if (!nextEvent) {
+                container.innerHTML = `
+                    <div class="player-info">
+                        <h3>#${player.number} ${player.name} ${player.surname}</h3>
+                        <p>${player.role}</p>
+                    </div>
+                    <div class="no-event">
+                        <div class="emoji">📅</div>
+                        <h2>Nessun evento in programma</h2>
+                        <p>Non ci sono eventi futuri nel calendario</p>
+                        <a href="index.html" class="back-btn">← Torna alla Home</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Controlla se ha già risposto per questo evento
+            const alreadyResponded = savedResponses[nextEvent.date];
+            
+            let buttonsHTML = '';
+            if (alreadyResponded) {
+                let responseText = '';
+                let bgColor = '';
+                switch(alreadyResponded.response) {
+                    case 'yes':
+                        responseText = '✅ Hai confermato la presenza';
+                        bgColor = '#c6f6d5';
+                        break;
+                    case 'no':
+                        responseText = '❌ Hai indicato che sarai assente';
+                        bgColor = '#fed7d7';
+                        break;
+                    case 'maybe':
+                        responseText = '⚠️ Hai indicato che sei incerto';
+                        bgColor = '#fefcbf';
+                        break;
+                }
+                buttonsHTML = `
+                    <div style="text-align: center; padding: 1.5rem; background: ${bgColor}; border-radius: 12px; width: 100%;">
+                        <p style="font-size: 1.1rem; font-weight: 600; margin: 0;">${responseText}</p>
+                        <p style="color: #718096; margin-top: 0.5rem; font-size: 0.9rem;">Vuoi modificare la risposta?</p>
+                    </div>
+                    <div class="presence-buttons" style="margin-top: 1rem;">
+                        <button class="presence-btn yes" onclick="sendWhatsApp('yes')">✅ Presente</button>
+                        <button class="presence-btn maybe" onclick="sendWhatsApp('maybe')">⚠️ Forse</button>
+                        <button class="presence-btn no" onclick="sendWhatsApp('no')">❌ Assente</button>
+                    </div>
+                `;
+            } else {
+                buttonsHTML = `
+                    <div class="presence-buttons">
+                        <button class="presence-btn yes" onclick="sendWhatsApp('yes')">✅ Presente</button>
+                        <button class="presence-btn maybe" onclick="sendWhatsApp('maybe')">⚠️ Forse</button>
+                        <button class="presence-btn no" onclick="sendWhatsApp('no')">❌ Assente</button>
+                    </div>
+                `;
+            }
+            
+            // Genera storico risposte
+            let historyHTML = '';
+            const responseEntries = Object.entries(savedResponses).sort((a, b) => new Date(b[0]) - new Date(a[0]));
+            if (responseEntries.length > 0) {
+                const historyItems = responseEntries.slice(0, 5).map(([date, data]) => {
+                    const event = allEvents.find(e => e.date === date);
+                    const eventName = event ? event.title : 'Evento';
+                    const eventDate = new Date(date);
+                    const formattedDate = `${eventDate.getDate()}/${eventDate.getMonth() + 1}`;
+                    
+                    return `
+                        <div class="history-item">
+                            <div>
+                                <span class="event-name">${eventName}</span>
+                                <span style="color: #a0aec0; font-size: 0.85rem;"> - ${formattedDate}</span>
+                            </div>
+                            <span class="response ${data.response}">${data.response === 'yes' ? '✅ Presente' : data.response === 'no' ? '❌ Assente' : '⚠️ Forse'}</span>
+                        </div>
+                    `;
+                }).join('');
+                
+                historyHTML = `
+                    <div class="history-section">
+                        <h3>📜 Le tue ultime risposte</h3>
+                        ${historyItems}
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = `
+                <div class="player-info">
+                    <h3>#${player.number} ${player.name} ${player.surname}</h3>
+                    <p>${player.role}</p>
+                </div>
+                
+                <div class="next-event">
+                    <span class="event-type ${getEventTypeClass(nextEvent.type)}">${nextEvent.tag}</span>
+                    <h2 class="event-title">${nextEvent.title}</h2>
+                    <p class="event-date">📅 ${formatDate(nextEvent.dateObj)}</p>
+                    <p class="event-details">🕐 ${nextEvent.time}</p>
+                </div>
+                
+                <div class="presence-question">
+                    <h2>Sarai presente?</h2>
+                    <p>Clicca per inviare la tua risposta via WhatsApp</p>
+                </div>
+                
+                ${buttonsHTML}
+                
+                <div class="whatsapp-note">
+                    <strong>📱 WhatsApp</strong> - Cliccando si aprirà WhatsApp con il messaggio già pronto. Basta inviarlo!
+                </div>
+                
+                ${historyHTML}
+                
+                <div style="text-align: center;">
+                    <a href="index.html" class="back-btn">← Torna alla Home</a>
+                </div>
+            `;
+        }
+        
+        // Inizializza
+        generateContent();
+    </script>
+</body>
+</html>

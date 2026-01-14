@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Presenze - Lancers Baseball</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-hero {
+            min-height: 25vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        .admin-hero h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .admin-section {
+            max-width: 1200px;
+            margin: -2rem auto 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .access-denied {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .access-denied .emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .access-denied h2 {
+            color: #c53030;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-card.green { border-left: 5px solid #48bb78; }
+        .stat-card.red { border-left: 5px solid #e53e3e; }
+        .stat-card.yellow { border-left: 5px solid #ecc94b; }
+        .stat-card.blue { border-left: 5px solid #4299e1; }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a365d;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .event-selector {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .event-selector h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+        }
+
+        .event-selector select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            background: white;
+            cursor: pointer;
+        }
+
+        .event-selector select:focus {
+            outline: none;
+            border-color: #ed8936;
+        }
+
+        .players-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .players-table th,
+        .players-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .players-table th {
+            background: #1a365d;
+            color: white;
+            font-weight: 600;
+        }
+
+        .players-table th:first-child { border-radius: 12px 0 0 0; }
+        .players-table th:last-child { border-radius: 0 12px 0 0; }
+        .players-table tr:hover { background: #f7fafc; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-badge.present { background: #c6f6d5; color: #276749; }
+        .status-badge.absent { background: #fed7d7; color: #c53030; }
+        .status-badge.maybe { background: #fefcbf; color: #975a16; }
+        .status-badge.pending { background: #e2e8f0; color: #718096; }
+
+        .player-number {
+            background: #1a365d;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .summary-section { margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e2e8f0; }
+        .summary-section h3 { color: #1a365d; margin-bottom: 1.5rem; }
+
+        .player-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .player-card {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .player-card-info { flex: 1; }
+        .player-card-name { font-weight: 600; color: #1a365d; }
+        .player-card-role { color: #718096; font-size: 0.85rem; }
+        .player-card-stats { display: flex; gap: 0.5rem; }
+
+        .mini-stat { text-align: center; padding: 0.5rem; border-radius: 8px; min-width: 45px; }
+        .mini-stat.green { background: #c6f6d5; color: #276749; }
+        .mini-stat.red { background: #fed7d7; color: #c53030; }
+        .mini-stat.yellow { background: #fefcbf; color: #975a16; }
+        .mini-stat-value { font-weight: 700; font-size: 1.1rem; }
+        .mini-stat-label { font-size: 0.7rem; }
+
+        .attendance-rate { font-size: 1.5rem; font-weight: 700; }
+        .attendance-rate.high { color: #276749; }
+        .attendance-rate.medium { color: #975a16; }
+        .attendance-rate.low { color: #c53030; }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #1a365d;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { background: #2c5282; transform: translateY(-2px); }
+
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            background: #e2e8f0;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .tab-btn:hover { background: #cbd5e0; }
+        .tab-btn.active { background: #1a365d; color: white; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .action-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+
+        .action-btn {
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .action-btn:hover { transform: translateY(-2px); }
+        .action-btn.refresh { background: #ed8936; color: white; }
+        .action-btn.email { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .action-btn.whatsapp { background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); color: white; }
+        .action-btn.sync { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: white; }
+        .action-btn.export { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; }
+        .action-btn.import { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: white; }
+
+        .sync-section {
+            background: #ebf8ff;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #4299e1;
+        }
+
+        .sync-section h4 { color: #2b6cb0; margin-bottom: 0.5rem; }
+        .sync-section p { color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem; }
+
+        .sync-code {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+            max-height: 100px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .sync-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .send-buttons {
+            background: #f0fff4;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #48bb78;
+        }
+
+        .send-buttons h4 { color: #276749; margin-bottom: 1rem; }
+
+        @media (max-width: 768px) {
+            .players-table { font-size: 0.85rem; }
+            .players-table th, .players-table td { padding: 0.75rem 0.5rem; }
+            .admin-hero h1 { font-size: 1.8rem; }
+            .action-buttons { flex-direction: column; }
+            .action-btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        if (sessionStorage.getItem('authenticated') !== 'true') {
+            window.location.href = 'login.html';
+        }
+        
+        const playerData = JSON.parse(sessionStorage.getItem('playerData') || '{}');
+        const authorizedNumbers = [25, 19, 38, 6, 'ADMIN'];
+        
+        if (!authorizedNumbers.includes(playerData.number)) {
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('mainContent').innerHTML = `
+                    <section class="admin-section">
+                        <div class="access-denied">
+                            <div class="emoji">🚫</div>
+                            <h2>Accesso Negato</h2>
+                            <p>Non hai i permessi per visualizzare questa pagina.</p>
+                            <p style="color: #718096; margin-top: 1rem;">Questa area è riservata allo staff tecnico.</p>
+                            <a href="index.html" class="back-btn">← Torna alla Home</a>
+                        </div>
+                    </section>
+                `;
+            });
+        }
+    </script>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo">⚾</span>
+            <span class="team-name">Lancers Baseball</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="documento.html">Documento</a></li>
+            <li><a href="calendario.html">Partite</a></li>
+            <li><a href="allenamenti.html">Allenamenti</a></li>
+            <li><a href="presenze.html">Presenze</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="admin-hero">
+        <div class="hero-content">
+            <h1>📊 Gestione Presenze</h1>
+            <p>Riepilogo presenze di tutti i giocatori</p>
+        </div>
+    </div>
+
+    <div id="mainContent">
+        <section class="admin-section">
+            <!-- Sezione Sincronizzazione -->
+            <div class="sync-section">
+                <h4>☁️ Database Online Attivo</h4>
+                <p>Le presenze sono salvate in un database online e sincronizzate automaticamente su tutti i dispositivi. Puoi anche esportare/importare i dati manualmente.</p>
+                <div class="action-buttons">
+                    <button class="action-btn refresh" onclick="loadAllData()">🔄 Ricarica dal Database</button>
+                    <button class="action-btn export" onclick="exportData()">📤 Esporta Dati</button>
+                    <button class="action-btn import" onclick="showImportDialog()">📥 Importa Dati</button>
+                </div>
+                <div id="exportCode" style="display: none;">
+                    <div class="sync-code" id="syncCodeDisplay"></div>
+                    <button class="action-btn sync" onclick="copyToClipboard()">📋 Copia Codice</button>
+                </div>
+                <div id="importSection" style="display: none;">
+                    <textarea class="sync-input" id="importInput" rows="3" placeholder="Incolla qui il codice da importare..."></textarea>
+                    <button class="action-btn sync" onclick="importData()">✅ Importa</button>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('overview')">📊 Riepilogo</button>
+                    <button class="tab-btn" onclick="showTab('byEvent')">📅 Per Evento</button>
+                    <button class="tab-btn" onclick="showTab('byPlayer')">👥 Per Giocatore</button>
+                </div>
+                <button class="action-btn refresh" onclick="loadAllData()">🔄 Aggiorna</button>
+            </div>
+
+            <!-- TAB: Riepilogo Generale -->
+            <div id="tab-overview" class="tab-content active">
+                <div class="stats-grid" id="statsGrid"></div>
+                <h3>📋 Prossimo Evento</h3>
+                <div id="nextEventStatus"></div>
+                <div class="send-buttons">
+                    <h4>📤 Invia Riepilogo Prossimo Evento</h4>
+                    <div class="action-buttons">
+                        <button class="action-btn email" onclick="sendEmailReport('next')">📧 Invia via Email</button>
+                        <button class="action-btn whatsapp" onclick="sendWhatsAppReport('next')">💬 Invia via WhatsApp</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Per Evento -->
+            <div id="tab-byEvent" class="tab-content">
+                <div class="event-selector">
+                    <h3>📅 Seleziona Evento</h3>
+                    <select id="eventSelect" onchange="showEventDetails()">
+                        <option value="">-- Seleziona un evento --</option>
+                    </select>
+                </div>
+                <div id="eventDetails"></div>
+                <div class="send-buttons" id="eventSendButtons" style="display: none;">
+                    <h4>📤 Invia Riepilogo Evento Selezionato</h4>
+                    <div class="action-buttons">
+                        <button class="action-btn email" onclick="sendEmailReport('selected')">📧 Invia via Email</button>
+                        <button class="action-btn whatsapp" onclick="sendWhatsAppReport('selected')">💬 Invia via WhatsApp</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Per Giocatore -->
+            <div id="tab-byPlayer" class="tab-content">
+                <div class="summary-section" style="border-top: none; padding-top: 0;">
+                    <h3>👥 Riepilogo per Giocatore</h3>
+                    <div class="player-summary" id="playerSummary"></div>
+                </div>
+                <div class="send-buttons">
+                    <h4>📤 Invia Riepilogo Completo di Tutti i Giocatori</h4>
+                    <div class="action-buttons">
+                        <button class="action-btn email" onclick="sendEmailReport('all')">📧 Invia via Email</button>
+                        <button class="action-btn whatsapp" onclick="sendWhatsAppReport('all')">💬 Invia via WhatsApp</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="index.html" class="back-btn">← Torna alla Home</a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
+        <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="database.js"></script>
+    <script>
+        const STAFF_EMAIL = 'loriscarpulla@gmail.com';
+        const WHATSAPP_NUMBER = '393331549353';
+
+        const allPlayers = [
+            { number: 0, name: 'Niccolò', surname: 'Bucci', role: 'UTL' },
+            { number: 1, name: 'Alessandro', surname: 'Ferrini', role: 'P/SS' },
+            { number: 3, name: 'Ettore', surname: 'Della Nave', role: 'OF/P' },
+            { number: 4, name: 'Giovanni G.', surname: 'Beudean', role: 'P/OF' },
+            { number: 5, name: 'Marco', surname: 'Mastroianni', role: '2B/3B' },
+            { number: 6, name: 'Simone', surname: 'Geri', role: 'OF' },
+            { number: 7, name: 'Silvano', surname: 'Albano', role: 'OF/IF' },
+            { number: 8, name: 'Tommaso', surname: 'Panichi', role: 'OF' },
+            { number: 12, name: 'Francesco', surname: 'Grassi', role: '1B/DH' },
+            { number: 14, name: 'Leonardo', surname: 'Scarpulla', role: 'OF/2B' },
+            { number: 19, name: 'Simone', surname: 'Baratella', role: '1B/3B' },
+            { number: 22, name: 'Giuseppe G.', surname: 'Grado', role: 'P' },
+            { number: 24, name: 'Guido', surname: 'Nannucci', role: 'UTL' },
+            { number: 25, name: 'Lorenzo', surname: 'Scarpulla', role: 'DH/C' },
+            { number: 32, name: 'Filippo', surname: 'Anichini', role: '3B/SS' },
+            { number: 38, name: 'Antonio', surname: 'Parrini', role: 'SS/3B' },
+            { number: 59, name: 'Lapo', surname: 'Biondi', role: '2B/SS' },
+            { number: 77, name: 'Cosimo', surname: 'Rinaldi', role: '1B/RF' },
+            { number: 89, name: 'Daniele', surname: 'Silvestri', role: 'P' },
+            { number: 90, name: 'Alessandro', surname: 'Rrethatori', role: 'C' }
+        ];
+
+        const allEvents = [
+            { date: '2026-01-15', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-20', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-22', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-27', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-01-29', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-05', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-10', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-12', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-17', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-19', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-24', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-02-26', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
+            { date: '2026-03-01', type: 'friendly', title: 'Amichevole Interna', time: 'Domenica', tag: 'Amichevole' },
+            { date: '2026-03-08', type: 'friendly', title: 'vs Lucca/Phoenix/Castenaso', time: 'Domenica', tag: 'Amichevole' },
+            { date: '2026-03-14', type: 'friendly', title: '@ Fortitudo', time: 'Sabato', tag: 'Trasferta' },
+            { date: '2026-03-22', type: 'friendly', title: '@ Fiorentina', time: 'Domenica', tag: 'Amichevole' },
+            { date: '2026-03-29', type: 'friendly', title: 'vs Arezzo', time: 'Domenica', tag: 'Amichevole' },
+            { date: '2026-04-12', type: 'match-home', title: 'vs Health & Performance S.S.D', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-04-19', type: 'match-away', title: '@ Livorno 1940 Baseball', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-04-26', type: 'match-home', title: 'vs Longbridge 2000 B.C', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-05-03', type: 'match-away', title: '@ Colorno B.C.', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-05-10', type: 'match-home', title: 'vs A.S.D BSC Arezzo', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-05-17', type: 'match-home', title: 'vs Cali Roma XII', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-05-30', type: 'match-away', title: '@ Padule Baseball A.S.D', time: '15:00', tag: 'Campionato Trasferta' },
+            { date: '2026-06-07', type: 'match-away', title: '@ Health & Performance S.S.D', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-06-14', type: 'match-home', title: 'vs Livorno 1940 Baseball', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-06-21', type: 'match-away', title: '@ Longbridge 2000 B.C', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-06-28', type: 'match-home', title: 'vs Colorno B.C.', time: '11:00', tag: 'Campionato Casa' },
+            { date: '2026-07-05', type: 'match-away', title: '@ A.S.D BSC Arezzo', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-07-12', type: 'match-away', title: '@ Cali Roma XII', time: '11:00', tag: 'Campionato Trasferta' },
+            { date: '2026-07-26', type: 'match-home', title: 'vs Padule Baseball A.S.D', time: '11:00', tag: 'Campionato Casa' }
+        ];
+
+        // Cache per le presenze caricate dal database
+        let cachedPresences = {};
+
+        async function getAllPresences() {
+            try {
+                cachedPresences = await LancersDB.loadAll();
+                return cachedPresences;
+            } catch (error) {
+                console.error('Errore caricamento database:', error);
+                // Fallback a localStorage
+                const presences = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('presence_')) {
+                        const playerNumber = key.replace('presence_', '');
+                        presences[playerNumber] = JSON.parse(localStorage.getItem(key) || '{}');
+                    }
+                }
+                return presences;
+            }
+        }
+
+        function exportData() {
+            const dataString = JSON.stringify(cachedPresences);
+            const encoded = btoa(encodeURIComponent(dataString));
+            document.getElementById('exportCode').style.display = 'block';
+            document.getElementById('importSection').style.display = 'none';
+            document.getElementById('syncCodeDisplay').textContent = encoded;
+        }
+
+        function showImportDialog() {
+            document.getElementById('importSection').style.display = 'block';
+            document.getElementById('exportCode').style.display = 'none';
+        }
+
+        async function importData() {
+            const encoded = document.getElementById('importInput').value.trim();
+            if (!encoded) { alert('Inserisci un codice valido'); return; }
+            try {
+                const dataString = decodeURIComponent(atob(encoded));
+                const presences = JSON.parse(dataString);
+                
+                // Salva nel database online
+                for (const [playerNumber, playerPresences] of Object.entries(presences)) {
+                    for (const [eventDate, data] of Object.entries(playerPresences)) {
+                        await LancersDB.save(playerNumber, eventDate, data.response);
+                    }
+                }
+                
+                alert('✅ Dati importati con successo nel database online!');
+                document.getElementById('importInput').value = '';
+                document.getElementById('importSection').style.display = 'none';
+                loadAllData();
+            } catch (e) { 
+                console.error(e);
+                alert('❌ Errore: codice non valido'); 
+            }
+        }
+
+        function copyToClipboard() {
+            const code = document.getElementById('syncCodeDisplay').textContent;
+            navigator.clipboard.writeText(code).then(() => alert('✅ Codice copiato!')).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ Codice copiato!');
+            });
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const days = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+            const months = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+            return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+        }
+
+        function formatDateLong(dateStr) {
+            const date = new Date(dateStr);
+            const days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        }
+
+        function getNextEvent() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            for (const event of allEvents) {
+                const eventDate = new Date(event.date);
+                if (eventDate >= today) return { ...event, dateObj: eventDate };
+            }
+            return null;
+        }
+
+        function generateEventReport(event) {
+            const presences = cachedPresences;
+            const presentList = [], absentList = [], maybeList = [], pendingList = [];
+            allPlayers.forEach(player => {
+                const playerPresences = presences[player.number] || {};
+                const response = playerPresences[event.date];
+                const playerName = `#${player.number} ${player.name} ${player.surname}`;
+                if (!response) pendingList.push(playerName);
+                else if (response.response === 'yes') presentList.push(playerName);
+                else if (response.response === 'no') absentList.push(playerName);
+                else if (response.response === 'maybe') maybeList.push(playerName);
+            });
+            return { presentList, absentList, maybeList, pendingList, event };
+        }
+
+        function generateFullReport() {
+            const presences = cachedPresences;
+            return allPlayers.map(player => {
+                const playerPresences = presences[player.number] || {};
+                let present = 0, absent = 0, maybe = 0;
+                Object.values(playerPresences).forEach(r => {
+                    if (r.response === 'yes') present++;
+                    else if (r.response === 'no') absent++;
+                    else if (r.response === 'maybe') maybe++;
+                });
+                const total = present + absent + maybe;
+                const rate = total > 0 ? Math.round((present / total) * 100) : 0;
+                return { name: `#${player.number} ${player.name} ${player.surname}`, present, absent, maybe, rate };
+            });
+        }
+
+        function sendEmailReport(type) {
+            let subject, body;
+            if (type === 'next') {
+                const nextEvent = getNextEvent();
+                if (!nextEvent) { alert('Nessun evento in programma'); return; }
+                const report = generateEventReport(nextEvent);
+                subject = `⚾ Presenze Lancers - ${report.event.title} (${formatDate(report.event.date)})`;
+                body = `RIEPILOGO PRESENZE LANCERS BASEBALL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+                body += `📅 Evento: ${report.event.title}\n📆 Data: ${formatDateLong(report.event.date)}\n🕐 Orario: ${report.event.time}\n\n`;
+                body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+                body += `✅ PRESENTI (${report.presentList.length}):\n${report.presentList.length > 0 ? report.presentList.join('\n') : '(nessuno)'}\n\n`;
+                body += `⚠️ FORSE (${report.maybeList.length}):\n${report.maybeList.length > 0 ? report.maybeList.join('\n') : '(nessuno)'}\n\n`;
+                body += `❌ ASSENTI (${report.absentList.length}):\n${report.absentList.length > 0 ? report.absentList.join('\n') : '(nessuno)'}\n\n`;
+                body += `⏳ IN ATTESA (${report.pendingList.length}):\n${report.pendingList.length > 0 ? report.pendingList.join('\n') : '(nessuno)'}\n\n`;
+                body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTotale disponibili: ${report.presentList.length + report.maybeList.length}/${allPlayers.length}`;
+            } else if (type === 'selected') {
+                const eventIndex = document.getElementById('eventSelect').value;
+                if (!eventIndex) { alert('Seleziona prima un evento'); return; }
+                const event = allEvents[eventIndex];
+                const report = generateEventReport(event);
+                subject = `⚾ Presenze Lancers - ${report.event.title} (${formatDate(report.event.date)})`;
+                body = `RIEPILOGO PRESENZE LANCERS BASEBALL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+                body += `📅 Evento: ${report.event.title}\n📆 Data: ${formatDateLong(report.event.date)}\n🕐 Orario: ${report.event.time}\n\n`;
+                body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+                body += `✅ PRESENTI (${report.presentList.length}):\n${report.presentList.length > 0 ? report.presentList.join('\n') : '(nessuno)'}\n\n`;
+                body += `⚠️ FORSE (${report.maybeList.length}):\n${report.maybeList.length > 0 ? report.maybeList.join('\n') : '(nessuno)'}\n\n`;
+                body += `❌ ASSENTI (${report.absentList.length}):\n${report.absentList.length > 0 ? report.absentList.join('\n') : '(nessuno)'}\n\n`;
+                body += `⏳ IN ATTESA (${report.pendingList.length}):\n${report.pendingList.length > 0 ? report.pendingList.join('\n') : '(nessuno)'}\n\n`;
+                body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTotale disponibili: ${report.presentList.length + report.maybeList.length}/${allPlayers.length}`;
+            } else if (type === 'all') {
+                const stats = generateFullReport();
+                subject = `⚾ Riepilogo Presenze Completo Lancers Baseball`;
+                body = `RIEPILOGO PRESENZE COMPLETO LANCERS BASEBALL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nGenerato il: ${new Date().toLocaleDateString('it-IT')}\n\n`;
+                stats.forEach(p => { body += `${p.name}\n   ✅ ${p.present} | ⚠️ ${p.maybe} | ❌ ${p.absent} | Tasso: ${p.rate}%\n\n`; });
+            }
+            window.open(`mailto:${STAFF_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+        }
+
+        function sendWhatsAppReport(type) {
+            let message;
+            if (type === 'next') {
+                const nextEvent = getNextEvent();
+                if (!nextEvent) { alert('Nessun evento in programma'); return; }
+                const report = generateEventReport(nextEvent);
+                message = `⚾ *PRESENZE LANCERS*\n\n📅 *${report.event.title}*\n📆 ${formatDateLong(report.event.date)}\n🕐 ${report.event.time}\n\n`;
+                message += `✅ *PRESENTI (${report.presentList.length}):*\n${report.presentList.length > 0 ? report.presentList.join('\n') : '(nessuno)'}\n\n`;
+                message += `⚠️ *FORSE (${report.maybeList.length}):*\n${report.maybeList.length > 0 ? report.maybeList.join('\n') : '(nessuno)'}\n\n`;
+                message += `❌ *ASSENTI (${report.absentList.length}):*\n${report.absentList.length > 0 ? report.absentList.join('\n') : '(nessuno)'}\n\n`;
+                message += `⏳ *IN ATTESA (${report.pendingList.length}):*\n${report.pendingList.length > 0 ? report.pendingList.join('\n') : '(nessuno)'}\n\n`;
+                message += `━━━━━━━━━━━━\n👥 Disponibili: ${report.presentList.length + report.maybeList.length}/${allPlayers.length}`;
+            } else if (type === 'selected') {
+                const eventIndex = document.getElementById('eventSelect').value;
+                if (!eventIndex) { alert('Seleziona prima un evento'); return; }
+                const event = allEvents[eventIndex];
+                const report = generateEventReport(event);
+                message = `⚾ *PRESENZE LANCERS*\n\n📅 *${report.event.title}*\n📆 ${formatDateLong(report.event.date)}\n🕐 ${report.event.time}\n\n`;
+                message += `✅ *PRESENTI (${report.presentList.length}):*\n${report.presentList.length > 0 ? report.presentList.join('\n') : '(nessuno)'}\n\n`;
+                message += `⚠️ *FORSE (${report.maybeList.length}):*\n${report.maybeList.length > 0 ? report.maybeList.join('\n') : '(nessuno)'}\n\n`;
+                message += `❌ *ASSENTI (${report.absentList.length}):*\n${report.absentList.length > 0 ? report.absentList.join('\n') : '(nessuno)'}\n\n`;
+                message += `⏳ *IN ATTESA (${report.pendingList.length}):*\n${report.pendingList.length > 0 ? report.pendingList.join('\n') : '(nessuno)'}\n\n`;
+                message += `━━━━━━━━━━━━\n👥 Disponibili: ${report.presentList.length + report.maybeList.length}/${allPlayers.length}`;
+            } else if (type === 'all') {
+                const stats = generateFullReport();
+                message = `⚾ *RIEPILOGO COMPLETO LANCERS*\n📆 ${new Date().toLocaleDateString('it-IT')}\n\n`;
+                stats.forEach(p => {
+                    const emoji = p.rate >= 70 ? '🟢' : p.rate >= 40 ? '🟡' : '🔴';
+                    message += `${emoji} ${p.name}: ${p.rate}%\n    ✅${p.present} ⚠️${p.maybe} ❌${p.absent}\n`;
+                });
+            }
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        async function loadAllData() {
+            // Mostra stato di caricamento
+            document.getElementById('statsGrid').innerHTML = '<div class="stat-card blue"><div class="stat-value">⏳</div><div class="stat-label">Caricamento dal database...</div></div>';
+            
+            const presences = await getAllPresences();
+            let totalPresent = 0, totalAbsent = 0, totalMaybe = 0, totalResponses = 0;
+
+            Object.values(presences).forEach(playerPresences => {
+                Object.values(playerPresences).forEach(response => {
+                    totalResponses++;
+                    if (response.response === 'yes') totalPresent++;
+                    else if (response.response === 'no') totalAbsent++;
+                    else if (response.response === 'maybe') totalMaybe++;
+                });
+            });
+
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card blue"><div class="stat-value">${totalResponses}</div><div class="stat-label">Risposte Totali</div></div>
+                <div class="stat-card green"><div class="stat-value">${totalPresent}</div><div class="stat-label">✅ Presenti</div></div>
+                <div class="stat-card yellow"><div class="stat-value">${totalMaybe}</div><div class="stat-label">⚠️ Forse</div></div>
+                <div class="stat-card red"><div class="stat-value">${totalAbsent}</div><div class="stat-label">❌ Assenti</div></div>
+            `;
+
+            const nextEvent = getNextEvent();
+            if (nextEvent) {
+                let presentCount = 0, absentCount = 0, maybeCount = 0, pendingCount = 0;
+                const playerStatuses = allPlayers.map(player => {
+                    const playerPresences = presences[player.number] || {};
+                    const eventResponse = playerPresences[nextEvent.date];
+                    let status = 'pending';
+                    if (eventResponse) {
+                        status = eventResponse.response;
+                        if (status === 'yes') presentCount++;
+                        else if (status === 'no') absentCount++;
+                        else if (status === 'maybe') maybeCount++;
+                    } else pendingCount++;
+                    return { ...player, status };
+                });
+
+                document.getElementById('nextEventStatus').innerHTML = `
+                    <div style="border-left: 5px solid #ed8936; background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #1a365d; margin-bottom: 0.5rem;">${nextEvent.title}</h4>
+                        <p style="color: #718096;">📅 ${formatDate(nextEvent.date)} - ${nextEvent.time}</p>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                            <span class="status-badge present">✅ ${presentCount} presenti</span>
+                            <span class="status-badge maybe">⚠️ ${maybeCount} forse</span>
+                            <span class="status-badge absent">❌ ${absentCount} assenti</span>
+                            <span class="status-badge pending">⏳ ${pendingCount} in attesa</span>
+                        </div>
+                    </div>
+                    <table class="players-table">
+                        <thead><tr><th>#</th><th>Giocatore</th><th>Ruolo</th><th>Stato</th></tr></thead>
+                        <tbody>${playerStatuses.map(p => `
+                            <tr>
+                                <td><span class="player-number">${p.number}</span></td>
+                                <td>${p.name} ${p.surname}</td>
+                                <td>${p.role}</td>
+                                <td><span class="status-badge ${p.status === 'yes' ? 'present' : p.status === 'no' ? 'absent' : p.status === 'maybe' ? 'maybe' : 'pending'}">
+                                    ${p.status === 'yes' ? '✅ Presente' : p.status === 'no' ? '❌ Assente' : p.status === 'maybe' ? '⚠️ Forse' : '⏳ In attesa'}
+                                </span></td>
+                            </tr>`).join('')}</tbody>
+                    </table>`;
+            } else {
+                document.getElementById('nextEventStatus').innerHTML = `<p style="text-align: center; color: #718096; padding: 2rem;">Nessun evento in programma</p>`;
+            }
+
+            const eventSelect = document.getElementById('eventSelect');
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            eventSelect.innerHTML = '<option value="">-- Seleziona un evento --</option>';
+            allEvents.forEach((event, index) => {
+                const eventDate = new Date(event.date);
+                if (eventDate >= today) eventSelect.innerHTML += `<option value="${index}">${formatDate(event.date)} - ${event.title}</option>`;
+            });
+
+            document.getElementById('playerSummary').innerHTML = allPlayers.map(player => {
+                const playerPresences = presences[player.number] || {};
+                let presentCount = 0, absentCount = 0, maybeCount = 0;
+                Object.values(playerPresences).forEach(response => {
+                    if (response.response === 'yes') presentCount++;
+                    else if (response.response === 'no') absentCount++;
+                    else if (response.response === 'maybe') maybeCount++;
+                });
+                const total = presentCount + absentCount + maybeCount;
+                const rate = total > 0 ? Math.round((presentCount / total) * 100) : 0;
+                let rateClass = rate >= 70 ? 'high' : rate >= 40 ? 'medium' : 'low';
+                return `
+                    <div class="player-card">
+                        <span class="player-number">${player.number}</span>
+                        <div class="player-card-info">
+                            <div class="player-card-name">${player.name} ${player.surname}</div>
+                            <div class="player-card-role">${player.role}</div>
+                        </div>
+                        <div class="player-card-stats">
+                            <div class="mini-stat green"><div class="mini-stat-value">${presentCount}</div><div class="mini-stat-label">✅</div></div>
+                            <div class="mini-stat yellow"><div class="mini-stat-value">${maybeCount}</div><div class="mini-stat-label">⚠️</div></div>
+                            <div class="mini-stat red"><div class="mini-stat-value">${absentCount}</div><div class="mini-stat-label">❌</div></div>
+                        </div>
+                        <div class="attendance-rate ${rateClass}" title="Tasso di presenza">${rate}%</div>
+                    </div>`;
+            }).join('');
+        }
+
+        function showEventDetails() {
+            const eventIndex = document.getElementById('eventSelect').value;
+            if (!eventIndex) {
+                document.getElementById('eventDetails').innerHTML = '';
+                document.getElementById('eventSendButtons').style.display = 'none';
+                return;
+            }
+            document.getElementById('eventSendButtons').style.display = 'block';
+            const event = allEvents[eventIndex];
+            const presences = cachedPresences;
+            const playerStatuses = allPlayers.map(player => {
+                const playerPresences = presences[player.number] || {};
+                const eventResponse = playerPresences[event.date];
+                return { ...player, status: eventResponse ? eventResponse.response : 'pending' };
+            });
+
+            const presentCount = playerStatuses.filter(p => p.status === 'yes').length;
+            const absentCount = playerStatuses.filter(p => p.status === 'no').length;
+            const maybeCount = playerStatuses.filter(p => p.status === 'maybe').length;
+            const pendingCount = playerStatuses.filter(p => p.status === 'pending').length;
+
+            document.getElementById('eventDetails').innerHTML = `
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <span class="status-badge present">✅ ${presentCount} presenti</span>
+                    <span class="status-badge maybe">⚠️ ${maybeCount} forse</span>
+                    <span class="status-badge absent">❌ ${absentCount} assenti</span>
+                    <span class="status-badge pending">⏳ ${pendingCount} in attesa</span>
+                </div>
+                <table class="players-table">
+                    <thead><tr><th>#</th><th>Giocatore</th><th>Ruolo</th><th>Stato</th></tr></thead>
+                    <tbody>${playerStatuses.map(p => `
+                        <tr>
+                            <td><span class="player-number">${p.number}</span></td>
+                            <td>${p.name} ${p.surname}</td>
+                            <td>${p.role}</td>
+                            <td><span class="status-badge ${p.status === 'yes' ? 'present' : p.status === 'no' ? 'absent' : p.status === 'maybe' ? 'maybe' : 'pending'}">
+                                ${p.status === 'yes' ? '✅ Presente' : p.status === 'no' ? '❌ Assente' : p.status === 'maybe' ? '⚠️ Forse' : '⏳ In attesa'}
+                            </span></td>
+                        </tr>`).join('')}</tbody>
+                </table>`;
+        }
+
+        loadAllData();
+    </script>
+</body>
+</html>

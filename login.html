@@ -151,22 +151,49 @@
         
         <form id="loginForm">
             <div class="input-group">
+                <span class="icon">�</span>
+                <input type="text" id="username" placeholder="Username (cognome-numero)" required>
+            </div>
+            <div class="input-group">
                 <span class="icon">🔒</span>
-                <input type="password" id="password" placeholder="Inserisci la password" required>
+                <input type="password" id="password" placeholder="Password" required>
             </div>
             <button type="submit" class="login-btn">⚾ Entra nel Dugout</button>
         </form>
         
         <div class="error-message" id="errorMessage">
-            ❌ Password errata. Riprova!
+            ❌ Username o password errati. Riprova!
         </div>
         
-        <p class="footer-note">🏟️ Contatta lo staff per ricevere la password</p>
+        <p class="footer-note">🏟️ Username: cognome-numero | Password: chiedi allo staff</p>
     </div>
 
     <script>
-        // Password corretta
-        const correctPassword = 'Lancers2026';
+        // Database giocatori: username = cognome-numero, password = cognome + prima lettera nome + numero
+        const players = [
+            { number: 0, name: 'Niccolò', surname: 'Bucci', role: 'UTL', username: 'bucci-0', password: 'buccin0' },
+            { number: 1, name: 'Alessandro', surname: 'Ferrini', role: 'P/SS', username: 'ferrini-1', password: 'ferrinia1' },
+            { number: 3, name: 'Ettore', surname: 'Della Nave', role: 'OF/P', username: 'dellanave-3', password: 'dellanavee3' },
+            { number: 4, name: 'Giovanni G.', surname: 'Beudean', role: 'P/OF', username: 'beudean-4', password: 'beudeang4' },
+            { number: 5, name: 'Marco', surname: 'Mastroianni', role: '2B/3B', username: 'mastroianni-5', password: 'mastroiannim5' },
+            { number: 6, name: 'Simone', surname: 'Geri', role: 'OF', username: 'geri-6', password: 'geris6', isStaff: true },
+            { number: 7, name: 'Silvano', surname: 'Albano', role: 'OF/IF', username: 'albano-7', password: 'albanos7' },
+            { number: 8, name: 'Tommaso', surname: 'Panichi', role: 'OF', username: 'panichi-8', password: 'panichit8' },
+            { number: 12, name: 'Francesco', surname: 'Grassi', role: '1B/DH', username: 'grassi-12', password: 'grassif12' },
+            { number: 14, name: 'Leonardo', surname: 'Scarpulla', role: 'OF/2B', username: 'scarpulla-14', password: 'scarpullal14' },
+            { number: 19, name: 'Simone', surname: 'Baratella', role: '1B/3B', username: 'baratella-19', password: 'baratellas19', isStaff: true },
+            { number: 22, name: 'Giuseppe G.', surname: 'Grado', role: 'P', username: 'grado-22', password: 'gradog22' },
+            { number: 25, name: 'Lorenzo', surname: 'Scarpulla', role: 'DH/C', username: 'scarpulla-25', password: 'scarpullal25', isStaff: true },
+            { number: 32, name: 'Filippo', surname: 'Anichini', role: '3B/SS', username: 'anichini-32', password: 'anichinif32' },
+            { number: 38, name: 'Antonio', surname: 'Parrini', role: 'SS/3B', username: 'parrini-38', password: 'parrinia38', isStaff: true },
+            { number: 59, name: 'Lapo', surname: 'Biondi', role: '2B/SS', username: 'biondi-59', password: 'biondil59' },
+            { number: 89, name: 'Daniele', surname: 'Silvestri', role: 'P', username: 'silvestri-89', password: 'silvestrid89' },
+            { number: 90, name: 'Alessandro', surname: 'Rrethatori', role: 'C', username: 'rrethatori-90', password: 'rrethatoria90' },
+            { number: 24, name: 'Guido', surname: 'Nannucci', role: 'UTL', username: 'nannucci-24', password: 'nannuccig24' },
+            { number: 77, name: 'Cosimo', surname: 'Rinaldi', role: '1B/RF', username: 'rinaldi-77', password: 'rinaldic77' },
+            // Admin account
+            { number: 'ADMIN', name: 'Admin', surname: 'Staff', role: 'Admin', username: 'admin', password: 'admin26', isStaff: true, isAdmin: true }
+        ];
 
         // Controlla se già autenticato
         if (sessionStorage.getItem('authenticated') === 'true') {
@@ -176,11 +203,16 @@
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value.toLowerCase().trim();
             const errorMessage = document.getElementById('errorMessage');
             
-            if (password === correctPassword) {
+            // Cerca il giocatore
+            const player = players.find(p => p.username === username && p.password === password);
+            
+            if (player) {
                 sessionStorage.setItem('authenticated', 'true');
+                sessionStorage.setItem('playerData', JSON.stringify(player));
                 window.location.href = 'index.html';
             } else {
                 errorMessage.classList.add('show');

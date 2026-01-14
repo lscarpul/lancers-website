@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Personale - Lancers Baseball</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .personal-hero {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .player-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .player-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .player-name {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .player-role {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .objectives-section {
+            max-width: 900px;
+            margin: -2rem auto 2rem;
+            padding: 3rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .objectives-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .objectives-header h2 {
+            font-size: 1.8rem;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
+
+        .objectives-header p {
+            color: #718096;
+        }
+
+        .objective-category {
+            margin-bottom: 2rem;
+        }
+
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+            color: #1a365d;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid #48bb78;
+        }
+
+        .objective-item:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .objective-icon {
+            font-size: 1.5rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .objective-content h4 {
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .objective-content p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .priority-high {
+            border-left: 4px solid #48bb78;
+        }
+
+        .priority-medium {
+            border-left: 4px solid #48bb78;
+        }
+
+        .priority-normal {
+            border-left: 4px solid #48bb78;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #1a365d;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 2rem auto;
+            display: block;
+            width: fit-content;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #2c5282;
+            transform: translateY(-2px);
+        }
+
+        .no-player {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .no-player h2 {
+            color: #e53e3e;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        if (sessionStorage.getItem('authenticated') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo">⚾</span>
+            <span class="team-name">Lancers Baseball</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="documento.html">Documento</a></li>
+            <li><a href="calendario.html">Partite</a></li>
+            <li><a href="allenamenti.html">Allenamenti</a></li>
+            <li><a href="presenze.html">Presenze</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div id="personalContent">
+        <!-- Contenuto generato dinamicamente -->
+    </div>
+
+    <footer>
+        <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
+        <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Database obiettivi per giocatore - Stagione 2026
+        // Basato sulle statistiche 2025 e aree di miglioramento
+        const playerObjectives = {
+            0: { // Niccolò Bucci - UTL
+                name: 'Niccolò Bucci',
+                number: 0,
+                role: 'UTL',
+                objectives: {
+                    batting: [
+                        { title: 'Aumentare la media battuta', description: 'Lavorare sul timing e la meccanica dello swing per migliorare il contatto' },
+                        { title: 'Ridurre gli strikeout', description: 'Migliorare la disciplina al piatto e la selezione dei lanci' },
+                        { title: 'Sviluppare battuta opposta', description: 'Imparare a usare tutto il campo per diventare meno prevedibile' },
+                        { title: 'Migliorare con RISP', description: 'Essere più produttivo con corridori in posizione punto' }
+                    ],
+                    fielding: [
+                        { title: 'Versatilità difensiva', description: 'Perfezionare i fondamentali in tutti i ruoli per essere pronto ovunque' },
+                        { title: 'Footwork generale', description: 'Migliorare il movimento dei piedi nelle transizioni tra i ruoli' },
+                        { title: 'Comunicazione in campo', description: 'Essere sempre vocale e coordinato con i compagni' }
+                    ],
+                    physical: [
+                        { title: 'Velocità di base', description: 'Aumentare la velocità nella corsa sulle basi' },
+                        { title: 'Agilità', description: 'Migliorare i cambi di direzione rapidi' }
+                    ]
+                }
+            },
+            1: { // Alessandro Ferrini - P/SS
+                name: 'Alessandro Ferrini',
+                number: 1,
+                role: 'P/SS',
+                objectives: {
+                    pitching: [
+                        { title: 'Controllo zona bassa', description: 'Dominare la parte bassa della zona strike' },
+                        { title: 'Sviluppo changeup', description: 'Aggiungere un changeup efficace al repertorio' },
+                        { title: 'Primo strike %', description: 'Aumentare la percentuale di primi strike per controllare il conteggio' },
+                        { title: 'Gestione corridori', description: 'Migliorare il tempo verso casa con corridori in base' },
+                        { title: 'Pitch count efficiente', description: 'Ridurre il numero medio di lanci per inning' }
+                    ],
+                    fielding: [
+                        { title: 'Range laterale SS', description: 'Aumentare il range verso il buco e verso seconda' },
+                        { title: 'Tiri rapidi DP', description: 'Velocizzare il rilascio sui doppi giochi' },
+                        { title: 'Backhand plays', description: 'Perfezionare le giocate di rovescio' }
+                    ],
+                    batting: [
+                        { title: 'Battuta situazionale', description: 'Migliorare nelle situazioni con corridori in posizione punto' }
+                    ]
+                }
+            },
+            3: { // Ettore Della Nave - OF/P
+                name: 'Ettore Della Nave',
+                number: 3,
+                role: 'OF/P',
+                objectives: {
+                    fielding: [
+                        { title: 'Primo passo', description: 'Migliorare la lettura della palla e il primo movimento' },
+                        { title: 'Forza del braccio', description: 'Aumentare potenza e precisione dei tiri dal campo esterno' },
+                        { title: 'Prese al volo', description: 'Aumentare la sicurezza sulle palle alte e di linea' },
+                        { title: 'Backup plays', description: 'Essere sempre in posizione per il backup' }
+                    ],
+                    pitching: [
+                        { title: 'Consistenza meccanica', description: 'Mantenere la meccanica costante durante tutto il turno' },
+                        { title: 'Comando breaking ball', description: 'Migliorare il controllo dei lanci curvi' }
+                    ],
+                    batting: [
+                        { title: 'Potenza', description: 'Sviluppare più potenza nel contatto per gli extra-base hit' },
+                        { title: 'Selettività', description: 'Aspettare i propri lanci e non rincorrere' }
+                    ]
+                }
+            },
+            4: { // Giovanni G. Beudean - P/OF
+                name: 'Giovanni G. Beudean',
+                number: 4,
+                role: 'P/OF',
+                objectives: {
+                    pitching: [
+                        { title: 'Velocità fastball', description: 'Incrementare la velocità della palla veloce con lavoro specifico' },
+                        { title: 'Movimento breaking ball', description: 'Perfezionare il movimento della curva per più strikeout' },
+                        { title: 'Controllo generale', description: 'Ridurre le basi su ball per inning' },
+                        { title: 'Pitch sequencing', description: 'Migliorare la combinazione dei lanci per confondere i battitori' }
+                    ],
+                    fielding: [
+                        { title: 'Posizionamento OF', description: 'Migliorare il posizionamento in base al battitore e conteggio' },
+                        { title: 'Precisione tiri', description: 'Aumentare la precisione dei tiri verso le basi' }
+                    ],
+                    physical: [
+                        { title: 'Resistenza', description: 'Aumentare la resistenza per lanciare più inning efficacemente' },
+                        { title: 'Recupero', description: 'Ottimizzare il recupero tra le uscite' }
+                    ]
+                }
+            },
+            5: { // Marco Mastroianni - 2B/3B
+                name: 'Marco Mastroianni',
+                number: 5,
+                role: '2B/3B',
+                objectives: {
+                    fielding: [
+                        { title: 'Pivot doppi giochi', description: 'Perfezionare la meccanica del pivot in seconda base' },
+                        { title: 'Palle a rimbalzo 3B', description: 'Gestire meglio le palle difficili sul lato di terza' },
+                        { title: 'Reazione palle veloci', description: 'Migliorare i riflessi sulle battute dure in terza' },
+                        { title: 'Tiri in movimento', description: 'Aumentare precisione dei tiri mentre si corre' }
+                    ],
+                    batting: [
+                        { title: 'Battuta opposta', description: 'Sviluppare la capacità di battere verso il lato opposto' },
+                        { title: 'Bunting', description: 'Perfezionare la tecnica del bunt di sacrificio e drag bunt' },
+                        { title: 'Contatto con 2 strike', description: 'Accorciare lo swing e proteggere il piatto' }
+                    ],
+                    baserunning: [
+                        { title: 'Aggressività sulle basi', description: 'Leggere meglio le situazioni per prendere basi extra' }
+                    ]
+                }
+            },
+            6: { // Simone Geri - OF
+                name: 'Simone Geri',
+                number: 6,
+                role: 'OF',
+                objectives: {
+                    fielding: [
+                        { title: 'Comunicazione outfield', description: 'Essere il leader vocale del campo esterno' },
+                        { title: 'Prese difficili', description: 'Aumentare la sicurezza sulle palle al limite' },
+                        { title: 'Lettura traiettorie', description: 'Migliorare la lettura immediata della battuta' },
+                        { title: 'Tiri precisi', description: 'Aumentare la precisione dei tiri verso le basi' }
+                    ],
+                    batting: [
+                        { title: 'Selettività al piatto', description: 'Essere più paziente e aspettare il lancio giusto' },
+                        { title: 'Contatto costante', description: 'Ridurre gli strikeout e mettere più palle in gioco' },
+                        { title: 'Situazioni clutch', description: 'Migliorare la produttività nei momenti decisivi' }
+                    ],
+                    baserunning: [
+                        { title: 'Basi rubate', description: 'Sviluppare la tecnica e il timing per rubare basi' },
+                        { title: 'Lettura lanciatore', description: 'Studiare i lanciatori per partenze migliori' }
+                    ]
+                }
+            },
+            7: { // Silvano Albano - OF/IF
+                name: 'Silvano Albano',
+                number: 7,
+                role: 'OF/IF',
+                objectives: {
+                    fielding: [
+                        { title: 'Transizione OF/IF', description: 'Perfezionare il passaggio mentale e tecnico tra i ruoli' },
+                        { title: 'Precisione tiri lunghi', description: 'Migliorare la precisione dei tiri da distanza' },
+                        { title: 'Fondamentali interni', description: 'Consolidare i fondamentali del campo interno' },
+                        { title: 'Range esterno', description: 'Aumentare la copertura di terreno in esterno' }
+                    ],
+                    batting: [
+                        { title: 'Aggressività controllata', description: 'Attaccare i lanci giusti senza rincorrere' },
+                        { title: 'Gap power', description: 'Sviluppare potenza per i doppi nei corridoi' },
+                        { title: 'Approccio 2 strike', description: 'Proteggere il piatto con due strike' }
+                    ]
+                }
+            },
+            8: { // Tommaso Panichi - OF
+                name: 'Tommaso Panichi',
+                number: 8,
+                role: 'OF',
+                objectives: {
+                    fielding: [
+                        { title: 'Velocità di reazione', description: 'Migliorare il primo movimento sulla battuta' },
+                        { title: 'Backup costante', description: 'Essere sempre in posizione per supportare i compagni' },
+                        { title: 'Prese in corsa', description: 'Perfezionare le prese mentre si corre verso la palla' },
+                        { title: 'Crow hop efficiente', description: 'Ottimizzare la meccanica del tiro dal campo' }
+                    ],
+                    batting: [
+                        { title: 'Timing vs diversi P', description: 'Adattarsi rapidamente a diversi tipi di lanciatori' },
+                        { title: 'Gap power', description: 'Sviluppare potenza per i doppi nei corridoi' },
+                        { title: 'Disciplina al piatto', description: 'Aumentare le basi su ball' }
+                    ],
+                    baserunning: [
+                        { title: 'Lettura difesa', description: 'Leggere la posizione della difesa per basi extra' }
+                    ]
+                }
+            },
+            12: { // Francesco Grassi - 1B/DH
+                name: 'Francesco Grassi',
+                number: 12,
+                role: '1B/DH',
+                objectives: {
+                    fielding: [
+                        { title: 'Stretch in prima', description: 'Perfezionare lo stretch per salvare tiri difficili' },
+                        { title: 'Palle a terra', description: 'Gestire meglio le palle a rimbalzo verso prima' },
+                        { title: 'Tiri da lanciatori', description: 'Ricevere meglio i tiri dei diversi lanciatori' },
+                        { title: 'Bunt defense', description: 'Migliorare la copertura sui bunt' }
+                    ],
+                    batting: [
+                        { title: 'Potenza RBI', description: 'Diventare il riferimento per portare a casa i punti' },
+                        { title: 'Disciplina 2 strike', description: 'Non espandere la zona con due strike' },
+                        { title: 'Battuta vs mancini', description: 'Migliorare contro i lanciatori mancini' },
+                        { title: 'Situazioni RISP', description: 'Aumentare la produttività con corridori in posizione punto' }
+                    ]
+                }
+            },
+            14: { // Leonardo Scarpulla - OF/2B
+                name: 'Leonardo Scarpulla',
+                number: 14,
+                role: 'OF/2B',
+                objectives: {
+                    fielding: [
+                        { title: 'Fondamentali 2B', description: 'Consolidare i fondamentali in seconda base' },
+                        { title: 'Range esterno', description: 'Aumentare la copertura di terreno in esterno' },
+                        { title: 'Doppi giochi', description: 'Migliorare la velocità e precisione nei DP' },
+                        { title: 'Comunicazione', description: 'Essere sempre vocale in campo' }
+                    ],
+                    batting: [
+                        { title: 'Contatto costante', description: 'Aumentare la consistenza nel mettere palle in gioco' },
+                        { title: 'On-base percentage', description: 'Aumentare la percentuale di arrivo in base' },
+                        { title: 'Bunting', description: 'Sviluppare il bunt come arma offensiva' }
+                    ],
+                    baserunning: [
+                        { title: 'Lettura lanciatore', description: 'Migliorare la lettura per partenze e basi rubate' },
+                        { title: 'Aggressività', description: 'Prendere basi extra quando possibile' }
+                    ]
+                }
+            },
+            19: { // Simone Baratella - 1B/3B
+                name: 'Simone Baratella',
+                number: 19,
+                role: '1B/3B',
+                objectives: {
+                    fielding: [
+                        { title: 'Reazione in terza', description: 'Migliorare i riflessi sulle battute veloci' },
+                        { title: 'Forza del braccio', description: 'Aumentare la potenza per i tiri lunghi dalla terza' },
+                        { title: 'Palle lente', description: 'Caricare e tirare efficacemente su bunt e tocchi' },
+                        { title: 'Stretch in prima', description: 'Migliorare la tecnica quando gioca in prima' }
+                    ],
+                    batting: [
+                        { title: 'Potenza pull side', description: 'Sviluppare più potenza verso il lato del tiro' },
+                        { title: 'Approccio 2 strike', description: 'Accorciare lo swing e proteggere il piatto' },
+                        { title: 'Selezione lanci', description: 'Non rincorrere i lanci fuori zona' },
+                        { title: 'Battuta opposta', description: 'Usare tutto il campo' }
+                    ]
+                }
+            },
+            22: { // Giuseppe G. Grado - P
+                name: 'Giuseppe G. Grado',
+                number: 22,
+                role: 'P',
+                objectives: {
+                    pitching: [
+                        { title: 'Comando zona bassa', description: 'Dominare la parte bassa della zona strike' },
+                        { title: 'Terzo lancio', description: 'Sviluppare un terzo lancio affidabile' },
+                        { title: 'Gestione conteggio', description: 'Essere più efficace nei conteggi sfavorevoli' },
+                        { title: 'Strikeout rate', description: 'Aumentare il numero di strikeout per inning' },
+                        { title: 'Primo strike', description: 'Iniziare più at-bat con uno strike' },
+                        { title: 'Pitch selection', description: 'Scegliere il lancio giusto per ogni situazione' }
+                    ],
+                    physical: [
+                        { title: 'Forza core', description: 'Rafforzare il core per maggiore stabilità' },
+                        { title: 'Flessibilità spalla', description: 'Mantenere la mobilità per prevenire infortuni' },
+                        { title: 'Resistenza', description: 'Aumentare gli inning lanciati per partita' }
+                    ]
+                }
+            },
+            25: { // Lorenzo Scarpulla - DH/C
+                name: 'Lorenzo Scarpulla',
+                number: 25,
+                role: 'DH/C',
+                objectives: {
+                    catching: [
+                        { title: 'Framing', description: 'Perfezionare la tecnica per guadagnare strike' },
+                        { title: 'Blocking', description: 'Migliorare il blocco delle palle nel terreno' },
+                        { title: 'Pop time', description: 'Ridurre il tempo di rilascio verso seconda' },
+                        { title: 'Ricevuta', description: 'Presentare meglio i lanci all\'arbitro' }
+                    ],
+                    leadership: [
+                        { title: 'Game calling', description: 'Sviluppare la strategia di chiamata della partita' },
+                        { title: 'Rapport lanciatori', description: 'Costruire relazioni efficaci con ogni lanciatore' },
+                        { title: 'Gestione ritmo', description: 'Controllare il ritmo della partita' }
+                    ],
+                    batting: [
+                        { title: 'Battuta con RISP', description: 'Essere clutch con corridori in posizione punto' },
+                        { title: 'Potenza', description: 'Sviluppare più potenza come DH' },
+                        { title: 'Disciplina al piatto', description: 'Aumentare le basi su ball' }
+                    ]
+                }
+            },
+            32: { // Filippo Anichini - 3B/SS
+                name: 'Filippo Anichini',
+                number: 32,
+                role: '3B/SS',
+                objectives: {
+                    fielding: [
+                        { title: 'Palle lente', description: 'Caricare aggressivamente su bunt e tocchi' },
+                        { title: 'Pivot SS', description: 'Perfezionare le giocate da interbase' },
+                        { title: 'Tiri in movimento', description: 'Aumentare la precisione tirando in corsa' },
+                        { title: 'Backhand', description: 'Migliorare le prese e i tiri di rovescio' },
+                        { title: 'Range', description: 'Aumentare la copertura di terreno' }
+                    ],
+                    batting: [
+                        { title: 'Battuta gap', description: 'Trovare i corridoi per extra-base hit' },
+                        { title: 'Contatto', description: 'Ridurre gli strikeout' },
+                        { title: 'Approccio situazionale', description: 'Adattare l\'approccio alla situazione di gioco' }
+                    ]
+                }
+            },
+            38: { // Antonio Parrini - SS/3B
+                name: 'Antonio Parrini',
+                number: 38,
+                role: 'SS/3B',
+                objectives: {
+                    fielding: [
+                        { title: 'Range laterale', description: 'Aumentare il range verso il buco SS-3B' },
+                        { title: 'Forza braccio', description: 'Sviluppare un braccio più potente per i tiri dalla buca' },
+                        { title: 'Doppi giochi', description: 'Velocizzare l\'esecuzione dei DP' },
+                        { title: 'Giocate routine', description: 'Essere consistente sulle palle facili' }
+                    ],
+                    batting: [
+                        { title: 'Gap-to-gap', description: 'Usare tutto il campo in battuta' },
+                        { title: 'Velocità swing', description: 'Aumentare la velocità della mazza' },
+                        { title: 'On-base', description: 'Aumentare la percentuale di arrivo in base' },
+                        { title: 'Produttività', description: 'Aumentare RBI e runs' }
+                    ]
+                }
+            },
+            59: { // Lapo Biondi - 2B/SS
+                name: 'Lapo Biondi',
+                number: 59,
+                role: '2B/SS',
+                objectives: {
+                    fielding: [
+                        { title: 'Doppi giochi', description: 'Diventare specialista nei DP' },
+                        { title: 'Backhand', description: 'Migliorare le prese di rovescio' },
+                        { title: 'Tiri rapidi', description: 'Ridurre il tempo tra presa e tiro' },
+                        { title: 'Posizionamento', description: 'Leggere meglio la situazione per posizionarsi' }
+                    ],
+                    batting: [
+                        { title: 'On-base percentage', description: 'Aumentare la percentuale di arrivo in base' },
+                        { title: 'Bunting', description: 'Perfezionare bunt di sacrificio e drag bunt' },
+                        { title: 'Contatto', description: 'Mettere più palle in gioco' },
+                        { title: 'Battuta opposta', description: 'Sviluppare la battuta verso il lato opposto' }
+                    ],
+                    baserunning: [
+                        { title: 'Aggressività', description: 'Essere più aggressivo nel prendere basi extra' },
+                        { title: 'Basi rubate', description: 'Aumentare i tentativi e la percentuale di successo' }
+                    ]
+                }
+            },
+            89: { // Daniele Silvestri - P
+                name: 'Daniele Silvestri',
+                number: 89,
+                role: 'P',
+                objectives: {
+                    pitching: [
+                        { title: 'Consistenza meccanica', description: 'Mantenere la meccanica costante per tutto il turno' },
+                        { title: 'Sviluppo slider', description: 'Aggiungere uno slider efficace al repertorio' },
+                        { title: 'Primo strike', description: 'Aumentare la percentuale di primi strike' },
+                        { title: 'Controllo BB', description: 'Ridurre le basi su ball concesse' },
+                        { title: 'Pitch tunneling', description: 'Far sembrare diversi lanci uguali all\'uscita' },
+                        { title: 'Efficienza', description: 'Ridurre il numero di lanci per inning' }
+                    ],
+                    mental: [
+                        { title: 'Gestione pressione', description: 'Mantenere la calma nelle situazioni difficili' },
+                        { title: 'Focus post-errore', description: 'Rimanere concentrato dopo errori difensivi' },
+                        { title: 'Routine pre-lancio', description: 'Sviluppare una routine consistente' }
+                    ]
+                }
+            },
+            90: { // Alessandro Rrethatori - C
+                name: 'Alessandro Rrethatori',
+                number: 90,
+                role: 'C',
+                objectives: {
+                    catching: [
+                        { title: 'Tecnica ricevuta', description: 'Perfezionare posizione e movimento della ricevuta' },
+                        { title: 'Tiri veloci', description: 'Ridurre il pop time verso le basi' },
+                        { title: 'Blocking', description: 'Bloccare più palle nel terreno' },
+                        { title: 'Framing', description: 'Rubare più strike per i lanciatori' },
+                        { title: 'Difesa bunt', description: 'Migliorare la reazione sui bunt' }
+                    ],
+                    batting: [
+                        { title: 'Potenza', description: 'Sviluppare più potenza nel contatto' },
+                        { title: 'Disciplina', description: 'Essere più paziente al piatto' },
+                        { title: 'Contatto', description: 'Mettere più palle in gioco' }
+                    ],
+                    leadership: [
+                        { title: 'Conoscenza gioco', description: 'Studiare le situazioni per guidare la difesa' },
+                        { title: 'Comunicazione', description: 'Essere più vocale con i compagni e i lanciatori' }
+                    ]
+                }
+            },
+            24: { // Guido Nannucci - UTL
+                name: 'Guido Nannucci',
+                number: 24,
+                role: 'UTL',
+                objectives: {
+                    batting: [
+                        { title: 'Costruire media battuta', description: 'Lavorare intensamente sul contatto per iniziare a produrre valide' },
+                        { title: 'Meccanica swing', description: 'Perfezionare la meccanica dello swing con lavoro quotidiano' },
+                        { title: 'Timing', description: 'Migliorare il timing contro diversi tipi di lanciatori' },
+                        { title: 'Selezione lanci', description: 'Imparare a riconoscere i lanci buoni da attaccare' },
+                        { title: 'Approccio mentale', description: 'Sviluppare fiducia e mentalità positiva al piatto' },
+                        { title: 'Situazioni di gioco', description: 'Capire cosa serve alla squadra in ogni situazione' }
+                    ],
+                    fielding: [
+                        { title: 'Fondamentali base', description: 'Consolidare i fondamentali difensivi in ogni ruolo' },
+                        { title: 'Versatilità', description: 'Essere pronto a giocare in qualsiasi posizione' },
+                        { title: 'Footwork', description: 'Migliorare il movimento dei piedi' },
+                        { title: 'Tiri precisi', description: 'Aumentare la precisione dei tiri verso le basi' }
+                    ],
+                    physical: [
+                        { title: 'Condizione atletica', description: 'Migliorare la forma fisica generale' },
+                        { title: 'Velocità', description: 'Lavorare sulla velocità di base e reazione' }
+                    ]
+                }
+            },
+            77: { // Cosimo Rinaldi - 1B/RF
+                name: 'Cosimo Rinaldi',
+                number: 77,
+                role: '1B/RF',
+                objectives: {
+                    fielding: [
+                        { title: 'Stretch in prima', description: 'Perfezionare lo stretch per salvare tiri difficili' },
+                        { title: 'Palle a terra 1B', description: 'Gestire le palle a rimbalzo verso prima base' },
+                        { title: 'Ricevuta tiri', description: 'Migliorare la ricevuta dei tiri da tutti gli angoli' },
+                        { title: 'Difesa bunt', description: 'Caricare aggressivamente sui bunt' },
+                        { title: 'Range RF', description: 'Aumentare la copertura di terreno in esterno destro' },
+                        { title: 'Braccio RF', description: 'Sviluppare forza e precisione nei tiri dal campo destro' },
+                        { title: 'Lettura palla', description: 'Migliorare il primo passo sulle battute' }
+                    ],
+                    batting: [
+                        { title: 'Potenza', description: 'Sviluppare potenza per gli extra-base hit' },
+                        { title: 'Contatto costante', description: 'Mettere la palla in gioco con regolarità' },
+                        { title: 'Disciplina al piatto', description: 'Non espandere la zona e aspettare il proprio lancio' },
+                        { title: 'RBI production', description: 'Essere produttivo con corridori in base' },
+                        { title: 'Battuta opposta', description: 'Usare tutto il campo' }
+                    ],
+                    baserunning: [
+                        { title: 'Lettura difesa', description: 'Leggere la posizione della difesa per basi extra' },
+                        { title: 'Aggressività intelligente', description: 'Sapere quando prendere rischi sulle basi' }
+                    ]
+                }
+            }
+        };
+
+        // Mappa icone per categorie
+        const categoryIcons = {
+            batting: '🏏',
+            fielding: '🧤',
+            pitching: '⚾',
+            catching: '🥎',
+            physical: '💪',
+            baserunning: '🏃',
+            mental: '🧠',
+            leadership: '👑'
+        };
+
+        const categoryNames = {
+            batting: 'Battuta',
+            fielding: 'Difesa',
+            pitching: 'Lancio',
+            catching: 'Ricevitore',
+            physical: 'Preparazione Fisica',
+            baserunning: 'Corsa Basi',
+            mental: 'Mentalità',
+            leadership: 'Leadership'
+        };
+
+        // Genera contenuto
+        const playerData = sessionStorage.getItem('playerData');
+        const container = document.getElementById('personalContent');
+
+        if (playerData) {
+            const player = JSON.parse(playerData);
+            const objectives = playerObjectives[player.number];
+
+            if (objectives) {
+                let objectivesHTML = '';
+                
+                for (const [category, items] of Object.entries(objectives.objectives)) {
+                    objectivesHTML += `
+                        <div class="objective-category">
+                            <h3 class="category-title">${categoryIcons[category] || '📋'} ${categoryNames[category] || category}</h3>
+                            ${items.map(obj => `
+                                <div class="objective-item">
+                                    <div class="objective-icon">⚾</div>
+                                    <div class="objective-content">
+                                        <h4>${obj.title}</h4>
+                                        <p>${obj.description}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = `
+                    <div class="personal-hero">
+                        <div class="hero-content">
+                            <div class="player-badge">
+                                <span class="player-number">#${objectives.number}</span>
+                            </div>
+                            <h1 class="player-name">${objectives.name}</h1>
+                            <p class="player-role">${objectives.role}</p>
+                        </div>
+                    </div>
+
+                    <section class="objectives-section">
+                        <div class="objectives-header">
+                            <h2>🎯 I Tuoi Obiettivi Stagione 2026</h2>
+                            <p>Ecco su cosa lavoreremo insieme quest'anno</p>
+                        </div>
+
+                        ${objectivesHTML}
+
+                        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: #f0fff4; border-radius: 12px; border: 2px solid #48bb78;">
+                            <p style="font-size: 1.1rem; color: #276749;">
+                                💪 Lavora su ogni obiettivo con costanza e determinazione!
+                            </p>
+                        </div>
+
+                        <a href="index.html" class="back-btn">← Torna alla Home</a>
+                    </section>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="no-player">
+                        <h2>⚠️ Obiettivi non trovati</h2>
+                        <p>Non sono stati ancora definiti obiettivi per il tuo profilo.</p>
+                        <a href="index.html" class="back-btn">← Torna alla Home</a>
+                    </div>
+                `;
+            }
+        } else {
+            container.innerHTML = `
+                <div class="no-player">
+                    <h2>❌ Accesso negato</h2>
+                    <p>Devi effettuare il login per accedere alla tua area personale.</p>
+                    <a href="login.html" class="back-btn">🔒 Vai al Login</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

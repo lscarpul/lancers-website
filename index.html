@@ -23,7 +23,7 @@
             <li><a href="documento.html">Documento</a></li>
             <li><a href="calendario.html">Partite</a></li>
             <li><a href="allenamenti.html">Allenamenti</a></li>
-            <li><a href="calendario-completo.html">Tutto</a></li>
+            <li><a href="presenze.html">Presenze</a></li>
         </ul>
         <div class="hamburger">
             <span></span>
@@ -35,13 +35,102 @@
     <main class="hero">
         <div class="hero-content">
             <h1>⚾ Lancers Baseball Club</h1>
-            <p>Benvenuti nella nostra area riservata! Qui trovi tutto ciò che serve per la stagione 2026: documenti, calendari, allenamenti e partite.</p>
+            <p id="welcomeMessage">Benvenuti nella nostra area riservata! Qui trovi tutto ciò che serve per la stagione 2026: documenti, calendari, allenamenti e partite.</p>
             <div class="hero-buttons">
+                <a href="area-personale.html" class="btn btn-personal" id="personalAreaBtn" style="display: none;">🎯 I Miei Obiettivi</a>
+                <a href="presenze.html" class="btn btn-presence">📋 Conferma Presenza</a>
                 <a href="calendario-completo.html" class="btn btn-primary">📅 Calendario Completo</a>
                 <a href="documento.html" class="btn btn-secondary">📄 Documento</a>
             </div>
         </div>
     </main>
+
+    <script>
+        // Mostra messaggio personalizzato e pulsante area personale
+        const playerData = sessionStorage.getItem('playerData');
+        if (playerData) {
+            const player = JSON.parse(playerData);
+            document.getElementById('welcomeMessage').innerHTML = `Ciao <strong>#${player.number} ${player.name} ${player.surname}</strong>! Benvenuto nella tua area riservata.`;
+            document.getElementById('personalAreaBtn').style.display = 'inline-block';
+            
+            // Mostra pulsante gestione presenze solo per staff autorizzato
+            const authorizedNumbers = [25, 19, 38, 6, 'ADMIN'];
+            if (authorizedNumbers.includes(player.number)) {
+                const staffBtn = document.createElement('a');
+                staffBtn.href = 'gestione-presenze.html';
+                staffBtn.className = 'btn btn-staff';
+                staffBtn.innerHTML = '📊 Gestione Presenze';
+                staffBtn.style.background = 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)';
+                staffBtn.style.color = 'white';
+                document.querySelector('.hero-buttons').appendChild(staffBtn);
+            }
+            
+            // Popup promemoria presenza per prossimo evento
+            checkPresenceReminder(player);
+        }
+        
+        function checkPresenceReminder(player) {
+            // Verifica se c'è un evento nelle prossime 48 ore senza risposta
+            const allEvents = [
+                { date: '2026-01-15', title: 'Allenamento', time: '19:30 - 21:30' },
+                { date: '2026-01-20', title: 'Allenamento', time: '19:30 - 21:30' },
+                { date: '2026-01-22', title: 'Allenamento', time: '19:30 - 21:30' },
+                { date: '2026-01-27', title: 'Allenamento', time: '19:30 - 21:30' },
+                { date: '2026-01-29', title: 'Allenamento', time: '19:30 - 21:30' },
+                { date: '2026-02-03', title: 'Allenamento', time: '19:30 - 21:30' },
+                { date: '2026-02-05', title: 'Allenamento', time: '19:30 - 21:30' },
+                { date: '2026-03-01', title: 'Amichevole Interna', time: 'Domenica' },
+                { date: '2026-04-12', title: 'vs Health & Performance S.S.D', time: '11:00' }
+            ];
+            
+            const now = new Date();
+            const hoursAhead = 72; // Controlla eventi nelle prossime 72 ore
+            
+            for (const event of allEvents) {
+                const eventDate = new Date(event.date);
+                const diffHours = (eventDate - now) / (1000 * 60 * 60);
+                
+                if (diffHours > 0 && diffHours <= hoursAhead) {
+                    // Controlla se ha già risposto
+                    const storageKey = `presence_${player.number}`;
+                    const responses = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                    
+                    if (!responses[event.date]) {
+                        // Non ha ancora risposto, mostra popup
+                        showPresencePopup(event, eventDate);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        function showPresencePopup(event, eventDate) {
+            const days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            const dateStr = `${days[eventDate.getDay()]} ${eventDate.getDate()} ${months[eventDate.getMonth()]}`;
+            
+            const popup = document.createElement('div');
+            popup.id = 'presencePopup';
+            popup.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+                    <div style="background: white; border-radius: 20px; padding: 2rem; max-width: 400px; text-align: center; animation: slideUp 0.3s ease;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">📢</div>
+                        <h2 style="color: #1a365d; margin-bottom: 0.5rem;">Conferma la tua presenza!</h2>
+                        <p style="color: #718096; margin-bottom: 1rem;">Hai un evento in arrivo e non hai ancora risposto:</p>
+                        <div style="background: #f7fafc; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #ed8936;">
+                            <strong style="color: #1a365d;">${event.title}</strong><br>
+                            <span style="color: #718096;">📅 ${dateStr} - ${event.time}</span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="presenze.html" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #48bb78, #38a169); color: white; text-decoration: none; border-radius: 10px; font-weight: 600;">✅ Conferma Ora</a>
+                            <button onclick="document.getElementById('presencePopup').remove()" style="padding: 0.75rem 1.5rem; background: #e2e8f0; color: #4a5568; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Dopo</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+    </script>
 
     <!-- EVENTI SETTIMANA CORRENTE -->
     <section class="weekly-events">
