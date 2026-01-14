@@ -3,6 +3,8 @@
 
 const FIREBASE_DB_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
 
+console.log('🔥 Firebase config loaded - URL:', FIREBASE_DB_URL);
+
 // ===== FUNZIONI DATABASE =====
 
 const LancersDB = {
@@ -22,28 +24,33 @@ const LancersDB = {
 
     // Salva la presenza di un giocatore
     async save(playerNumber, eventDate, responseType) {
+        console.log('💾 Saving to Firebase:', { playerNumber, eventDate, responseType });
         try {
             const presenceData = {
                 response: responseType,
                 timestamp: new Date().toISOString()
             };
             
+            const url = `${FIREBASE_DB_URL}/presenze/${playerNumber}/${eventDate.replace(/\-/g, '_')}.json`;
+            console.log('📡 Firebase URL:', url);
+            
             // Salva su Firebase
-            const response = await fetch(
-                `${FIREBASE_DB_URL}/presenze/${playerNumber}/${eventDate.replace(/\-/g, '_')}.json`,
-                {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(presenceData)
-                }
-            );
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(presenceData)
+            });
+            
+            console.log('📥 Firebase response status:', response.status);
             
             if (!response.ok) throw new Error('Errore salvataggio');
+            
+            const result = await response.json();
+            console.log('✅ Presenza salvata su Firebase:', result);
             
             // Salva anche in localStorage come backup
             this.saveToLocalStorage(playerNumber, eventDate, responseType);
             
-            console.log('✅ Presenza salvata su Firebase');
             return true;
         } catch (error) {
             console.error('❌ Errore salvataggio Firebase:', error);
