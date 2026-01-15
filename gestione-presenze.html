@@ -403,6 +403,14 @@
                         <button class="action-btn whatsapp" onclick="sendWhatsAppReport('next')">💬 Invia via WhatsApp</button>
                     </div>
                 </div>
+                <div class="send-buttons" style="background: #ebf8ff; border-left-color: #4299e1;">
+                    <h4>📊 Scarica Report Excel - Riepilogo Generale</h4>
+                    <p style="color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem;">Esporta le statistiche generali e il prossimo evento</p>
+                    <div class="action-buttons">
+                        <button class="action-btn" style="background: linear-gradient(135deg, #38a169 0%, #276749 100%); color: white;" onclick="downloadExcelOverview()">📥 Scarica Excel (.xlsx)</button>
+                        <button class="action-btn" style="background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%); color: white;" onclick="downloadCSVOverview()">📄 Scarica CSV</button>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB: Per Evento -->
@@ -421,6 +429,14 @@
                         <button class="action-btn whatsapp" onclick="sendWhatsAppReport('selected')">💬 Invia via WhatsApp</button>
                     </div>
                 </div>
+                <div class="send-buttons" id="eventExcelButtons" style="display: none; background: #ebf8ff; border-left-color: #4299e1;">
+                    <h4>📊 Scarica Report Excel - Evento Selezionato</h4>
+                    <p style="color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem;">Esporta le presenze dell'evento selezionato</p>
+                    <div class="action-buttons">
+                        <button class="action-btn" style="background: linear-gradient(135deg, #38a169 0%, #276749 100%); color: white;" onclick="downloadExcelEvent()">📥 Scarica Excel (.xlsx)</button>
+                        <button class="action-btn" style="background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%); color: white;" onclick="downloadCSVEvent()">📄 Scarica CSV</button>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB: Per Giocatore -->
@@ -434,6 +450,14 @@
                     <div class="action-buttons">
                         <button class="action-btn email" onclick="sendEmailReport('all')">📧 Invia via Email</button>
                         <button class="action-btn whatsapp" onclick="sendWhatsAppReport('all')">💬 Invia via WhatsApp</button>
+                    </div>
+                </div>
+                <div class="send-buttons" style="background: #ebf8ff; border-left-color: #4299e1;">
+                    <h4>📊 Scarica Report Excel</h4>
+                    <p style="color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem;">Esporta le statistiche complete di tutti i giocatori in formato Excel</p>
+                    <div class="action-buttons">
+                        <button class="action-btn" style="background: linear-gradient(135deg, #38a169 0%, #276749 100%); color: white;" onclick="downloadExcel()">📥 Scarica Excel (.xlsx)</button>
+                        <button class="action-btn" style="background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%); color: white;" onclick="downloadCSV()">📄 Scarica CSV</button>
                     </div>
                 </div>
             </div>
@@ -451,6 +475,8 @@
 
     <script src="script.js"></script>
     <script src="firebase-config.js"></script>
+    <!-- SheetJS per export Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script>
         const STAFF_EMAIL = 'loriscarpulla@gmail.com';
         const WHATSAPP_NUMBER = '393331549353';
@@ -478,7 +504,7 @@
             { number: 90, name: 'Alessandro', surname: 'Rrethatori', role: 'C' }
         ];
 
-        const allEvents = [
+        const adminEvents = [
             { date: '2026-01-15', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
             { date: '2026-01-20', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
             { date: '2026-01-22', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
@@ -615,7 +641,7 @@
         function getNextEvent() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            for (const event of allEvents) {
+            for (const event of adminEvents) {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) return { ...event, dateObj: eventDate };
             }
@@ -671,7 +697,7 @@
             } else if (type === 'selected') {
                 const eventIndex = document.getElementById('eventSelect').value;
                 if (!eventIndex) { alert('Seleziona prima un evento'); return; }
-                const event = allEvents[eventIndex];
+                const event = adminEvents[eventIndex];
                 const report = generateEventReport(event);
                 subject = `⚾ Presenze Lancers - ${report.event.title} (${formatDate(report.event.date)})`;
                 body = `RIEPILOGO PRESENZE LANCERS BASEBALL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
@@ -706,7 +732,7 @@
             } else if (type === 'selected') {
                 const eventIndex = document.getElementById('eventSelect').value;
                 if (!eventIndex) { alert('Seleziona prima un evento'); return; }
-                const event = allEvents[eventIndex];
+                const event = adminEvents[eventIndex];
                 const report = generateEventReport(event);
                 message = `⚾ *PRESENZE LANCERS*\n\n📅 *${report.event.title}*\n📆 ${formatDateLong(report.event.date)}\n🕐 ${report.event.time}\n\n`;
                 message += `✅ *PRESENTI (${report.presentList.length}):*\n${report.presentList.length > 0 ? report.presentList.join('\n') : '(nessuno)'}\n\n`;
@@ -801,7 +827,7 @@
             const eventSelect = document.getElementById('eventSelect');
             const today = new Date(); today.setHours(0, 0, 0, 0);
             eventSelect.innerHTML = '<option value="">-- Seleziona un evento --</option>';
-            allEvents.forEach((event, index) => {
+            adminEvents.forEach((event, index) => {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) eventSelect.innerHTML += `<option value="${index}">${formatDate(event.date)} - ${event.title}</option>`;
             });
@@ -839,10 +865,12 @@
             if (!eventIndex) {
                 document.getElementById('eventDetails').innerHTML = '';
                 document.getElementById('eventSendButtons').style.display = 'none';
+                document.getElementById('eventExcelButtons').style.display = 'none';
                 return;
             }
             document.getElementById('eventSendButtons').style.display = 'block';
-            const event = allEvents[eventIndex];
+            document.getElementById('eventExcelButtons').style.display = 'block';
+            const event = adminEvents[eventIndex];
             const presences = cachedPresences;
             const playerStatuses = allPlayers.map(player => {
                 const playerPresences = presences[player.number] || {};
@@ -874,6 +902,429 @@
                             </span></td>
                         </tr>`).join('')}</tbody>
                 </table>`;
+        }
+
+        // Funzione per scaricare Excel
+        function downloadExcel() {
+            const presences = cachedPresences;
+            const today = new Date();
+            
+            // Prepara i dati per Excel
+            const data = [];
+            
+            // Intestazione
+            const headers = ['#', 'Nome', 'Cognome', 'Ruolo', 'Presenti', 'Forse', 'Assenti', 'Totale Risposte', 'Tasso Presenza %'];
+            
+            // Aggiungi le date degli eventi come colonne
+            const futureEvents = adminEvents.filter(e => new Date(e.date) >= today).slice(0, 20);
+            futureEvents.forEach(event => {
+                const d = new Date(event.date);
+                headers.push(`${d.getDate()}/${d.getMonth() + 1} - ${event.title}`);
+            });
+            
+            data.push(headers);
+            
+            // Dati dei giocatori
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                let presentCount = 0, absentCount = 0, maybeCount = 0;
+                
+                Object.values(playerPresences).forEach(response => {
+                    if (response.response === 'yes') presentCount++;
+                    else if (response.response === 'no') absentCount++;
+                    else if (response.response === 'maybe') maybeCount++;
+                });
+                
+                const total = presentCount + absentCount + maybeCount;
+                const rate = total > 0 ? Math.round((presentCount / total) * 100) : 0;
+                
+                const row = [
+                    player.number,
+                    player.name,
+                    player.surname,
+                    player.role,
+                    presentCount,
+                    maybeCount,
+                    absentCount,
+                    total,
+                    rate
+                ];
+                
+                // Aggiungi lo stato per ogni evento
+                futureEvents.forEach(event => {
+                    const response = playerPresences[event.date];
+                    if (response) {
+                        row.push(response.response === 'yes' ? '✓ Presente' : response.response === 'no' ? '✗ Assente' : '? Forse');
+                    } else {
+                        row.push('- In attesa');
+                    }
+                });
+                
+                data.push(row);
+            });
+            
+            // Crea il workbook Excel
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            
+            // Imposta la larghezza delle colonne
+            ws['!cols'] = [
+                { wch: 5 },  // #
+                { wch: 15 }, // Nome
+                { wch: 15 }, // Cognome
+                { wch: 10 }, // Ruolo
+                { wch: 10 }, // Presenti
+                { wch: 8 },  // Forse
+                { wch: 10 }, // Assenti
+                { wch: 12 }, // Totale
+                { wch: 15 }, // Tasso
+            ];
+            
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Presenze Lancers');
+            
+            // Scarica il file
+            const fileName = `Presenze_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        }
+        
+        // Funzione per scaricare CSV
+        function downloadCSV() {
+            const presences = cachedPresences;
+            const today = new Date();
+            
+            // Prepara i dati per CSV
+            let csv = '';
+            
+            // Intestazione
+            const headers = ['Numero', 'Nome', 'Cognome', 'Ruolo', 'Presenti', 'Forse', 'Assenti', 'Totale Risposte', 'Tasso Presenza %'];
+            
+            // Aggiungi le date degli eventi come colonne
+            const futureEvents = adminEvents.filter(e => new Date(e.date) >= today).slice(0, 20);
+            futureEvents.forEach(event => {
+                const d = new Date(event.date);
+                headers.push(`${d.getDate()}/${d.getMonth() + 1} - ${event.title}`);
+            });
+            
+            csv += headers.join(';') + '\n';
+            
+            // Dati dei giocatori
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                let presentCount = 0, absentCount = 0, maybeCount = 0;
+                
+                Object.values(playerPresences).forEach(response => {
+                    if (response.response === 'yes') presentCount++;
+                    else if (response.response === 'no') absentCount++;
+                    else if (response.response === 'maybe') maybeCount++;
+                });
+                
+                const total = presentCount + absentCount + maybeCount;
+                const rate = total > 0 ? Math.round((presentCount / total) * 100) : 0;
+                
+                const row = [
+                    player.number,
+                    player.name,
+                    player.surname,
+                    player.role,
+                    presentCount,
+                    maybeCount,
+                    absentCount,
+                    total,
+                    rate + '%'
+                ];
+                
+                // Aggiungi lo stato per ogni evento
+                futureEvents.forEach(event => {
+                    const response = playerPresences[event.date];
+                    if (response) {
+                        row.push(response.response === 'yes' ? 'Presente' : response.response === 'no' ? 'Assente' : 'Forse');
+                    } else {
+                        row.push('In attesa');
+                    }
+                });
+                
+                csv += row.join(';') + '\n';
+            });
+            
+            // Scarica il file
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Presenze_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.csv`;
+            link.click();
+        }
+
+        // ========== EXCEL TAB RIEPILOGO (OVERVIEW) ==========
+        function downloadExcelOverview() {
+            const presences = cachedPresences;
+            const today = new Date();
+            
+            // Trova il prossimo evento
+            const nextEvent = adminEvents.find(e => new Date(e.date) >= today);
+            
+            // Sheet 1: Statistiche Generali
+            const statsData = [
+                ['RIEPILOGO GENERALE PRESENZE LANCERS'],
+                ['Data Report:', today.toLocaleDateString('it-IT')],
+                [],
+                ['STATISTICHE GLOBALI'],
+                ['Totale Giocatori:', allPlayers.length],
+            ];
+            
+            // Calcola statistiche globali
+            let totalPresent = 0, totalAbsent = 0, totalMaybe = 0;
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                Object.values(playerPresences).forEach(response => {
+                    if (response.response === 'yes') totalPresent++;
+                    else if (response.response === 'no') totalAbsent++;
+                    else if (response.response === 'maybe') totalMaybe++;
+                });
+            });
+            
+            statsData.push(['Totale Risposte "Presente":', totalPresent]);
+            statsData.push(['Totale Risposte "Forse":', totalMaybe]);
+            statsData.push(['Totale Risposte "Assente":', totalAbsent]);
+            statsData.push([]);
+            
+            // Prossimo evento
+            if (nextEvent) {
+                const eventDate = new Date(nextEvent.date);
+                statsData.push(['PROSSIMO EVENTO']);
+                statsData.push(['Evento:', nextEvent.title]);
+                statsData.push(['Data:', eventDate.toLocaleDateString('it-IT')]);
+                statsData.push(['Orario:', nextEvent.time]);
+                statsData.push([]);
+                statsData.push(['STATO GIOCATORI PER PROSSIMO EVENTO']);
+                statsData.push(['#', 'Nome', 'Cognome', 'Ruolo', 'Stato']);
+                
+                allPlayers.forEach(player => {
+                    const playerPresences = presences[String(player.number)] || {};
+                    const eventResponse = playerPresences[nextEvent.date];
+                    const status = eventResponse ? 
+                        (eventResponse.response === 'yes' ? 'Presente' : 
+                         eventResponse.response === 'no' ? 'Assente' : 'Forse') 
+                        : 'In attesa';
+                    statsData.push([player.number, player.name, player.surname, player.role, status]);
+                });
+            }
+            
+            const ws = XLSX.utils.aoa_to_sheet(statsData);
+            ws['!cols'] = [{ wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 10 }, { wch: 12 }];
+            
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Riepilogo Generale');
+            
+            const fileName = `Riepilogo_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        }
+        
+        function downloadCSVOverview() {
+            const presences = cachedPresences;
+            const today = new Date();
+            const nextEvent = adminEvents.find(e => new Date(e.date) >= today);
+            
+            let csv = 'RIEPILOGO GENERALE PRESENZE LANCERS\n';
+            csv += `Data Report;${today.toLocaleDateString('it-IT')}\n\n`;
+            
+            // Statistiche globali
+            let totalPresent = 0, totalAbsent = 0, totalMaybe = 0;
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                Object.values(playerPresences).forEach(response => {
+                    if (response.response === 'yes') totalPresent++;
+                    else if (response.response === 'no') totalAbsent++;
+                    else if (response.response === 'maybe') totalMaybe++;
+                });
+            });
+            
+            csv += 'STATISTICHE GLOBALI\n';
+            csv += `Totale Giocatori;${allPlayers.length}\n`;
+            csv += `Totale Presenti;${totalPresent}\n`;
+            csv += `Totale Forse;${totalMaybe}\n`;
+            csv += `Totale Assenti;${totalAbsent}\n\n`;
+            
+            if (nextEvent) {
+                const eventDate = new Date(nextEvent.date);
+                csv += 'PROSSIMO EVENTO\n';
+                csv += `Evento;${nextEvent.title}\n`;
+                csv += `Data;${eventDate.toLocaleDateString('it-IT')}\n`;
+                csv += `Orario;${nextEvent.time}\n\n`;
+                csv += 'Numero;Nome;Cognome;Ruolo;Stato\n';
+                
+                allPlayers.forEach(player => {
+                    const playerPresences = presences[String(player.number)] || {};
+                    const eventResponse = playerPresences[nextEvent.date];
+                    const status = eventResponse ? 
+                        (eventResponse.response === 'yes' ? 'Presente' : 
+                         eventResponse.response === 'no' ? 'Assente' : 'Forse') 
+                        : 'In attesa';
+                    csv += `${player.number};${player.name};${player.surname};${player.role};${status}\n`;
+                });
+            }
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Riepilogo_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.csv`;
+            link.click();
+        }
+
+        // ========== EXCEL TAB PER EVENTO ==========
+        function downloadExcelEvent() {
+            const eventIndex = document.getElementById('eventSelect').value;
+            if (!eventIndex) {
+                alert('Seleziona prima un evento!');
+                return;
+            }
+            
+            const event = adminEvents[eventIndex];
+            const presences = cachedPresences;
+            const today = new Date();
+            const eventDate = new Date(event.date);
+            
+            const data = [
+                ['REPORT PRESENZE EVENTO'],
+                ['Evento:', event.title],
+                ['Data:', eventDate.toLocaleDateString('it-IT')],
+                ['Orario:', event.time],
+                ['Tipo:', event.tag],
+                [],
+                ['RIEPILOGO']
+            ];
+            
+            // Calcola statistiche evento
+            let presentCount = 0, absentCount = 0, maybeCount = 0, pendingCount = 0;
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                if (eventResponse) {
+                    if (eventResponse.response === 'yes') presentCount++;
+                    else if (eventResponse.response === 'no') absentCount++;
+                    else if (eventResponse.response === 'maybe') maybeCount++;
+                } else {
+                    pendingCount++;
+                }
+            });
+            
+            data.push(['Presenti:', presentCount]);
+            data.push(['Forse:', maybeCount]);
+            data.push(['Assenti:', absentCount]);
+            data.push(['In Attesa:', pendingCount]);
+            data.push([]);
+            data.push(['DETTAGLIO GIOCATORI']);
+            data.push(['#', 'Nome', 'Cognome', 'Ruolo', 'Stato', 'Data Risposta']);
+            
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                let status = 'In attesa';
+                let timestamp = '-';
+                
+                if (eventResponse) {
+                    status = eventResponse.response === 'yes' ? 'Presente' : 
+                             eventResponse.response === 'no' ? 'Assente' : 'Forse';
+                    if (eventResponse.timestamp) {
+                        timestamp = new Date(eventResponse.timestamp).toLocaleString('it-IT');
+                    }
+                }
+                
+                data.push([player.number, player.name, player.surname, player.role, status, timestamp]);
+            });
+            
+            // Aggiungi liste separate
+            data.push([]);
+            data.push(['LISTA PRESENTI']);
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                if (eventResponse && eventResponse.response === 'yes') {
+                    data.push([`${player.number} - ${player.name} ${player.surname}`]);
+                }
+            });
+            
+            data.push([]);
+            data.push(['LISTA ASSENTI']);
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                if (eventResponse && eventResponse.response === 'no') {
+                    data.push([`${player.number} - ${player.name} ${player.surname}`]);
+                }
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            ws['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 15 }, { wch: 10 }, { wch: 12 }, { wch: 20 }];
+            
+            const wb = XLSX.utils.book_new();
+            const sheetName = `${eventDate.getDate()}-${eventDate.getMonth()+1} ${event.title}`.substring(0, 31);
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            
+            const fileName = `Evento_${event.title.replace(/[^a-zA-Z0-9]/g, '_')}_${event.date}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        }
+        
+        function downloadCSVEvent() {
+            const eventIndex = document.getElementById('eventSelect').value;
+            if (!eventIndex) {
+                alert('Seleziona prima un evento!');
+                return;
+            }
+            
+            const event = adminEvents[eventIndex];
+            const presences = cachedPresences;
+            const eventDate = new Date(event.date);
+            
+            let csv = 'REPORT PRESENZE EVENTO\n';
+            csv += `Evento;${event.title}\n`;
+            csv += `Data;${eventDate.toLocaleDateString('it-IT')}\n`;
+            csv += `Orario;${event.time}\n`;
+            csv += `Tipo;${event.tag}\n\n`;
+            
+            // Statistiche
+            let presentCount = 0, absentCount = 0, maybeCount = 0, pendingCount = 0;
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                if (eventResponse) {
+                    if (eventResponse.response === 'yes') presentCount++;
+                    else if (eventResponse.response === 'no') absentCount++;
+                    else if (eventResponse.response === 'maybe') maybeCount++;
+                } else {
+                    pendingCount++;
+                }
+            });
+            
+            csv += 'RIEPILOGO\n';
+            csv += `Presenti;${presentCount}\n`;
+            csv += `Forse;${maybeCount}\n`;
+            csv += `Assenti;${absentCount}\n`;
+            csv += `In Attesa;${pendingCount}\n\n`;
+            
+            csv += 'Numero;Nome;Cognome;Ruolo;Stato;Data Risposta\n';
+            
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                let status = 'In attesa';
+                let timestamp = '-';
+                
+                if (eventResponse) {
+                    status = eventResponse.response === 'yes' ? 'Presente' : 
+                             eventResponse.response === 'no' ? 'Assente' : 'Forse';
+                    if (eventResponse.timestamp) {
+                        timestamp = new Date(eventResponse.timestamp).toLocaleString('it-IT');
+                    }
+                }
+                
+                csv += `${player.number};${player.name};${player.surname};${player.role};${status};${timestamp}\n`;
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Evento_${event.title.replace(/[^a-zA-Z0-9]/g, '_')}_${event.date}.csv`;
+            link.click();
         }
 
         loadAllData();

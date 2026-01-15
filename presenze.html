@@ -8,181 +8,306 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         .presence-hero {
-            min-height: 30vh;
+            min-height: 25vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
-            padding: 3rem 5%;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #1a365d 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            padding: 2rem 5%;
             text-align: center;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .presence-hero h1 {
             color: white;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .presence-hero p {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .presence-section {
-            max-width: 700px;
+            max-width: 900px;
             margin: -2rem auto 2rem;
             padding: 2rem;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .next-event {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-left: 5px solid #ed8936;
-        }
-
-        .event-type {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .event-type.training {
-            background: #c6f6d5;
-            color: #276749;
-        }
-
-        .event-type.match {
-            background: #fed7d7;
-            color: #c53030;
-        }
-
-        .event-type.friendly {
-            background: #feebc8;
-            color: #c05621;
-        }
-
-        .event-title {
-            font-size: 1.5rem;
-            color: #1a365d;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-details {
-            color: #718096;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-date {
-            font-size: 1.2rem;
-            color: #2d3748;
-            font-weight: 600;
-        }
-
-        .presence-question {
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        .presence-question h2 {
-            color: #1a365d;
-            margin-bottom: 0.5rem;
-        }
-
-        .presence-question p {
-            color: #718096;
-        }
-
-        .presence-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-
-        .presence-btn {
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-
-        .presence-btn.yes {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-
-        .presence-btn.yes:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
-        }
-
-        .presence-btn.no {
-            background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
-            color: white;
-        }
-
-        .presence-btn.no:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(229, 62, 62, 0.3);
-        }
-
-        .presence-btn.maybe {
-            background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%);
-            color: white;
-        }
-
-        .presence-btn.maybe:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(214, 158, 46, 0.3);
-        }
-
-        .whatsapp-note {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            background: #f0fff4;
-            border-radius: 10px;
-            color: #276749;
-            font-size: 0.9rem;
-        }
-
-        .whatsapp-note strong {
-            color: #25d366;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
         }
 
         .player-info {
             text-align: center;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: #ebf8ff;
-            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            border-radius: 16px;
+            border: 2px solid #90cdf4;
         }
 
         .player-info h3 {
             color: #1a365d;
             margin: 0;
+            font-size: 1.3rem;
         }
 
         .player-info p {
             color: #4a5568;
             margin: 0.25rem 0 0;
             font-size: 0.9rem;
+        }
+
+        .presence-intro {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+        }
+
+        .presence-intro h2 {
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .presence-intro p {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: #cbd5e0;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            border-color: #cbd5e0;
+        }
+
+        .event-card.responded-yes {
+            border-color: #9ae6b4;
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+        }
+        .event-card.responded-yes::before { background: #48bb78; }
+
+        .event-card.responded-no {
+            border-color: #feb2b2;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        }
+        .event-card.responded-no::before { background: #e53e3e; }
+
+        .event-card.responded-maybe {
+            border-color: #faf089;
+            background: linear-gradient(135deg, #fffff0 0%, #fefcbf 100%);
+        }
+        .event-card.responded-maybe::before { background: #ecc94b; }
+
+        .event-card.not-responded {
+            border-color: #fbd38d;
+        }
+        .event-card.not-responded::before { background: #ed8936; }
+
+        .event-card.auto-absent {
+            border-color: #feb2b2;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            opacity: 0.8;
+        }
+        .event-card.auto-absent::before { background: #c53030; }
+
+        .event-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .event-type {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-type.training {
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            color: #276749;
+        }
+
+        .event-type.match {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            color: #c53030;
+        }
+
+        .event-type.friendly {
+            background: linear-gradient(135deg, #feebc8 0%, #fbd38d 100%);
+            color: #c05621;
+        }
+
+        .event-status {
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-status.yes {
+            background: #48bb78;
+            color: white;
+        }
+
+        .event-status.no {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .event-status.maybe {
+            background: #ecc94b;
+            color: #744210;
+        }
+
+        .event-status.pending {
+            background: #ed8936;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .event-status.auto-absent {
+            background: #c53030;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .event-card-title {
+            font-size: 1.05rem;
+            color: #1a365d;
+            margin: 0 0 0.5rem 0;
+            font-weight: 700;
+        }
+
+        .event-card-date {
+            color: #2d3748;
+            font-size: 0.9rem;
+            margin: 0.25rem 0;
+            font-weight: 600;
+        }
+
+        .event-card-time {
+            color: #718096;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+
+        .event-card-buttons {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .mini-btn {
+            width: 55px;
+            height: 55px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .mini-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .mini-btn.yes {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .mini-btn.yes:hover:not(:disabled) {
+            transform: scale(1.15) rotate(-5deg);
+            box-shadow: 0 8px 20px rgba(72, 187, 120, 0.5);
+        }
+
+        .mini-btn.no {
+            background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .mini-btn.no:hover:not(:disabled) {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(229, 62, 62, 0.5);
+        }
+
+        .mini-btn.maybe {
+            background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%);
+            color: white;
+        }
+
+        .mini-btn.maybe:hover:not(:disabled) {
+            transform: scale(1.15);
+            box-shadow: 0 8px 20px rgba(214, 158, 46, 0.5);
+        }
+
+        .mini-btn.remove {
+            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            font-size: 1.1rem;
+        }
+
+        .mini-btn.remove:hover:not(:disabled) {
+            transform: scale(1.15);
+            box-shadow: 0 8px 20px rgba(113, 128, 150, 0.5);
         }
 
         .no-event {
@@ -200,67 +325,75 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: #1a365d;
+            padding: 0.85rem 1.75rem;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
             color: white;
             text-decoration: none;
-            border-radius: 10px;
-            margin-top: 2rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
             transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(26, 54, 93, 0.3);
         }
 
         .back-btn:hover {
-            background: #2c5282;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 54, 93, 0.4);
         }
 
-        .history-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .history-section h3 {
-            color: #1a365d;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .history-item {
+        .legend {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1rem;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
             background: #f7fafc;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
+            border-radius: 12px;
         }
 
-        .history-item .event-name {
-            font-weight: 600;
-            color: #2d3748;
-        }
-
-        .history-item .response {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.85rem;
-            font-weight: 600;
+            color: #4a5568;
         }
 
-        .history-item .response.yes {
-            background: #c6f6d5;
-            color: #276749;
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
         }
 
-        .history-item .response.no {
-            background: #fed7d7;
-            color: #c53030;
-        }
+        .legend-dot.yes { background: #48bb78; }
+        .legend-dot.no { background: #e53e3e; }
+        .legend-dot.maybe { background: #ecc94b; }
+        .legend-dot.pending { background: #ed8936; }
 
-        .history-item .response.maybe {
-            background: #fefcbf;
-            color: #975a16;
+        @media (max-width: 768px) {
+            .presence-section {
+                margin: -1rem 1rem 2rem;
+                padding: 1.25rem;
+            }
+            
+            .presence-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mini-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .legend {
+                gap: 1rem;
+            }
         }
     </style>
 </head>
@@ -292,7 +425,7 @@
     <div class="presence-hero">
         <div class="hero-content">
             <h1>📋 Conferma Presenza</h1>
-            <p>Indica se sarai presente al prossimo evento</p>
+            <p>Indica la tua presenza per i prossimi 10 eventi</p>
         </div>
     </div>
 
@@ -308,11 +441,8 @@
     <script src="script.js"></script>
     <script src="firebase-config.js"></script>
     <script>
-        // Numero WhatsApp dello staff (formato internazionale senza +)
-        const WHATSAPP_NUMBER = '393331549353';
-
-        // Database eventi (stesso di script.js)
-        const allEvents = [
+        // Database eventi per la pagina presenze
+        const presenzeEvents = [
             // GENNAIO 2026
             { date: '2026-01-15', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
             { date: '2026-01-20', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
@@ -370,13 +500,29 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
-            for (const event of allEvents) {
+            for (const event of presenzeEvents) {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) {
                     return { ...event, dateObj: eventDate };
                 }
             }
             return null;
+        }
+
+        // Funzione per ottenere i prossimi N eventi
+        function getNextEvents(count = 10) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const futureEvents = [];
+            for (const event of presenzeEvents) {
+                const eventDate = new Date(event.date);
+                if (eventDate >= today) {
+                    futureEvents.push({ ...event, dateObj: eventDate });
+                    if (futureEvents.length >= count) break;
+                }
+            }
+            return futureEvents;
         }
 
         // Funzione per formattare la data
@@ -394,87 +540,18 @@
             return 'training';
         }
 
-        // Funzione per inviare messaggio WhatsApp
-        async function sendWhatsApp(response) {
-            const playerData = JSON.parse(sessionStorage.getItem('playerData'));
-            const nextEvent = getNextEvent();
-            
-            if (!playerData || !nextEvent) return;
-            
-            const playerName = `${playerData.name} ${playerData.surname} (#${playerData.number})`;
-            const eventInfo = `${nextEvent.title} - ${formatDate(nextEvent.dateObj)}`;
-            
-            let responseText = '';
-            let emoji = '';
-            
-            switch(response) {
-                case 'yes':
-                    responseText = 'PRESENTE ✅';
-                    emoji = '✅';
-                    break;
-                case 'no':
-                    responseText = 'ASSENTE ❌';
-                    emoji = '❌';
-                    break;
-                case 'maybe':
-                    responseText = 'FORSE/INCERTO ⚠️';
-                    emoji = '⚠️';
-                    break;
-            }
-            
-            const message = `${emoji} *PRESENZA LANCERS*\n\n👤 *Giocatore:* ${playerName}\n📅 *Evento:* ${eventInfo}\n📍 *Risposta:* ${responseText}`;
-            
-            // Salva la risposta su Firebase
-            await LancersDB.save(playerData.number, nextEvent.date, response);
-            
-            // Apri WhatsApp con il messaggio pre-compilato
-            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-            
-            // Aggiorna la UI
-            showConfirmation(response);
-        }
-
         // Ottieni le risposte salvate da Firebase
         async function getSavedResponses() {
             const playerData = JSON.parse(sessionStorage.getItem('playerData'));
             if (!playerData) return {};
             
-            return await LancersDB.getPlayer(playerData.number);
-        }
-
-        // Mostra conferma
-        function showConfirmation(response) {
-            const container = document.getElementById('presenceSection');
-            const nextEvent = getNextEvent();
-            
-            let responseText = '';
-            let bgColor = '';
-            
-            switch(response) {
-                case 'yes':
-                    responseText = '✅ Presenza confermata!';
-                    bgColor = '#c6f6d5';
-                    break;
-                case 'no':
-                    responseText = '❌ Assenza registrata';
-                    bgColor = '#fed7d7';
-                    break;
-                case 'maybe':
-                    responseText = '⚠️ Risposta incerta registrata';
-                    bgColor = '#fefcbf';
-                    break;
-            }
-            
-            // Aggiorna solo la sezione dei pulsanti
-            const buttonsSection = document.querySelector('.presence-buttons');
-            if (buttonsSection) {
-                buttonsSection.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; background: ${bgColor}; border-radius: 12px; width: 100%;">
-                        <p style="font-size: 1.3rem; font-weight: 600; margin: 0;">${responseText}</p>
-                        <p style="color: #718096; margin-top: 0.5rem;">Il messaggio WhatsApp è stato preparato</p>
-                    </div>
-                `;
+            try {
+                const responses = await LancersDB.getPlayer(playerData.number);
+                console.log('📥 Risposte caricate:', responses);
+                return responses || {};
+            } catch (error) {
+                console.error('❌ Errore caricamento risposte:', error);
+                return {};
             }
         }
 
@@ -482,7 +559,11 @@
         async function generateContent() {
             const container = document.getElementById('presenceSection');
             const playerData = sessionStorage.getItem('playerData');
-            const nextEvent = getNextEvent();
+            const nextEvents = getNextEvents(10);
+            
+            console.log('🚀 generateContent avviato');
+            console.log('👤 playerData:', playerData);
+            console.log('📅 nextEvents:', nextEvents.length, 'eventi trovati');
             
             if (!playerData) {
                 container.innerHTML = `
@@ -505,13 +586,42 @@
                     <p>${player.role}</p>
                 </div>
                 <div style="text-align: center; padding: 2rem;">
-                    <p>⏳ Caricamento...</p>
+                    <p>⏳ Caricamento presenze...</p>
                 </div>
             `;
             
-            const savedResponses = await getSavedResponses();
+            let savedResponses = {};
+            try {
+                savedResponses = await getSavedResponses();
+            } catch (error) {
+                console.error('❌ Errore getSavedResponses:', error);
+            }
             
-            if (!nextEvent) {
+            console.log('💾 savedResponses:', savedResponses);
+            
+            // Controlla eventi passati senza risposta e segna come assente automaticamente
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // Marca automaticamente come assente gli eventi passati senza risposta
+            for (const event of presenzeEvents) {
+                const eventDate = new Date(event.date);
+                const dayAfterEvent = new Date(eventDate);
+                dayAfterEvent.setDate(dayAfterEvent.getDate() + 1);
+                
+                // Se siamo al giorno dopo l'evento e non c'è risposta
+                if (today >= dayAfterEvent && !savedResponses[event.date]) {
+                    try {
+                        await LancersDB.save(player.number, event.date, 'no');
+                        savedResponses[event.date] = { response: 'no', autoAbsent: true };
+                        console.log(`🚫 Auto-assente per evento ${event.date}`);
+                    } catch (error) {
+                        console.error('Errore auto-assente:', error);
+                    }
+                }
+            }
+            
+            if (nextEvents.length === 0) {
                 container.innerHTML = `
                     <div class="player-info">
                         <h3>#${player.number} ${player.name} ${player.surname}</h3>
@@ -527,102 +637,85 @@
                 return;
             }
             
-            // Controlla se ha già risposto per questo evento
-            const alreadyResponded = savedResponses[nextEvent.date];
-            
-            let buttonsHTML = '';
-            if (alreadyResponded) {
-                let responseText = '';
-                let bgColor = '';
-                switch(alreadyResponded.response) {
-                    case 'yes':
-                        responseText = '✅ Hai confermato la presenza';
-                        bgColor = '#c6f6d5';
-                        break;
-                    case 'no':
-                        responseText = '❌ Hai indicato che sarai assente';
-                        bgColor = '#fed7d7';
-                        break;
-                    case 'maybe':
-                        responseText = '⚠️ Hai indicato che sei incerto';
-                        bgColor = '#fefcbf';
-                        break;
-                }
-                buttonsHTML = `
-                    <div style="text-align: center; padding: 1.5rem; background: ${bgColor}; border-radius: 12px; width: 100%;">
-                        <p style="font-size: 1.1rem; font-weight: 600; margin: 0;">${responseText}</p>
-                        <p style="color: #718096; margin-top: 0.5rem; font-size: 0.9rem;">Vuoi modificare la risposta?</p>
-                    </div>
-                    <div class="presence-buttons" style="margin-top: 1rem;">
-                        <button class="presence-btn yes" onclick="sendWhatsApp('yes')">✅ Presente</button>
-                        <button class="presence-btn maybe" onclick="sendWhatsApp('maybe')">⚠️ Forse</button>
-                        <button class="presence-btn no" onclick="sendWhatsApp('no')">❌ Assente</button>
-                    </div>
-                `;
-            } else {
-                buttonsHTML = `
-                    <div class="presence-buttons">
-                        <button class="presence-btn yes" onclick="sendWhatsApp('yes')">✅ Presente</button>
-                        <button class="presence-btn maybe" onclick="sendWhatsApp('maybe')">⚠️ Forse</button>
-                        <button class="presence-btn no" onclick="sendWhatsApp('no')">❌ Assente</button>
-                    </div>
-                `;
-            }
-            
-            // Genera storico risposte
-            let historyHTML = '';
-            const responseEntries = Object.entries(savedResponses).sort((a, b) => new Date(b[0]) - new Date(a[0]));
-            if (responseEntries.length > 0) {
-                const historyItems = responseEntries.slice(0, 5).map(([date, data]) => {
-                    const event = allEvents.find(e => e.date === date);
-                    const eventName = event ? event.title : 'Evento';
-                    const eventDate = new Date(date);
-                    const formattedDate = `${eventDate.getDate()}/${eventDate.getMonth() + 1}`;
-                    
-                    return `
-                        <div class="history-item">
-                            <div>
-                                <span class="event-name">${eventName}</span>
-                                <span style="color: #a0aec0; font-size: 0.85rem;"> - ${formattedDate}</span>
-                            </div>
-                            <span class="response ${data.response}">${data.response === 'yes' ? '✅ Presente' : data.response === 'no' ? '❌ Assente' : '⚠️ Forse'}</span>
-                        </div>
-                    `;
-                }).join('');
+            // Genera le card per ogni evento
+            let eventsHTML = nextEvents.map((event, index) => {
+                const alreadyResponded = savedResponses[event.date];
+                let statusHTML = '';
+                let statusClass = '';
+                let buttonsDisabled = false;
                 
-                historyHTML = `
-                    <div class="history-section">
-                        <h3>📜 Le tue ultime risposte</h3>
-                        ${historyItems}
+                // Controlla se l'evento è oggi
+                const isToday = event.dateObj.toDateString() === today.toDateString();
+                const isTomorrow = new Date(today.getTime() + 86400000).toDateString() === event.dateObj.toDateString();
+                
+                if (alreadyResponded) {
+                    switch(alreadyResponded.response) {
+                        case 'yes':
+                            statusHTML = '<span class="event-status yes">✅ PRESENTE</span>';
+                            statusClass = 'responded-yes';
+                            break;
+                        case 'no':
+                            statusHTML = '<span class="event-status no">❌ ASSENTE</span>';
+                            statusClass = 'responded-no';
+                            break;
+                        case 'maybe':
+                            statusHTML = '<span class="event-status maybe">⚠️ FORSE</span>';
+                            statusClass = 'responded-maybe';
+                            break;
+                    }
+                } else {
+                    if (isToday) {
+                        statusHTML = '<span class="event-status pending">🔴 OGGI!</span>';
+                    } else if (isTomorrow) {
+                        statusHTML = '<span class="event-status pending">🟠 DOMANI</span>';
+                    } else {
+                        statusHTML = '<span class="event-status pending">⏳ DA RISPONDERE</span>';
+                    }
+                    statusClass = 'not-responded';
+                }
+                
+                // Formatta il giorno in modo più leggibile
+                const dayName = formatDate(event.dateObj).split(' ')[0];
+                const shortDate = `${event.dateObj.getDate()}/${event.dateObj.getMonth() + 1}`;
+                
+                return `
+                    <div class="event-card ${statusClass}${isToday ? ' today' : ''}" data-event-index="${index}">
+                        <div class="event-card-header">
+                            <span class="event-type ${getEventTypeClass(event.type)}">${event.tag}</span>
+                            ${statusHTML}
+                        </div>
+                        <h3 class="event-card-title">${event.title}</h3>
+                        <p class="event-card-date">📅 ${dayName} ${shortDate}</p>
+                        <p class="event-card-time">🕐 ${event.time}</p>
+                        <div class="event-card-buttons">
+                            <button class="mini-btn yes" onclick="sendResponse('${event.date}', 'yes', '${event.title}', '${formatDate(event.dateObj)}')" ${buttonsDisabled ? 'disabled' : ''}>✅</button>
+                            <button class="mini-btn no" onclick="sendResponse('${event.date}', 'no', '${event.title}', '${formatDate(event.dateObj)}')" ${buttonsDisabled ? 'disabled' : ''}>❌</button>
+                        </div>
                     </div>
                 `;
-            }
+            }).join('');
             
             container.innerHTML = `
                 <div class="player-info">
-                    <h3>#${player.number} ${player.name} ${player.surname}</h3>
+                    <h3>⚾ #${player.number} ${player.name} ${player.surname}</h3>
                     <p>${player.role}</p>
                 </div>
                 
-                <div class="next-event">
-                    <span class="event-type ${getEventTypeClass(nextEvent.type)}">${nextEvent.tag}</span>
-                    <h2 class="event-title">${nextEvent.title}</h2>
-                    <p class="event-date">📅 ${formatDate(nextEvent.dateObj)}</p>
-                    <p class="event-details">🕐 ${nextEvent.time}</p>
+                <div class="presence-intro">
+                    <h2>📋 Prossimi Eventi</h2>
+                    <p>Clicca sui pulsanti per confermare la tua presenza</p>
                 </div>
                 
-                <div class="presence-question">
-                    <h2>Sarai presente?</h2>
-                    <p>Clicca per inviare la tua risposta via WhatsApp</p>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot yes"></span> Presente</div>
+                    <div class="legend-item"><span class="legend-dot maybe"></span> Forse</div>
+                    <div class="legend-item"><span class="legend-dot no"></span> Assente</div>
+                    <div class="legend-item"><span class="legend-dot pending"></span> Da rispondere</div>
                 </div>
                 
-                ${buttonsHTML}
-                
-                <div class="whatsapp-note">
-                    <strong>📱 WhatsApp</strong> - Cliccando si aprirà WhatsApp con il messaggio già pronto. Basta inviarlo!
+                <div class="events-grid">
+                    ${eventsHTML}
                 </div>
-                
-                ${historyHTML}
                 
                 <div style="text-align: center;">
                     <a href="index.html" class="back-btn">← Torna alla Home</a>
@@ -630,8 +723,102 @@
             `;
         }
         
-        // Inizializza
-        generateContent();
+        // Nuova funzione per inviare risposta per un evento specifico
+        async function sendResponse(eventDate, response, eventTitle, eventDateFormatted) {
+            const playerData = JSON.parse(sessionStorage.getItem('playerData'));
+            if (!playerData) return;
+            
+            // Mostra feedback immediato
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳';
+            btn.disabled = true;
+            
+            // Salva la risposta su Firebase
+            try {
+                await LancersDB.save(playerData.number, eventDate, response);
+                console.log('✅ Presenza salvata su Firebase');
+                
+                // Ricarica per aggiornare lo stato
+                await generateContent();
+            } catch (error) {
+                console.error('❌ Errore salvataggio:', error);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Errore nel salvataggio. Riprova.');
+            }
+        }
+        
+        // Funzione per rimuovere la risposta
+        async function removeResponse(eventDate) {
+            const playerData = JSON.parse(sessionStorage.getItem('playerData'));
+            if (!playerData) return;
+            
+            if (!confirm('Vuoi rimuovere la tua risposta per questo evento?')) {
+                return;
+            }
+            
+            // Mostra feedback immediato
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳';
+            btn.disabled = true;
+            
+            try {
+                // Cancella da Firebase usando PUT con null
+                const dateKey = eventDate.replace(/-/g, '_');
+                const url = `${LancersDB.baseUrl}/presenze/${playerData.number}/${dateKey}.json`;
+                const response = await fetch(url, { 
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(null)
+                });
+                
+                if (response.ok) {
+                    console.log('🗑️ Risposta rimossa da Firebase');
+                    // Ricarica per aggiornare lo stato
+                    await generateContent();
+                } else {
+                    throw new Error('Errore nella rimozione');
+                }
+            } catch (error) {
+                console.error('❌ Errore rimozione:', error);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Errore nella rimozione. Riprova.');
+            }
+        }
+        
+        // Inizializza quando il DOM è pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                generateContent().catch(error => {
+                    console.error('❌ Errore generateContent:', error);
+                    document.getElementById('presenceSection').innerHTML = `
+                        <div class="no-event">
+                            <div class="emoji">⚠️</div>
+                            <h2>Errore di caricamento</h2>
+                            <p>Si è verificato un errore. Riprova più tardi.</p>
+                            <p style="color: #718096; font-size: 0.85rem; margin-top: 1rem;">${error.message}</p>
+                            <a href="index.html" class="back-btn">← Torna alla Home</a>
+                        </div>
+                    `;
+                });
+            });
+        } else {
+            generateContent().catch(error => {
+                console.error('❌ Errore generateContent:', error);
+                document.getElementById('presenceSection').innerHTML = `
+                    <div class="no-event">
+                        <div class="emoji">⚠️</div>
+                        <h2>Errore di caricamento</h2>
+                        <p>Si è verificato un errore. Riprova più tardi.</p>
+                        <p style="color: #718096; font-size: 0.85rem; margin-top: 1rem;">${error.message}</p>
+                        <a href="index.html" class="back-btn">← Torna alla Home</a>
+                    </div>
+                `;
+            });
+        }
     </script>
 </body>
 </html>

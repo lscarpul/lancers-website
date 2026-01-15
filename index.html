@@ -69,8 +69,8 @@
             checkPresenceReminder(player);
         }
         
-        function checkPresenceReminder(player) {
-            // Verifica se c'è un evento nelle prossime 48 ore senza risposta
+        async function checkPresenceReminder(player) {
+            // Verifica se c'è un evento nelle prossime 72 ore senza risposta
             const allEvents = [
                 { date: '2026-01-15', title: 'Allenamento', time: '19:30 - 21:30' },
                 { date: '2026-01-20', title: 'Allenamento', time: '19:30 - 21:30' },
@@ -86,15 +86,29 @@
             const now = new Date();
             const hoursAhead = 72; // Controlla eventi nelle prossime 72 ore
             
+            // Carica le risposte da Firebase
+            let responses = {};
+            try {
+                const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+                const response = await fetch(`${baseUrl}/presenze/${player.number}.json`);
+                const data = await response.json();
+                if (data) {
+                    // Converti le chiavi da underscore a trattini
+                    Object.entries(data).forEach(([dateKey, value]) => {
+                        const normalizedDate = dateKey.replace(/_/g, '-');
+                        responses[normalizedDate] = value;
+                    });
+                }
+            } catch (error) {
+                console.error('Errore caricamento presenze:', error);
+            }
+            
             for (const event of allEvents) {
                 const eventDate = new Date(event.date);
                 const diffHours = (eventDate - now) / (1000 * 60 * 60);
                 
                 if (diffHours > 0 && diffHours <= hoursAhead) {
                     // Controlla se ha già risposto
-                    const storageKey = `presence_${player.number}`;
-                    const responses = JSON.parse(localStorage.getItem(storageKey) || '{}');
-                    
                     if (!responses[event.date]) {
                         // Non ha ancora risposto, mostra popup
                         showPresencePopup(event, eventDate);
