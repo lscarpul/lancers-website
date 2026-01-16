@@ -882,14 +882,36 @@
             }
             document.getElementById('eventSendButtons').style.display = 'block';
             document.getElementById('eventExcelButtons').style.display = 'block';
+            
             const event = adminEvents[eventIndex];
             const presences = cachedPresences;
+            
+            // --- LOGICA ASSENZA AUTOMATICA ---
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Oggi mezzanotte
+            const eventDate = new Date(event.date);
+            const isEventPast = eventDate < today; // L'evento è passato?
+
             const playerStatuses = allPlayers.map(player => {
                 const playerPresences = presences[player.number] || {};
                 const eventResponse = playerPresences[event.date];
-                return { ...player, status: eventResponse ? eventResponse.response : 'pending' };
+                
+                let status = 'pending'; // Default: In attesa
+                let isAuto = false;     // Flag per assenza automatica
+
+                if (eventResponse) {
+                    // Se c'è una risposta, usala
+                    status = eventResponse.response;
+                } else if (isEventPast) {
+                    // Se NON c'è risposta e l'evento è PASSATO -> Assente
+                    status = 'no';
+                    isAuto = true;
+                }
+
+                return { ...player, status: status, isAuto: isAuto };
             });
 
+            // Calcolo contatori
             const presentCount = playerStatuses.filter(p => p.status === 'yes').length;
             const absentCount = playerStatuses.filter(p => p.status === 'no').length;
             const maybeCount = playerStatuses.filter(p => p.status === 'maybe').length;
@@ -904,98 +926,114 @@
                 </div>
                 <table class="players-table">
                     <thead><tr><th>#</th><th>Giocatore</th><th>Ruolo</th><th>Stato</th></tr></thead>
-                    <tbody>${playerStatuses.map(p => `
+                    <tbody>${playerStatuses.map(p => {
+                        let statusHtml = '';
+                        if(p.status === 'yes') 
+                            statusHtml = '<span class="status-badge present">✅ Presente</span>';
+                        else if(p.status === 'maybe') 
+                            statusHtml = '<span class="status-badge maybe">⚠️ Forse</span>';
+                        else if(p.status === 'pending') 
+                            statusHtml = '<span class="status-badge pending">⏳ In attesa</span>';
+                        else if(p.status === 'no') {
+                            // Se è assenza automatica scriviamo "Non Risp."
+                            if (p.isAuto) {
+                                statusHtml = '<span class="status-badge absent" style="opacity: 0.8">❌ Non Risp.</span>';
+                            } else {
+                                statusHtml = '<span class="status-badge absent">❌ Assente</span>';
+                            }
+                        }
+                        
+                        return `
                         <tr>
                             <td><span class="player-number">${p.number}</span></td>
                             <td>${p.name} ${p.surname}</td>
                             <td>${p.role}</td>
-                            <td><span class="status-badge ${p.status === 'yes' ? 'present' : p.status === 'no' ? 'absent' : p.status === 'maybe' ? 'maybe' : 'pending'}">
-                                ${p.status === 'yes' ? '✅ Presente' : p.status === 'no' ? '❌ Assente' : p.status === 'maybe' ? '⚠️ Forse' : '⏳ In attesa'}
-                            </span></td>
-                        </tr>`).join('')}</tbody>
+                            <td>${statusHtml}</td>
+                        </tr>`;
+                    }).join('')}</tbody>
                 </table>`;
         }
 
         // Funzione per scaricare Excel
-        function downloadExcel() {
+        function downloadExcelEvent() {
+            const eventIndex = document.getElementById('eventSelect').value;
+            if (!eventIndex) {
+                alert('Seleziona prima un evento!');
+                return;
+            }
+            
+            const event = adminEvents[eventIndex];
             const presences = cachedPresences;
-            const today = new Date();
+            const today = new Date(); today.setHours(0,0,0,0);
+            const eventDate = new Date(event.date);
+            const isEventPast = eventDate < today;
             
-            // Prepara i dati per Excel
-            const data = [];
-            
-            // Intestazione
-            const headers = ['#', 'Nome', 'Cognome', 'Ruolo', 'Presenti', 'Forse', 'Assenti', 'Totale Risposte', 'Tasso Presenza %'];
-            
-            // Aggiungi le date degli eventi come colonne
-            const futureEvents = adminEvents.filter(e => new Date(e.date) >= today).slice(0, 20);
-            futureEvents.forEach(event => {
-                const d = new Date(event.date);
-                headers.push(`${d.getDate()}/${d.getMonth() + 1} - ${event.title}`);
-            });
-            
-            data.push(headers);
-            
-            // Dati dei giocatori
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                let presentCount = 0, absentCount = 0, maybeCount = 0;
-                
-                Object.values(playerPresences).forEach(response => {
-                    if (response.response === 'yes') presentCount++;
-                    else if (response.response === 'no') absentCount++;
-                    else if (response.response === 'maybe') maybeCount++;
-                });
-                
-                const total = presentCount + absentCount + maybeCount;
-                const rate = total > 0 ? Math.round((presentCount / total) * 100) : 0;
-                
-                const row = [
-                    player.number,
-                    player.name,
-                    player.surname,
-                    player.role,
-                    presentCount,
-                    maybeCount,
-                    absentCount,
-                    total,
-                    rate
-                ];
-                
-                // Aggiungi lo stato per ogni evento
-                futureEvents.forEach(event => {
-                    const response = playerPresences[event.date];
-                    if (response) {
-                        row.push(response.response === 'yes' ? '✓ Presente' : response.response === 'no' ? '✗ Assente' : '? Forse');
-                    } else {
-                        row.push('- In attesa');
-                    }
-                });
-                
-                data.push(row);
-            });
-            
-            // Crea il workbook Excel
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            
-            // Imposta la larghezza delle colonne
-            ws['!cols'] = [
-                { wch: 5 },  // #
-                { wch: 15 }, // Nome
-                { wch: 15 }, // Cognome
-                { wch: 10 }, // Ruolo
-                { wch: 10 }, // Presenti
-                { wch: 8 },  // Forse
-                { wch: 10 }, // Assenti
-                { wch: 12 }, // Totale
-                { wch: 15 }, // Tasso
+            const data = [
+                ['REPORT PRESENZE EVENTO'],
+                ['Evento:', event.title],
+                ['Data:', eventDate.toLocaleDateString('it-IT')],
+                ['Orario:', event.time],
+                ['Tipo:', event.tag],
+                [],
+                ['RIEPILOGO']
             ];
             
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Presenze Lancers');
+            // Calcolo statistiche con logica automatica
+            let presentCount = 0, absentCount = 0, maybeCount = 0, pendingCount = 0;
             
-            // Scarica il file
-            const fileName = `Presenze_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.xlsx`;
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                
+                if (eventResponse) {
+                    if (eventResponse.response === 'yes') presentCount++;
+                    else if (eventResponse.response === 'no') absentCount++;
+                    else if (eventResponse.response === 'maybe') maybeCount++;
+                } else {
+                    if (isEventPast) absentCount++; // Assente automatico
+                    else pendingCount++;
+                }
+            });
+            
+            data.push(['Presenti:', presentCount]);
+            data.push(['Forse:', maybeCount]);
+            data.push(['Assenti:', absentCount]);
+            data.push(['In Attesa:', pendingCount]);
+            data.push([]);
+            data.push(['DETTAGLIO GIOCATORI']);
+            data.push(['#', 'Nome', 'Cognome', 'Ruolo', 'Stato', 'Data Risposta']);
+            
+            allPlayers.forEach(player => {
+                const playerPresences = presences[String(player.number)] || {};
+                const eventResponse = playerPresences[event.date];
+                
+                let status = 'In attesa';
+                let timestamp = '-';
+                
+                if (eventResponse) {
+                    status = eventResponse.response === 'yes' ? 'Presente' : 
+                             eventResponse.response === 'no' ? 'Assente' : 'Forse';
+                    if (eventResponse.timestamp) {
+                        timestamp = new Date(eventResponse.timestamp).toLocaleString('it-IT');
+                    }
+                } else if (isEventPast) {
+                    // LOGICA EXCEL: Se passato e nessuna risposta -> Assente
+                    status = 'Assente (Non Risp.)';
+                    timestamp = 'Automatico';
+                }
+                
+                data.push([player.number, player.name, player.surname, player.role, status, timestamp]);
+            });
+            
+            // Crea il file Excel
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            ws['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 15 }, { wch: 10 }, { wch: 20 }, { wch: 20 }];
+            
+            const wb = XLSX.utils.book_new();
+            const sheetName = `${eventDate.getDate()}-${eventDate.getMonth()+1} Report`.substring(0, 31);
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            
+            const fileName = `Evento_${event.title.replace(/[^a-zA-Z0-9]/g, '_')}_${event.date}.xlsx`;
             XLSX.writeFile(wb, fileName);
         }
         
