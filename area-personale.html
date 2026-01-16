@@ -353,13 +353,93 @@
             color: var(--accent);
         }
 
-        @media (max-width: 900px) {
-            .personal-hero { padding: 4rem 1rem 6rem; clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%); }
-            .dashboard-container { grid-template-columns: 1fr; margin-top: -3rem; padding: 0 1rem; }
-            .col-span-12, .col-span-8, .col-span-6, .col-span-4, .col-span-3 { grid-column: span 1; }
-            .quad-grid { grid-template-columns: 1fr; }
-            .stat-box { margin-bottom: 0; }
-        }
+        /* --- INIZIO NUOVO CODICE RESPONSIVE --- */
+@media (max-width: 768px) {
+    /* 1. Riduciamo l'altezza e il padding dell'intestazione colorata */
+    .personal-hero { 
+        padding: 6rem 1rem 4rem; /* Meno spazio sotto */
+        min-height: auto;        /* Altezza automatica */
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%); /* Taglio meno obliquo */
+        margin-bottom: -2rem;    /* Avvicina il contenuto */
+    }
+
+    .player-name {
+        font-size: 2.2rem;       /* Nome più piccolo */
+    }
+
+    /* 2. Sistemiamo la griglia principale */
+    .dashboard-container { 
+        display: flex;           /* Passiamo a Flexbox per colonna verticale */
+        flex-direction: column;
+        gap: 1rem;               /* Meno spazio tra le card */
+        margin-top: -1rem; 
+        padding: 0 1rem; 
+    }
+
+    /* Reset di tutte le colonne per occupare tutto lo spazio */
+    .col-span-12, .col-span-8, .col-span-6, .col-span-4, .col-span-3 { 
+        width: 100%; 
+    }
+
+    /* 3. TRUCCO: Mettiamo i due box statistiche (K% e BB%) affiancati */
+    /* Selezioniamo i primi due elementi della dashboard che sono i stat-box */
+    .dashboard-container > .stat-box {
+        width: 48%;              /* Quasi metà larghezza */
+        display: inline-block;   /* Li mettiamo in linea */
+        padding: 1rem;           /* Meno imbottitura interna */
+        margin-bottom: 0;
+    }
+    
+    /* Contenitore wrapper per i stat-box se necessario, o forzatura flex */
+    /* Per farli stare sulla stessa riga, usiamo un trucco sull'ordine o flex-wrap */
+    .dashboard-container {
+        flex-direction: row;     /* Permette affiancamento */
+        flex-wrap: wrap;         /* Va a capo se serve */
+        justify-content: space-between;
+    }
+    
+    /* Le card grandi tornano al 100% */
+    .card {
+        width: 100%;
+        padding: 1.25rem;        /* Meno spazio interno nelle card */
+    }
+
+    .stat-value {
+        font-size: 1.8rem;       /* Numeri più piccoli */
+    }
+
+    /* 4. Ottimizzazione Griglia Punti Forza (Quad Grid) */
+    .quad-grid { 
+        grid-template-columns: 1fr; /* Una colonna */
+        gap: 1rem;
+    }
+    
+    .quad-box {
+        padding: 1rem;           /* Più compatto */
+    }
+
+    /* 5. Tabella più compatta */
+    .table-container {
+        margin: 0 -0.5rem;       /* Guadagna spazio ai lati */
+        border: none;            /* Rimuovi bordo esterno su mobile */
+    }
+    
+    .stats-table th, 
+    .stats-table td {
+        padding: 0.5rem 0.25rem; /* Celle molto più strette */
+        font-size: 0.8rem;       /* Testo più piccolo */
+    }
+    
+    /* Riduce la dimensione del font solo per la tabella */
+    .stats-table {
+        min-width: auto;         /* Lascia che si adatti se possibile */
+        display: block;          /* Necessario per scroll orizzontale fluido */
+        overflow-x: auto;
+        white-space: nowrap;     /* Evita che i numeri vadano a capo */
+    }
+}
+/* --- FINE NUOVO CODICE RESPONSIVE --- */
+        
     </style>
 </head>
 <body>
