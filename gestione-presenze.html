@@ -830,11 +830,18 @@
             }
 
             const eventSelect = document.getElementById('eventSelect');
-            const today = new Date(); today.setHours(0, 0, 0, 0);
+            // MODIFICA: Rimosso il filtro della data (today)
             eventSelect.innerHTML = '<option value="">-- Seleziona un evento --</option>';
+            
             adminEvents.forEach((event, index) => {
                 const eventDate = new Date(event.date);
-                if (eventDate >= today) eventSelect.innerHTML += `<option value="${index}">${formatDate(event.date)} - ${event.title}</option>`;
+                const today = new Date(); today.setHours(0, 0, 0, 0);
+                
+                // Aggiungiamo un'icona visiva per capire se è passato o futuro
+                const prefix = eventDate < today ? '⏪ ' : '📅 ';
+                
+                // Aggiungiamo TUTTI gli eventi alla lista
+                eventSelect.innerHTML += `<option value="${index}">${prefix}${formatDate(event.date)} - ${event.title}</option>`;
             });
 
             document.getElementById('playerSummary').innerHTML = allPlayers.map(player => {
