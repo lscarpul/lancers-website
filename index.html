@@ -52,32 +52,44 @@
         </div>
     </main>
 
-    <script>
+<script>
         // Mostra messaggio personalizzato e pulsante area personale
         const playerData = sessionStorage.getItem('playerData');
-        if (playerData) {
-            const player = JSON.parse(playerData);
-            document.getElementById('welcomeMessage').innerHTML = `Ciao <strong>#${player.number} ${player.name} ${player.surname}</strong>! Benvenuto nella tua area riservata.`;
-            document.getElementById('personalAreaBtn').style.display = 'inline-block';
-            
-            // Mostra pulsante gestione presenze solo per staff autorizzato
-            const authorizedNumbers = [25, 19, 38, 6, 'ADMIN'];
-            if (authorizedNumbers.includes(player.number)) {
-                const staffBtn = document.createElement('a');
-                staffBtn.href = 'gestione-presenze.html';
-                staffBtn.className = 'btn btn-staff';
-                staffBtn.innerHTML = '📊 Gestione Presenze';
-                staffBtn.style.background = 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)';
-                staffBtn.style.color = 'white';
-                document.querySelector('.hero-buttons').appendChild(staffBtn);
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (playerData) {
+                const player = JSON.parse(playerData);
+                const welcomeMsg = document.getElementById('welcomeMessage');
+                if(welcomeMsg) {
+                    welcomeMsg.innerHTML = `Ciao <strong>#${player.number} ${player.name} ${player.surname}</strong>! Benvenuto nella tua area riservata.`;
+                }
+                
+                const personalBtn = document.getElementById('personalAreaBtn');
+                if(personalBtn) personalBtn.style.display = 'inline-block';
+                
+                // Mostra pulsante gestione presenze solo per staff autorizzato
+                const authorizedNumbers = [25, 19, 38, 6, 'ADMIN'];
+                if (authorizedNumbers.includes(player.number)) {
+                    const btnContainer = document.querySelector('.hero-buttons');
+                    if (btnContainer && !document.querySelector('.btn-staff')) {
+                        const staffBtn = document.createElement('a');
+                        staffBtn.href = 'gestione-presenze.html';
+                        staffBtn.className = 'btn btn-staff';
+                        staffBtn.innerHTML = '📊 Gestione Presenze';
+                        staffBtn.style.background = 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)';
+                        staffBtn.style.color = 'white';
+                        btnContainer.appendChild(staffBtn);
+                    }
+                }
+                
+                // Popup promemoria presenza per prossimo evento
+                await checkPresenceReminder(player);
             }
-            
-            // Popup promemoria presenza per prossimo evento
-            checkPresenceReminder(player);
-        }
+        });
         
         async function checkPresenceReminder(player) {
             // Verifica se c'è un evento nelle prossime 72 ore senza risposta
+            // NOTA: Assicurati che queste date siano allineate col calendario
             const allEvents = [
                 { date: '2026-01-15', title: 'Allenamento', time: '19:30 - 21:30' },
                 { date: '2026-01-20', title: 'Allenamento', time: '19:30 - 21:30' },
@@ -93,39 +105,50 @@
             const now = new Date();
             const hoursAhead = 72; // Controlla eventi nelle prossime 72 ore
             
-            // Carica le risposte da Firebase
+            // Carica le risposte da Firebase (usa LancersDB se disponibile, altrimenti fetch manuale)
             let responses = {};
             try {
-                const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
-                const response = await fetch(`${baseUrl}/presenze/${player.number}.json`);
-                const data = await response.json();
-                if (data) {
-                    // Converti le chiavi da underscore a trattini
-                    Object.entries(data).forEach(([dateKey, value]) => {
-                        const normalizedDate = dateKey.replace(/_/g, '-');
-                        responses[normalizedDate] = value;
-                    });
+                // Proviamo a usare LancersDB se caricato
+                if (typeof LancersDB !== 'undefined') {
+                    responses = await LancersDB.getPlayer(player.number);
+                } else {
+                    // Fallback se firebase-config non è caricato o ha errore
+                    const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+                    const res = await fetch(`${baseUrl}/presenze/${player.number}.json`);
+                    const data = await res.json();
+                    if (data) {
+                        Object.entries(data).forEach(([dateKey, value]) => {
+                            const normalizedDate = dateKey.replace(/_/g, '-');
+                            responses[normalizedDate] = value;
+                        });
+                    }
                 }
             } catch (error) {
                 console.error('Errore caricamento presenze:', error);
+                return;
             }
             
             for (const event of allEvents) {
                 const eventDate = new Date(event.date);
                 const diffHours = (eventDate - now) / (1000 * 60 * 60);
                 
-                if (diffHours > 0 && diffHours <= hoursAhead) {
+                // Logica: se l'evento è nel futuro (diffHours > -3 per includere durata evento) 
+                // ed entro le 72 ore
+                if (diffHours > -3 && diffHours <= hoursAhead) {
                     // Controlla se ha già risposto
                     if (!responses[event.date]) {
                         // Non ha ancora risposto, mostra popup
-                        showPresencePopup(event, eventDate);
-                        break;
+                        showInteractivePopup(event, eventDate, player);
+                        break; // Mostra solo il primo evento imminente
                     }
                 }
             }
         }
         
-        function showPresencePopup(event, eventDate) {
+        function showInteractivePopup(event, eventDate, player) {
+            // Evita doppi popup
+            if(document.getElementById('presencePopup')) return;
+
             const days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
             const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
             const dateStr = `${days[eventDate.getDay()]} ${eventDate.getDate()} ${months[eventDate.getMonth()]}`;
@@ -133,26 +156,87 @@
             const popup = document.createElement('div');
             popup.id = 'presencePopup';
             popup.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
-                    <div style="background: white; border-radius: 20px; padding: 2rem; max-width: 400px; text-align: center; animation: slideUp 0.3s ease;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">📢</div>
-                        <h2 style="color: #1a365d; margin-bottom: 0.5rem;">Conferma la tua presenza!</h2>
-                        <p style="color: #718096; margin-bottom: 1rem;">Hai un evento in arrivo e non hai ancora risposto:</p>
-                        <div style="background: #f7fafc; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #ed8936;">
-                            <strong style="color: #1a365d;">${event.title}</strong><br>
-                            <span style="color: #718096;">📅 ${dateStr} - ${event.time}</span>
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(5px);">
+                    <div style="background: white; border-radius: 20px; padding: 2rem; max-width: 400px; width: 100%; text-align: center; animation: slideUp 0.3s ease; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">⚾</div>
+                        <h2 style="color: #1a365d; margin-bottom: 0.5rem; font-size: 1.5rem;">Ci sarai?</h2>
+                        <p style="color: #718096; margin-bottom: 1.5rem;">Conferma la presenza per il prossimo evento:</p>
+                        
+                        <div style="background: #ebf8ff; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #4299e1; text-align: left;">
+                            <strong style="color: #2c5282; display: block; font-size: 1.1rem; margin-bottom: 0.2rem;">${event.title}</strong>
+                            <div style="color: #4a5568; font-size: 0.9rem;">📅 ${dateStr}</div>
+                            <div style="color: #4a5568; font-size: 0.9rem;">🕐 ${event.time}</div>
                         </div>
-                        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                            <a href="presenze.html" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #48bb78, #38a169); color: white; text-decoration: none; border-radius: 10px; font-weight: 600;">✅ Conferma Ora</a>
-                            <button onclick="document.getElementById('presencePopup').remove()" style="padding: 0.75rem 1.5rem; background: #e2e8f0; color: #4a5568; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Dopo</button>
+                        
+                        <div style="display: grid; gap: 0.8rem;">
+                            <button onclick="quickSavePresence('${event.date}', 'yes')" style="padding: 1rem; background: #48bb78; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: transform 0.1s;">✅ CI SARÒ</button>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                                <button onclick="quickSavePresence('${event.date}', 'maybe')" style="padding: 1rem; background: #ecc94b; color: #744210; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">⚠️ FORSE</button>
+                                <button onclick="quickSavePresence('${event.date}', 'no')" style="padding: 1rem; background: #fc8181; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">❌ ASSENTE</button>
+                            </div>
+                            
+                            <button onclick="document.getElementById('presencePopup').remove()" style="margin-top: 0.5rem; background: none; border: none; color: #a0aec0; cursor: pointer; text-decoration: underline;">Decido dopo</button>
                         </div>
                     </div>
                 </div>
             `;
             document.body.appendChild(popup);
         }
-    </script>
 
+        // Funzione per salvare direttamente dal popup
+        async function quickSavePresence(date, status) {
+            const popupContent = document.querySelector('#presencePopup > div > div');
+            
+            // Feedback visivo di caricamento
+            popupContent.innerHTML = `
+                <div style="padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; animation: spin 1s linear infinite;">🔄</div>
+                    <h3>Salvataggio in corso...</h3>
+                </div>
+            `;
+
+            try {
+                const player = JSON.parse(sessionStorage.getItem('playerData'));
+                
+                // Usa LancersDB se disponibile (grazie all'inclusione di firebase-config.js)
+                if (typeof LancersDB !== 'undefined') {
+                    await LancersDB.save(player.number, date, status);
+                } else {
+                    // Fallback manuale
+                    console.warn("LancersDB non trovato, uso fetch manuale");
+                    const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+                    const payload = {
+                        response: status,
+                        timestamp: new Date().toISOString()
+                    };
+                    await fetch(`${baseUrl}/presenze/${player.number}/${date.replace(/\-/g, '_')}.json`, {
+                        method: 'PUT',
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                // Feedback successo
+                popupContent.innerHTML = `
+                    <div style="padding: 2rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                        <h3 style="color: #48bb78;">Risposta salvata!</h3>
+                        <p>Grazie per aver risposto.</p>
+                    </div>
+                `;
+                
+                // Chiudi dopo 1.5 secondi
+                setTimeout(() => {
+                    document.getElementById('presencePopup').remove();
+                }, 1500);
+
+            } catch (error) {
+                console.error(error);
+                alert("Errore nel salvataggio. Riprova dalla pagina Presenze.");
+                document.getElementById('presencePopup').remove();
+            }
+        }
+    </script>
     <!-- EVENTI SETTIMANA CORRENTE -->
     <section class="weekly-events">
         <div class="weekly-header">
@@ -196,7 +280,7 @@
         <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
         <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
-
+    <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
