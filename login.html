@@ -200,9 +200,9 @@
         ];
 
         // Controlla se già autenticato
-        if (localStorage.getItem('authenticated') === 'true') {
-    window.location.href = 'index.html';
-}
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            window.location.href = 'index.html';
+        }
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -215,10 +215,10 @@
             const player = players.find(p => p.username === username && p.password === password);
             
             if (player) {
-    localStorage.setItem('authenticated', 'true');
-    localStorage.setItem('playerData', JSON.stringify(player));
-    window.location.href = 'index.html';
-} else {
+                sessionStorage.setItem('authenticated', 'true');
+                sessionStorage.setItem('playerData', JSON.stringify(player));
+                window.location.href = 'index.html';
+            } else {
                 errorMessage.classList.add('show');
                 document.getElementById('password').value = '';
                 
