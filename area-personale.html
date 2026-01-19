@@ -444,7 +444,7 @@
 </head>
 <body>
     <script>
-        if (sessionStorage.getItem('authenticated') !== 'true') {
+     if (localStorage.getItem('authenticated') !== 'true') {
             window.location.href = 'login.html';
         }
     </script>
@@ -1071,7 +1071,7 @@
 
         // Mappa icone per categorie
         // Genera contenuto
-        const playerData = sessionStorage.getItem('playerData');
+        const playerData = localStorage.getItem('playerData');
         const container = document.getElementById('personalContent');
 
         if (playerData) {

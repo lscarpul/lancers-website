@@ -315,11 +315,11 @@
 </head>
 <body>
     <script>
-        if (sessionStorage.getItem('authenticated') !== 'true') {
-            window.location.href = 'login.html';
-        }
-        
-        const playerData = JSON.parse(sessionStorage.getItem('playerData') || '{}');
+        if (localStorage.getItem('authenticated') !== 'true') {
+    window.location.href = 'login.html';
+}
+
+const playerData = JSON.parse(localStorage.getItem('playerData') || '{}');
         const authorizedNumbers = [25, 19, 38, 6, 'ADMIN'];
         
         if (!authorizedNumbers.includes(playerData.number)) {

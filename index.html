@@ -16,7 +16,7 @@
 </head>
 <body>
     <script>
-        if (sessionStorage.getItem('authenticated') !== 'true') {
+        if (localStorage.getItem('authenticated') !== 'true') {
             window.location.href = 'login.html';
         }
     </script>
@@ -54,7 +54,7 @@
 
 <script>
         // Mostra messaggio personalizzato e pulsante area personale
-        const playerData = sessionStorage.getItem('playerData');
+        const playerData = localStorage.getItem('playerData');
         
         document.addEventListener('DOMContentLoaded', async () => {
             if (playerData) {
@@ -197,7 +197,7 @@
             `;
 
             try {
-                const player = JSON.parse(sessionStorage.getItem('playerData'));
+                const player = JSON.parse(localStorage.getItem('playerData'));
                 
                 // Usa LancersDB se disponibile (grazie all'inclusione di firebase-config.js)
                 if (typeof LancersDB !== 'undefined') {

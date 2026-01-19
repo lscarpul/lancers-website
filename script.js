@@ -3,10 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function() {
-            // Rimuovi autenticazione (sessionStorage, localStorage, Firebase se usato)
-            sessionStorage.removeItem('authenticated');
-            // Se usi Firebase Auth, aggiungi qui il signOut
-            // firebase.auth().signOut();
+            // Rimuovi autenticazione (localStorage per sessione persistente)
+            localStorage.removeItem('authenticated');
+            localStorage.removeItem('playerData'); 
+            
+            // Pulisci anche sessionStorage per sicurezza (compatibilità vecchia versione)
+            sessionStorage.clear();
+
             window.location.href = 'login.html';
         });
     }
