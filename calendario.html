@@ -13,11 +13,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <style>
         .match-card {
-            background: white;
+            background: rgba(15, 40, 71, 0.8);
             border-radius: 12px;
             margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             overflow: hidden;
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
         .match-header {
             display: flex;
@@ -25,13 +26,13 @@
             padding: 1rem 1.5rem;
             cursor: pointer;
             gap: 1rem;
-            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%);
             color: white;
             user-select: none;
         }
-        .match-header.home { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
-        .match-header.away { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); }
-        .match-header.friendly { background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); }
+        .match-header.home { background: linear-gradient(135deg, #166534 0%, #22c55e 100%); }
+        .match-header.away { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        .match-header.friendly { background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%); }
         
         .match-date {
             background: rgba(255,255,255,0.2);
@@ -57,7 +58,7 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
-            background: #f8fafc;
+            background: rgba(10, 22, 40, 0.9);
         }
         .match-card.open .match-details { max-height: 500px; }
         
@@ -68,24 +69,25 @@
             display: flex;
             margin-bottom: 1rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
         }
         .detail-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .detail-row strong { min-width: 120px; color: #1a365d; }
-        .detail-row span { color: #4a5568; }
+        .detail-row strong { min-width: 120px; color: #60a5fa; }
+        .detail-row span { color: #e2e8f0; }
         
         .section-title {
-            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%);
             color: white;
             padding: 1rem 1.5rem;
             border-radius: 12px;
             margin: 2rem 0 1rem 0;
             font-size: 1.2rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
         
         .map-btn {
             display: inline-block;
-            background: #ed8936;
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 6px;
@@ -93,7 +95,7 @@
             font-weight: 600;
             margin-top: 0.5rem;
         }
-        .map-btn:hover { background: #dd6b20; }
+        .map-btn:hover { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); }
 
         .test-notif-btn {
             display: block;
@@ -101,7 +103,7 @@
             max-width: 300px;
             margin: 1rem auto;
             padding: 1rem;
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
             color: white;
             border: none;
             border-radius: 10px;

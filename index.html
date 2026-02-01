@@ -156,27 +156,27 @@
             const popup = document.createElement('div');
             popup.id = 'presencePopup';
             popup.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(5px);">
-                    <div style="background: white; border-radius: 20px; padding: 2rem; max-width: 400px; width: 100%; text-align: center; animation: slideUp 0.3s ease; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(8px);">
+                    <div style="background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%); border-radius: 20px; padding: 2rem; max-width: 400px; width: 100%; text-align: center; animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(59, 130, 246, 0.3);">
                         <div style="font-size: 3rem; margin-bottom: 0.5rem;">⚾</div>
-                        <h2 style="color: #1a365d; margin-bottom: 0.5rem; font-size: 1.5rem;">Ci sarai?</h2>
-                        <p style="color: #718096; margin-bottom: 1.5rem;">Conferma la presenza per il prossimo evento:</p>
+                        <h2 style="color: #ffffff; margin-bottom: 0.5rem; font-size: 1.5rem;">Ci sarai?</h2>
+                        <p style="color: #94a3b8; margin-bottom: 1.5rem;">Conferma la presenza per il prossimo evento:</p>
                         
-                        <div style="background: #ebf8ff; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #4299e1; text-align: left;">
-                            <strong style="color: #2c5282; display: block; font-size: 1.1rem; margin-bottom: 0.2rem;">${event.title}</strong>
-                            <div style="color: #4a5568; font-size: 0.9rem;">📅 ${dateStr}</div>
-                            <div style="color: #4a5568; font-size: 0.9rem;">🕐 ${event.time}</div>
+                        <div style="background: rgba(59, 130, 246, 0.2); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6; text-align: left;">
+                            <strong style="color: #60a5fa; display: block; font-size: 1.1rem; margin-bottom: 0.2rem;">${event.title}</strong>
+                            <div style="color: #e2e8f0; font-size: 0.9rem;">📅 ${dateStr}</div>
+                            <div style="color: #e2e8f0; font-size: 0.9rem;">🕐 ${event.time}</div>
                         </div>
                         
                         <div style="display: grid; gap: 0.8rem;">
-                            <button onclick="quickSavePresence('${event.date}', 'yes')" style="padding: 1rem; background: #48bb78; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: transform 0.1s;">✅ CI SARÒ</button>
+                            <button onclick="quickSavePresence('${event.date}', 'yes')" style="padding: 1rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: transform 0.1s;">✅ CI SARÒ</button>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
-                                <button onclick="quickSavePresence('${event.date}', 'maybe')" style="padding: 1rem; background: #ecc94b; color: #744210; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">⚠️ FORSE</button>
-                                <button onclick="quickSavePresence('${event.date}', 'no')" style="padding: 1rem; background: #fc8181; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">❌ ASSENTE</button>
+                                <button onclick="quickSavePresence('${event.date}', 'maybe')" style="padding: 1rem; background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); color: #1a1a1a; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">⚠️ FORSE</button>
+                                <button onclick="quickSavePresence('${event.date}', 'no')" style="padding: 1rem; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">❌ ASSENTE</button>
                             </div>
                             
-                            <button onclick="document.getElementById('presencePopup').remove()" style="margin-top: 0.5rem; background: none; border: none; color: #a0aec0; cursor: pointer; text-decoration: underline;">Decido dopo</button>
+                            <button onclick="document.getElementById('presencePopup').remove()" style="margin-top: 0.5rem; background: none; border: none; color: #94a3b8; cursor: pointer; text-decoration: underline;">Decido dopo</button>
                         </div>
                     </div>
                 </div>
