@@ -618,53 +618,87 @@ async function schedulePresenceReminders() {
     
     console.log(`📅 Eventi senza presenza: ${upcomingEvents.length}`);
     
-    // Schedula notifiche per i prossimi 7 giorni
-    const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    
     upcomingEvents.forEach(event => {
         const eventDate = new Date(event.date);
+        const isMatch = ['friendly', 'match-home', 'match-away'].includes(event.type);
+        const isTraining = ['training', 'specific'].includes(event.type);
         
-        // Schedula solo eventi entro una settimana
-        if (eventDate > oneWeekFromNow) return;
-        
-        // Calcola quando inviare la notifica (giorno prima alle 18:00)
-        const notificationTime = new Date(eventDate);
-        notificationTime.setDate(notificationTime.getDate() - 1);
-        notificationTime.setHours(18, 0, 0, 0);
-        
-        // Se il tempo è già passato, prova 3 ore prima dell'evento
-        if (notificationTime <= now) {
-            notificationTime.setTime(eventDate.getTime() - 3 * 60 * 60 * 1000);
-        }
-        
-        // Se ancora passato, salta
-        if (notificationTime <= now) return;
-        
-        // Crea il messaggio
-        const eventEmoji = getEventEmoji(event.type);
-        const eventTypeText = getEventTypeText(event.type);
-        const dateFormatted = formatDateItalian(eventDate);
-        
-        const title = `${eventEmoji} Inserisci la presenza!`;
-        const body = `${eventTypeText}: ${event.title}\n📅 ${dateFormatted}`;
-        
-        // Invia al service worker
-        if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({
-                type: 'SCHEDULE_NOTIFICATION',
-                payload: {
-                    title,
-                    body,
-                    scheduledTime: notificationTime.getTime(),
-                    eventDate: event.date,
-                    eventType: event.type
-                }
-            });
+        if (isMatch) {
+            // PARTITE: notifica 1 volta al giorno per 5 giorni prima
+            for (let daysBeforeMatch = 5; daysBeforeMatch >= 1; daysBeforeMatch--) {
+                const notificationTime = new Date(eventDate);
+                notificationTime.setDate(notificationTime.getDate() - daysBeforeMatch);
+                notificationTime.setHours(10, 0, 0, 0); // Alle 10:00 del mattino
+                
+                // Salta se già passato
+                if (notificationTime <= now) continue;
+                
+                const eventEmoji = getEventEmoji(event.type);
+                const eventTypeText = getEventTypeText(event.type);
+                const dateFormatted = formatDateItalian(eventDate);
+                
+                const title = `${eventEmoji} Partita tra ${daysBeforeMatch} giorn${daysBeforeMatch === 1 ? 'o' : 'i'}!`;
+                const body = `${eventTypeText}: ${event.title}\n📅 ${dateFormatted}\n📋 Inserisci la tua presenza!`;
+                
+                scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, `match-${daysBeforeMatch}`);
+            }
+        } else if (isTraining) {
+            // ALLENAMENTI: notifica 4 ore prima
+            const notificationTime = new Date(eventDate);
+            // Assumiamo allenamento alle 19:30, quindi notifica alle 15:30
+            notificationTime.setHours(15, 30, 0, 0);
+            
+            // Se già passato, salta
+            if (notificationTime <= now) return;
+            
+            const eventEmoji = getEventEmoji(event.type);
+            const eventTypeText = getEventTypeText(event.type);
+            const dateFormatted = formatDateItalian(eventDate);
+            
+            const title = `${eventEmoji} Allenamento tra 4 ore!`;
+            const body = `${eventTypeText}\n📅 ${dateFormatted} ore 19:30\n📋 Hai inserito la presenza?`;
+            
+            scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, 'training-4h');
+        } else {
+            // ALTRI EVENTI: notifica il giorno prima alle 18:00
+            const notificationTime = new Date(eventDate);
+            notificationTime.setDate(notificationTime.getDate() - 1);
+            notificationTime.setHours(18, 0, 0, 0);
+            
+            if (notificationTime <= now) return;
+            
+            const eventEmoji = getEventEmoji(event.type);
+            const eventTypeText = getEventTypeText(event.type);
+            const dateFormatted = formatDateItalian(eventDate);
+            
+            const title = `${eventEmoji} Evento domani!`;
+            const body = `${eventTypeText}: ${event.title}\n📅 ${dateFormatted}`;
+            
+            scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, 'event-1d');
         }
     });
     
     // Salva ultimo check
     localStorage.setItem('lastNotificationCheck', now.toISOString());
+    console.log('✅ Notifiche schedulate!');
+}
+
+// Invia notifica schedulata al Service Worker
+function scheduleNotificationToSW(title, body, scheduledTime, eventDate, eventType, tag) {
+    if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'SCHEDULE_NOTIFICATION',
+            payload: {
+                title,
+                body,
+                scheduledTime: scheduledTime.getTime(),
+                eventDate: eventDate,
+                eventType: eventType,
+                tag: `${tag}-${eventDate}`
+            }
+        });
+        console.log(`⏰ Notifica schedulata: ${title} - ${scheduledTime.toLocaleString()}`);
+    }
 }
 
 // Helper: emoji per tipo evento

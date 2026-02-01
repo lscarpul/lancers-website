@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v6';
+const CACHE_NAME = 'lancers-app-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -160,7 +160,7 @@ self.addEventListener('message', (event) => {
 
 // Schedula notifica locale (senza server push)
 function scheduleLocalNotification(payload) {
-  const { title, body, scheduledTime, eventDate, eventType } = payload;
+  const { title, body, scheduledTime, eventDate, eventType, tag } = payload;
   
   const now = Date.now();
   const delay = scheduledTime - now;
@@ -171,7 +171,7 @@ function scheduleLocalNotification(payload) {
         body: body,
         icon: './icons/icon-192x192.png',
         badge: './icons/icon-192x192.png',
-        tag: `reminder-${eventDate}`,
+        tag: tag || `reminder-${eventDate}`,
         vibrate: [200, 100, 200],
         requireInteraction: true,
         actions: [
