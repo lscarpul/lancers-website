@@ -495,12 +495,15 @@
                 return;
             }
             
-            // Crea notifica
+            // Usa Service Worker per la notifica (richiesto su mobile)
             try {
-                new Notification('⚾ Test Lancers!', {
+                const registration = await navigator.serviceWorker.ready;
+                await registration.showNotification('⚾ Test Lancers!', {
                     body: '✅ Le notifiche funzionano!',
                     icon: './icons/icon-192x192.png',
-                    tag: 'test-' + Date.now()
+                    badge: './icons/icon-192x192.png',
+                    tag: 'test-' + Date.now(),
+                    vibrate: [200, 100, 200]
                 });
                 btn.textContent = '✅ Notifica Inviata!';
                 btn.style.background = '#48bb78';
@@ -509,6 +512,7 @@
                     btn.style.background = '';
                 }, 3000);
             } catch (e) {
+                console.error('Errore notifica:', e);
                 alert('Errore: ' + e.message);
             }
         }
