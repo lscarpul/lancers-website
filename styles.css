@@ -8,48 +8,53 @@
 }
 
 :root {
-    /* Colori principali */
-    --primary: #0f172a;
-    --primary-light: #1e293b;
-    --secondary: #3b82f6;
-    --accent: #f97316;
-    --accent-glow: rgba(249, 115, 22, 0.4);
+    /* Colori principali - BLU BIANCO ROSSO */
+    --primary: #0a1628;
+    --primary-light: #1a2d4d;
+    --secondary: #1e3a5f;
+    --accent: #dc2626;
+    --accent-glow: rgba(220, 38, 38, 0.4);
+    --navy: #0f2847;
+    --navy-light: #1a3a5c;
     
     /* Colori stati */
     --success: #22c55e;
     --warning: #eab308;
-    --danger: #ef4444;
-    --info: #06b6d4;
+    --danger: #dc2626;
+    --info: #3b82f6;
     
     /* Colori partite */
     --home: #22c55e;
     --away: #3b82f6;
-    --friendly: #f97316;
-    --training: #8b5cf6;
-    --specific: #ec4899;
+    --friendly: #dc2626;
+    --training: #3b82f6;
+    --specific: #60a5fa;
     
     /* Testi e sfondi */
-    --text: #f8fafc;
+    --text: #ffffff;
     --text-muted: #94a3b8;
     --text-dark: #1e293b;
-    --bg-dark: #0f172a;
-    --bg-card: #1e293b;
+    --bg-dark: #0a1628;
+    --bg-card: #0f2847;
     --bg-light: #f1f5f9;
     --white: #ffffff;
+    --red: #dc2626;
+    --blue: #3b82f6;
     
     /* Gradienti */
-    --gradient-primary: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
-    --gradient-accent: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+    --gradient-primary: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+    --gradient-accent: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
     --gradient-success: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
-    --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-    --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+    --gradient-blue: linear-gradient(135deg, #1e3a5f 0%, #3b82f6 100%);
+    --gradient-navy: linear-gradient(135deg, #0f2847 0%, #1a3a5c 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
     
     /* Ombre */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.25);
     --shadow-glow: 0 0 30px var(--accent-glow);
+    --shadow-blue: 0 4px 20px rgba(59, 130, 246, 0.3);
     
     /* Border radius */
     --radius-sm: 8px;
@@ -74,7 +79,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Background animato */
+/* Background con pattern */
 body::before {
     content: '';
     position: fixed;
@@ -83,8 +88,8 @@ body::before {
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
         var(--bg-dark);
     z-index: -1;
 }
@@ -131,7 +136,7 @@ a {
 
 .logo {
     font-size: 2.5rem;
-    filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.5));
+    filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5));
     transition: var(--transition);
     cursor: pointer;
 }
@@ -344,12 +349,12 @@ a {
 .btn-primary {
     background: var(--gradient-accent);
     color: var(--white);
-    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(249, 115, 22, 0.5);
+    box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
 }
 
 .btn-secondary {
@@ -375,14 +380,14 @@ a {
 }
 
 .btn-presence {
-    background: var(--gradient-purple);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: var(--white);
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
 }
 
 .btn-presence:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
 }
 
 /* Animazione pulse per bottoni importanti */
@@ -501,9 +506,9 @@ a {
     letter-spacing: 0.5px;
 }
 
-.training-tag { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+.training-tag { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 .specific-tag { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
-.friendly-tag { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+.friendly-tag { background: rgba(220, 38, 38, 0.2); color: #f87171; }
 .home-tag, .match-home-tag { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
 .away-tag, .match-away-tag { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 .tbd-tag { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
@@ -812,9 +817,9 @@ a {
 
 .home-badge { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
 .away-badge { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-.friendly-badge { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+.friendly-badge { background: rgba(220, 38, 38, 0.2); color: #f87171; }
 .recovery-badge { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
-.training-badge { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+.training-badge { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 .specific-badge { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
 .event-badge { background: rgba(234, 179, 8, 0.2); color: #facc15; }
 .tbd-badge { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
@@ -836,7 +841,7 @@ a {
 
 .map-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
 }
 
 /* ===== LEGEND ===== */
@@ -1002,12 +1007,12 @@ footer p, .footer p {
     font-weight: 700;
     cursor: pointer;
     transition: var(--transition);
-    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
 }
 
 .test-notif-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);
 }
 
 /* ===== FORMS & INPUTS ===== */
@@ -1026,7 +1031,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.2);
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
 }
 
 input::placeholder {
