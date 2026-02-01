@@ -605,49 +605,61 @@
         
         // Reset notifiche schedulate
         async function resetNotifiche() {
+            console.log('🔄 resetNotifiche() chiamata');
             try {
                 // Resetta flag locale
                 localStorage.removeItem('lastNotificationSchedule');
                 sessionStorage.removeItem('notificationsScheduledThisSession');
+                console.log('✅ Flag locali rimossi');
                 
                 // Chiedi al SW di cancellare tutte le notifiche
                 const swReg = await navigator.serviceWorker.getRegistration();
+                console.log('SW Registration:', swReg);
+                
                 if (swReg && swReg.active) {
                     swReg.active.postMessage({ type: 'CLEAR_ALL_NOTIFICATIONS' });
+                    console.log('✅ Messaggio CLEAR inviato al SW');
                 }
                 
-                // Invia notifica IMMEDIATA di conferma + schedula una tra 10 secondi
+                // Invia notifica IMMEDIATA di conferma
                 if (swReg && swReg.active && Notification.permission === 'granted') {
+                    console.log('📤 Invio notifica immediata...');
                     // Notifica immediata
                     await swReg.showNotification('🔄 Reset Completato!', {
-                        body: '✅ Notifiche resettate. Tra 10 secondi arriverà una notifica di test programmata.',
+                        body: '✅ Notifiche resettate. Tra 10 secondi arriverà una notifica di test.',
                         icon: './icons/icon-192x192.png',
                         badge: './icons/icon-192x192.png',
                         tag: 'reset-confirm-' + Date.now(),
                         vibrate: [200, 100, 200],
                         requireInteraction: false
                     });
+                    console.log('✅ Notifica immediata inviata');
                     
-                    // Schedula notifica tra 10 secondi (più breve per test)
+                    // Schedula notifica tra 10 secondi
                     const testTime = Date.now() + (10 * 1000);
                     swReg.active.postMessage({
                         type: 'SCHEDULE_NOTIFICATION',
                         payload: {
                             title: '⏰ Notifica Programmata!',
-                            body: 'Questa notifica era programmata 10 secondi fa. Il sistema di scheduling funziona! 🎉',
+                            body: 'Il sistema di scheduling funziona! 🎉',
                             scheduledTime: testTime,
                             eventDate: new Date().toISOString().split('T')[0],
                             eventType: 'test',
                             tag: 'test-scheduled-' + Date.now()
                         }
                     });
+                    console.log('✅ Notifica schedulata per tra 10 secondi');
                     
-                    alert('✅ Reset completato!\\n\\n1️⃣ Notifica immediata inviata ORA\\n2️⃣ Notifica programmata tra 10 SECONDI\\n\\n⏰ Resta sulla pagina per vedere se arriva!');
+                    alert('✅ Reset completato!\n\n1️⃣ Notifica immediata inviata ORA\n2️⃣ Notifica programmata tra 10 SECONDI');
                 } else {
-                    alert('⚠️ Service Worker non pronto o permessi mancanti.\\n\\nRicarica la pagina e riprova.');
+                    console.log('❌ SW non pronto o permessi mancanti');
+                    console.log('  swReg:', swReg);
+                    console.log('  swReg.active:', swReg?.active);
+                    console.log('  Notification.permission:', Notification.permission);
+                    alert('⚠️ Service Worker non pronto o permessi mancanti.\n\nPermesso: ' + Notification.permission + '\nSW: ' + (swReg?.active ? 'OK' : 'NO'));
                 }
             } catch (e) {
-                console.error('Errore reset:', e);
+                console.error('❌ Errore reset:', e);
                 alert('Errore: ' + e.message);
             }
         }
