@@ -1,17 +1,17 @@
 const CACHE_NAME = 'lancers-app-v2';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/login.html',
-  '/calendario.html',
-  '/allenamenti.html',
-  '/presenze.html',
-  '/documento.html',
-  '/area-personale.html',
-  '/gestione-presenze.html',
-  '/styles.css',
-  '/script.js',
-  '/firebase-config.js',
+  './',
+  './index.html',
+  './login.html',
+  './calendario.html',
+  './allenamenti.html',
+  './presenze.html',
+  './documento.html',
+  './area-personale.html',
+  './gestione-presenze.html',
+  './styles.css',
+  './script.js',
+  './firebase-config.js',
   'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap'
 ];
 
@@ -64,10 +64,10 @@ self.addEventListener('push', (event) => {
   let data = {
     title: '⚾ Lancers Baseball',
     body: 'Hai un evento in programma!',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-192x192.png',
+    icon: './icons/icon-192x192.png',
+    badge: './icons/icon-192x192.png',
     tag: 'lancers-reminder',
-    data: { url: '/presenze.html' }
+    data: { url: './presenze.html' }
   };
 
   if (event.data) {
@@ -105,7 +105,7 @@ self.addEventListener('notificationclick', (event) => {
   }
 
   // Apri la pagina presenze
-  const urlToOpen = event.notification.data?.url || '/presenze.html';
+  const urlToOpen = event.notification.data?.url || './presenze.html';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
@@ -148,8 +148,8 @@ function scheduleLocalNotification(payload) {
     setTimeout(() => {
       self.registration.showNotification(title, {
         body: body,
-        icon: '/icons/icon-192x192.png',
-        badge: '/icons/icon-192x192.png',
+        icon: './icons/icon-192x192.png',
+        badge: './icons/icon-192x192.png',
         tag: `reminder-${eventDate}`,
         vibrate: [200, 100, 200],
         requireInteraction: true,
@@ -157,7 +157,7 @@ function scheduleLocalNotification(payload) {
           { action: 'open', title: '📋 Inserisci Presenza' },
           { action: 'dismiss', title: '❌ Chiudi' }
         ],
-        data: { url: '/presenze.html', eventDate, eventType }
+        data: { url: './presenze.html', eventDate, eventType }
       });
     }, delay);
     

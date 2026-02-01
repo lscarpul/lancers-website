@@ -338,7 +338,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
+        // Usa path relativo per funzionare ovunque
+        navigator.serviceWorker.register('./service-worker.js')
             .then((registration) => {
                 console.log('✅ Service Worker registrato con successo! Scope:', registration.scope);
                 
@@ -347,7 +348,14 @@ if ('serviceWorker' in navigator) {
             })
             .catch((err) => {
                 console.error('❌ Registrazione Service Worker fallita:', err);
+                // Anche se SW fallisce, prova comunque le notifiche
+                initNotificationSystem(null);
             });
+    });
+} else {
+    // Anche senza SW, prova le notifiche
+    window.addEventListener('load', () => {
+        initNotificationSystem(null);
     });
 }
 
@@ -360,9 +368,11 @@ let swRegistration = null;
 async function initNotificationSystem(registration) {
     swRegistration = registration;
     
+    console.log('🔔 Inizializzazione sistema notifiche...');
+    
     // Controlla se le notifiche sono supportate
     if (!('Notification' in window)) {
-        console.log('❌ Notifiche non supportate');
+        console.log('❌ Notifiche non supportate in questo browser');
         return;
     }
     
@@ -371,21 +381,34 @@ async function initNotificationSystem(registration) {
     console.log('🔔 Stato permesso notifiche:', permission);
     
     if (permission === 'granted') {
+        console.log('✅ Notifiche già autorizzate');
         // Già autorizzato, schedula le notifiche
         await schedulePresenceReminders();
     } else if (permission === 'default') {
+        console.log('📢 Mostro banner richiesta notifiche');
         // Mostra banner per richiedere permesso
         showNotificationBanner();
+    } else {
+        console.log('🚫 Notifiche bloccate dall\'utente');
     }
 }
 
 // Mostra banner per richiedere permesso notifiche
 function showNotificationBanner() {
-    // Non mostrare se già mostrato in questa sessione
-    if (sessionStorage.getItem('notificationBannerShown')) return;
+    // Non mostrare se già rifiutato permanentemente
+    if (localStorage.getItem('notificationsDeclined')) {
+        console.log('🔕 Utente ha già rifiutato le notifiche');
+        return;
+    }
+    
+    console.log('📢 Creo banner notifiche...');
     
     // Aspetta che la pagina sia caricata
     setTimeout(() => {
+        // Rimuovi banner esistente se presente
+        const existingBanner = document.getElementById('notification-banner');
+        if (existingBanner) existingBanner.remove();
+        
         const banner = document.createElement('div');
         banner.id = 'notification-banner';
         banner.innerHTML = `
@@ -477,19 +500,21 @@ function showNotificationBanner() {
         document.head.appendChild(style);
         document.body.appendChild(banner);
         
-        sessionStorage.setItem('notificationBannerShown', 'true');
+        console.log('✅ Banner notifiche aggiunto al DOM');
         
         // Event listeners
         document.getElementById('acceptNotifications').addEventListener('click', async () => {
+            console.log('👆 Click su Attiva notifiche');
             banner.remove();
             await requestNotificationPermission();
         });
         
         document.getElementById('declineNotifications').addEventListener('click', () => {
+            console.log('👆 Click su Rifiuta notifiche');
             banner.remove();
             localStorage.setItem('notificationsDeclined', 'true');
         });
-    }, 2000);
+    }, 1500);
 }
 
 // Richiedi permesso notifiche
@@ -514,7 +539,7 @@ function showConfirmationNotification() {
     if (swRegistration) {
         swRegistration.showNotification('⚾ Notifiche Attivate!', {
             body: 'Riceverai un promemoria prima di ogni evento per inserire la presenza',
-            icon: '/icons/icon-192x192.png',
+            icon: './icons/icon-192x192.png',
             badge: '/icons/icon-192x192.png',
             tag: 'welcome',
             vibrate: [100, 50, 100]
