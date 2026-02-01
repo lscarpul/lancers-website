@@ -533,7 +533,7 @@
         <p>&copy; 2026 Lancers Baseball Club - Area Riservata</p>
     </footer>
 
-    <script src="script.js?v=13"></script>
+    <script src="script.js?v=14"></script>
     <script>
         // Toggle per le card - SOLO event delegation (rimosso onclick inline)
         document.addEventListener('DOMContentLoaded', function() {
@@ -635,8 +635,10 @@
                     });
                     console.log('✅ Notifica immediata inviata');
                     
+                    // Mostra alert PRIMA di avviare il timer
+                    alert('✅ Reset completato!\n\n1️⃣ Notifica immediata inviata ORA\n2️⃣ Notifica programmata tra 10 SECONDI\n\n⚠️ RESTA SU QUESTA PAGINA!');
+                    
                     // USA setTimeout DALLA PAGINA invece che dal SW
-                    // (su mobile il SW va in sleep e il timer non funziona)
                     console.log('⏰ Avvio timer 10 secondi dalla pagina...');
                     setTimeout(async () => {
                         console.log('⏰ Timer scaduto! Invio notifica...');
@@ -658,12 +660,11 @@
                         }
                     }, 10000);
                     
-                    alert('✅ Reset completato!\\n\\n1️⃣ Notifica immediata inviata ORA\\n2️⃣ Notifica programmata tra 10 SECONDI\\n\\n⚠️ RESTA SU QUESTA PAGINA per 10 secondi!');
                 } else {
                     console.log('❌ SW non pronto o permessi mancanti');
                     console.log('  swReg:', swReg);
                     console.log('  Notification.permission:', Notification.permission);
-                    alert('⚠️ Service Worker non pronto o permessi mancanti.\\n\\nPermesso: ' + Notification.permission + '\\nSW: ' + (swReg ? 'OK' : 'NO'));
+                    alert('⚠️ Service Worker non pronto o permessi mancanti.\n\nPermesso: ' + Notification.permission + '\nSW: ' + (swReg ? 'OK' : 'NO'));
                 }
             } catch (e) {
                 console.error('❌ Errore reset:', e);
