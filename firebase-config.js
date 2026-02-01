@@ -173,19 +173,31 @@ const LancersFCM = {
                 return;
             }
             
+            // Timeout di 8 secondi
+            const timeout = setTimeout(() => {
+                reject(new Error('Timeout caricamento Firebase SDK'));
+            }, 8000);
+            
             const script1 = document.createElement('script');
             script1.src = 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js';
             script1.onload = () => {
                 const script2 = document.createElement('script');
                 script2.src = 'https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js';
                 script2.onload = () => {
+                    clearTimeout(timeout);
                     console.log('📦 Firebase SDK caricato');
                     resolve();
                 };
-                script2.onerror = reject;
+                script2.onerror = () => {
+                    clearTimeout(timeout);
+                    reject(new Error('Errore caricamento firebase-messaging'));
+                };
                 document.head.appendChild(script2);
             };
-            script1.onerror = reject;
+            script1.onerror = () => {
+                clearTimeout(timeout);
+                reject(new Error('Errore caricamento firebase-app'));
+            };
             document.head.appendChild(script1);
         });
     },

@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v16 - FCM PUSH NOTIFICATIONS =====
-console.log('🚀 Script.js v16 caricato - FCM enabled!');
+// ===== SCRIPT.JS v17 - FCM FIX NON-BLOCKING =====
+console.log('🚀 Script.js v17 caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
@@ -444,50 +444,58 @@ async function initNotificationSystem(registration) {
 async function initFCM() {
     try {
         // Controlla se LancersFCM è disponibile
-        if (typeof LancersFCM === 'undefined') {
+        if (typeof LancersFCM === 'undefined' || !LancersFCM) {
             console.log('⚠️ LancersFCM non disponibile, uso sistema localStorage');
             return false;
         }
         
-        // Inizializza FCM
-        await LancersFCM.init();
+        // Timeout per evitare blocchi
+        const timeout = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('FCM init timeout')), 10000)
+        );
         
-        // Ottieni token
-        const token = await LancersFCM.getToken();
-        if (!token) {
-            console.log('⚠️ Impossibile ottenere token FCM');
-            return false;
-        }
-        
-        // Salva token per il giocatore corrente
-        const playerData = sessionStorage.getItem('playerData');
-        if (playerData) {
-            const player = JSON.parse(playerData);
-            await LancersFCM.saveToken(player.number);
-            console.log('✅ FCM configurato per giocatore', player.number);
-        }
-        
-        // Gestisci notifiche in foreground
-        LancersFCM.onForegroundMessage((payload) => {
-            console.log('📬 Notifica foreground ricevuta');
-            // Mostra notifica anche se app è aperta
-            if (swRegistration) {
-                swRegistration.showNotification(
-                    payload.notification?.title || payload.data?.title,
-                    {
-                        body: payload.notification?.body || payload.data?.body,
-                        icon: './icons/icon-192x192.png',
-                        badge: './icons/icon-192x192.png',
-                        tag: payload.data?.tag || 'lancers-foreground',
-                        vibrate: [200, 100, 200]
-                    }
-                );
+        // Inizializza FCM con timeout
+        const initPromise = (async () => {
+            await LancersFCM.init();
+            
+            // Ottieni token
+            const token = await LancersFCM.getToken();
+            if (!token) {
+                console.log('⚠️ Impossibile ottenere token FCM');
+                return false;
             }
-        });
+            
+            // Salva token per il giocatore corrente
+            const playerData = sessionStorage.getItem('playerData');
+            if (playerData) {
+                const player = JSON.parse(playerData);
+                await LancersFCM.saveToken(player.number);
+                console.log('✅ FCM configurato per giocatore', player.number);
+            }
+            
+            // Gestisci notifiche in foreground
+            LancersFCM.onForegroundMessage((payload) => {
+                console.log('📬 Notifica foreground ricevuta');
+                if (swRegistration) {
+                    swRegistration.showNotification(
+                        payload.notification?.title || payload.data?.title,
+                        {
+                            body: payload.notification?.body || payload.data?.body,
+                            icon: './icons/icon-192x192.png',
+                            badge: './icons/icon-192x192.png',
+                            tag: payload.data?.tag || 'lancers-foreground',
+                            vibrate: [200, 100, 200]
+                        }
+                    );
+                }
+            });
+            
+            return true;
+        })();
         
-        return true;
+        return await Promise.race([initPromise, timeout]);
     } catch (e) {
-        console.error('❌ Errore inizializzazione FCM:', e);
+        console.error('❌ Errore inizializzazione FCM (non bloccante):', e);
         return false;
     }
 }
