@@ -1,5 +1,9 @@
 // ===== LOGOUT BUTTON HANDLER =====
+console.log('🚀 Script.js caricato!');
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOMContentLoaded fired');
+    
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function() {
@@ -13,11 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // ===== HAMBURGER MENU =====
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🍔 Hamburger menu init');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
+    
+    console.log('   hamburger:', hamburger);
+    console.log('   navLinks:', navLinks);
 
     if (hamburger && navLinks) {
+        console.log('✅ Hamburger elements found, adding listener');
         hamburger.addEventListener('click', function() {
+            console.log('🖱️ Hamburger clicked!');
             navLinks.classList.toggle('active');
             
             // Animate hamburger
@@ -33,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 navLinks.classList.remove('active');
             });
         });
+    } else {
+        console.log('❌ Hamburger elements NOT found');
     }
 
     // ===== EASTER EGG =====
@@ -42,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     highlightNextMatch();
     
     // ===== LOAD WEEKLY EVENTS =====
+    console.log('📅 Calling loadWeeklyEvents...');
     loadWeeklyEvents();
 });
 
@@ -181,13 +194,22 @@ const allEvents = [
 
 // ===== LOAD WEEKLY EVENTS =====
 function loadWeeklyEvents() {
+    console.log('📅 loadWeeklyEvents() chiamata');
     const eventsList = document.getElementById('eventsList');
     const weekDatesEl = document.getElementById('weekDates');
     
-    if (!eventsList || !weekDatesEl) return;
+    console.log('   eventsList:', eventsList);
+    console.log('   weekDatesEl:', weekDatesEl);
+    
+    if (!eventsList || !weekDatesEl) {
+        console.log('❌ Elementi non trovati, esco');
+        return;
+    }
     
     const today = new Date();
+    console.log('   today:', today);
     const { start, end } = getWeekRange(today);
+    console.log('   week range:', start, '-', end);
     
     // Mostra le date della settimana
     weekDatesEl.textContent = formatWeekRange(start, end);
@@ -195,6 +217,10 @@ function loadWeeklyEvents() {
     // Filtra eventi della settimana
     const weekEvents = allEvents.filter(event => {
         const eventDate = new Date(event.date);
+        return eventDate >= start && eventDate <= end;
+    });
+    
+    console.log('   weekEvents trovati:', weekEvents.length);
         return eventDate >= start && eventDate <= end;
     });
     
