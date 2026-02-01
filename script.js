@@ -787,10 +787,9 @@ function scheduleNotificationToSW(title, body, scheduledTime, eventDate, eventTy
             eventDate: eventDate,
             eventType: eventType,
             tag: `${tag}-${eventDate}`
-            }
-        });
-        console.log(`⏰ Notifica schedulata: ${title} - ${scheduledTime.toLocaleString()}`);
-    }
+        }
+    });
+    console.log(`⏰ Notifica schedulata: ${title} - ${scheduledTime.toLocaleString()}`);
 }
 
 // Helper: emoji per tipo evento
