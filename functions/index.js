@@ -9,9 +9,12 @@ admin.initializeApp();
 const db = admin.database();
 const messaging = admin.messaging();
 
+// Region europea (stesso del database)
+const region = functions.region('europe-west1');
+
 // ===== FUNZIONE PRINCIPALE: Controlla e invia notifiche schedulate =====
 // Esegue ogni minuto
-exports.sendScheduledNotifications = functions.pubsub
+exports.sendScheduledNotifications = region.pubsub
     .schedule('every 1 minutes')
     .timeZone('Europe/Rome')
     .onRun(async (context) => {
@@ -125,7 +128,7 @@ exports.sendScheduledNotifications = functions.pubsub
 
 // ===== PULIZIA: Rimuovi notifiche vecchie già inviate =====
 // Esegue ogni giorno alle 3:00
-exports.cleanupOldNotifications = functions.pubsub
+exports.cleanupOldNotifications = region.pubsub
     .schedule('0 3 * * *')
     .timeZone('Europe/Rome')
     .onRun(async (context) => {
@@ -164,7 +167,7 @@ exports.cleanupOldNotifications = functions.pubsub
     });
 
 // ===== API: Invia notifica immediata (per test) =====
-exports.sendTestNotification = functions.https.onRequest(async (req, res) => {
+exports.sendTestNotification = region.https.onRequest(async (req, res) => {
     // CORS
     res.set('Access-Control-Allow-Origin', '*');
     
