@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v11';
+const CACHE_NAME = 'lancers-app-v12';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -16,36 +16,173 @@ const ASSETS_TO_CACHE = [
   'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap'
 ];
 
-// Installazione: scarica le risorse statiche
+// ===== IndexedDB per notifiche persistenti =====
+const DB_NAME = 'lancers-notifications';
+const DB_VERSION = 1;
+const STORE_NAME = 'scheduled-notifications';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+        store.createIndex('scheduledTime', 'scheduledTime', { unique: false });
+        store.createIndex('sent', 'sent', { unique: false });
+      }
+    };
+  });
+}
+
+async function saveNotification(notification) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    store.put(notification);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getNotification(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const store = tx.objectStore(STORE_NAME);
+    const request = store.get(id);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function getPendingNotifications() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const store = tx.objectStore(STORE_NAME);
+    const request = store.getAll();
+    request.onsuccess = () => {
+      const all = request.result || [];
+      const pending = all.filter(n => !n.sent);
+      resolve(pending);
+    };
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function markNotificationSent(id) {
+  const notification = await getNotification(id);
+  if (notification) {
+    notification.sent = true;
+    notification.sentAt = Date.now();
+    await saveNotification(notification);
+  }
+}
+
+async function clearOldNotifications() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    const request = store.getAll();
+    request.onsuccess = () => {
+      const all = request.result || [];
+      const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      all.forEach(n => {
+        if (n.sent && n.sentAt < oneWeekAgo) {
+          store.delete(n.id);
+        }
+        if (!n.sent && n.scheduledTime < Date.now() - (24 * 60 * 60 * 1000)) {
+          store.delete(n.id);
+        }
+      });
+    };
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+// ===== Controlla e invia notifiche pendenti =====
+async function checkAndSendNotifications() {
+  console.log('🔔 Controllo notifiche pendenti...');
+  
+  try {
+    const pending = await getPendingNotifications();
+    const now = Date.now();
+    let sentCount = 0;
+    
+    for (const notification of pending) {
+      if (notification.scheduledTime <= now && notification.scheduledTime > now - (24 * 60 * 60 * 1000)) {
+        try {
+          await self.registration.showNotification(notification.title, {
+            body: notification.body,
+            icon: './icons/icon-192x192.png',
+            badge: './icons/icon-192x192.png',
+            tag: notification.tag,
+            vibrate: [200, 100, 200],
+            requireInteraction: true,
+            actions: [
+              { action: 'open', title: '📋 Inserisci Presenza' },
+              { action: 'dismiss', title: '❌ Chiudi' }
+            ],
+            data: { url: './presenze.html', eventDate: notification.eventDate, eventType: notification.eventType }
+          });
+          
+          await markNotificationSent(notification.id);
+          sentCount++;
+          console.log(`✅ Notifica inviata: ${notification.title}`);
+        } catch (e) {
+          console.error('❌ Errore invio notifica:', e);
+        }
+      }
+    }
+    
+    await clearOldNotifications();
+    console.log(`📬 Notifiche inviate: ${sentCount}`);
+    return sentCount;
+  } catch (e) {
+    console.error('❌ Errore controllo notifiche:', e);
+    return 0;
+  }
+}
+
+// ===== INSTALLAZIONE =====
 self.addEventListener('install', (event) => {
-  console.log('🔧 Service Worker v6 installazione...');
+  console.log('🔧 Service Worker v12 installazione...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
-  // Attiva subito il nuovo service worker
   self.skipWaiting();
 });
 
-// Attivazione: pulisce TUTTE le vecchie cache
+// ===== ATTIVAZIONE =====
 self.addEventListener('activate', (event) => {
-  console.log('✅ Service Worker v6 attivato!');
+  console.log('✅ Service Worker v12 attivato!');
   event.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(keyList.map((key) => {
-        if (key !== CACHE_NAME) {
-          return caches.delete(key);
-        }
-      }));
-    })
+    Promise.all([
+      caches.keys().then((keyList) => {
+        return Promise.all(keyList.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        }));
+      }),
+      self.registration.periodicSync?.register('check-notifications', {
+        minInterval: 60 * 60 * 1000
+      }).catch(e => console.log('Periodic sync non supportato:', e)),
+      checkAndSendNotifications()
+    ])
   );
-  // Prendi controllo immediato delle pagine
   self.clients.claim();
 });
 
-// Fetch: serve i file dalla cache se disponibili, altrimenti rete
+// ===== FETCH =====
 self.addEventListener('fetch', (event) => {
-  // Escludi le chiamate a Firebase dalla cache (devono essere live)
   if (event.request.url.includes('firebase')) {
     return;
   }
@@ -58,9 +195,23 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// ===== GESTIONE NOTIFICHE PUSH =====
+// ===== PERIODIC BACKGROUND SYNC =====
+self.addEventListener('periodicsync', (event) => {
+  console.log('⏰ Periodic sync:', event.tag);
+  if (event.tag === 'check-notifications') {
+    event.waitUntil(checkAndSendNotifications());
+  }
+});
 
-// Ricevi notifica push dal server
+// ===== SYNC EVENT =====
+self.addEventListener('sync', (event) => {
+  console.log('🔄 Background sync:', event.tag);
+  if (event.tag === 'check-notifications') {
+    event.waitUntil(checkAndSendNotifications());
+  }
+});
+
+// ===== PUSH NOTIFICATION =====
 self.addEventListener('push', (event) => {
   console.log('📬 Push ricevuta:', event);
   
@@ -98,7 +249,7 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Gestisci click sulla notifica
+// ===== CLICK NOTIFICA =====
 self.addEventListener('notificationclick', (event) => {
   console.log('🖱️ Click su notifica:', event.action);
   event.notification.close();
@@ -107,36 +258,64 @@ self.addEventListener('notificationclick', (event) => {
     return;
   }
 
-  // Apri la pagina presenze
   const urlToOpen = event.notification.data?.url || './presenze.html';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((windowClients) => {
-        // Cerca una finestra già aperta
         for (const client of windowClients) {
           if (client.url.includes('lancers') || client.url.includes('localhost')) {
             client.navigate(urlToOpen);
             return client.focus();
           }
         }
-        // Altrimenti apri una nuova finestra
         return clients.openWindow(urlToOpen);
       })
   );
 });
 
-// Gestisci chiusura notifica
+// ===== CHIUSURA NOTIFICA =====
 self.addEventListener('notificationclose', (event) => {
   console.log('🔕 Notifica chiusa:', event.notification.tag);
 });
 
-// Ricevi messaggi dalla pagina principale
-self.addEventListener('message', (event) => {
+// ===== MESSAGGI DALLA PAGINA =====
+self.addEventListener('message', async (event) => {
   console.log('📨 Messaggio ricevuto nel SW:', event.data);
   
+  // Schedula nuova notifica
   if (event.data.type === 'SCHEDULE_NOTIFICATION') {
-    scheduleLocalNotification(event.data.payload);
+    const payload = event.data.payload;
+    const id = payload.tag || `${payload.eventDate}-${payload.eventType}-${Date.now()}`;
+    
+    const existing = await getNotification(id);
+    if (existing && !existing.sent) {
+      console.log(`⚠️ Notifica già schedulata: ${id}`);
+      return;
+    }
+    
+    await saveNotification({
+      id: id,
+      title: payload.title,
+      body: payload.body,
+      scheduledTime: payload.scheduledTime,
+      eventDate: payload.eventDate,
+      eventType: payload.eventType,
+      tag: payload.tag,
+      sent: false,
+      createdAt: Date.now()
+    });
+    
+    console.log(`💾 Notifica salvata: ${payload.title} per ${new Date(payload.scheduledTime).toLocaleString()}`);
+    await checkAndSendNotifications();
+  }
+  
+  // Richiesta di controllo notifiche
+  if (event.data.type === 'CHECK_NOTIFICATIONS') {
+    const count = await checkAndSendNotifications();
+    if (event.source) {
+      event.source.postMessage({ type: 'NOTIFICATIONS_CHECKED', count });
+    }
   }
   
   // Test notifica manuale
@@ -156,32 +335,17 @@ self.addEventListener('message', (event) => {
       console.error('❌ Errore invio notifica:', err);
     });
   }
-});
-
-// Schedula notifica locale (senza server push)
-function scheduleLocalNotification(payload) {
-  const { title, body, scheduledTime, eventDate, eventType, tag } = payload;
   
-  const now = Date.now();
-  const delay = scheduledTime - now;
-  
-  if (delay > 0) {
-    setTimeout(() => {
-      self.registration.showNotification(title, {
-        body: body,
-        icon: './icons/icon-192x192.png',
-        badge: './icons/icon-192x192.png',
-        tag: tag || `reminder-${eventDate}`,
-        vibrate: [200, 100, 200],
-        requireInteraction: true,
-        actions: [
-          { action: 'open', title: '📋 Inserisci Presenza' },
-          { action: 'dismiss', title: '❌ Chiudi' }
-        ],
-        data: { url: './presenze.html', eventDate, eventType }
-      });
-    }, delay);
-    
-    console.log(`⏰ Notifica schedulata per ${new Date(scheduledTime).toLocaleString()}`);
+  // Reset notifiche
+  if (event.data.type === 'CLEAR_ALL_NOTIFICATIONS') {
+    try {
+      const db = await openDB();
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.clear();
+      console.log('🗑️ Tutte le notifiche cancellate');
+    } catch (e) {
+      console.error('❌ Errore pulizia notifiche:', e);
+    }
   }
-}
+});

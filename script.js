@@ -368,6 +368,7 @@ if ('serviceWorker' in navigator) {
 // ==========================================
 
 let swRegistration = null;
+let notificationsScheduledThisSession = false; // Evita scheduling multipli nella stessa sessione
 
 async function initNotificationSystem(registration) {
     swRegistration = registration;
@@ -386,8 +387,14 @@ async function initNotificationSystem(registration) {
     
     if (permission === 'granted') {
         console.log('✅ Notifiche già autorizzate');
-        // Già autorizzato, schedula le notifiche
-        await schedulePresenceReminders();
+        // Chiedi al SW di controllare notifiche pendenti (per quando app era chiusa)
+        if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'CHECK_NOTIFICATIONS' });
+        }
+        // Schedula nuove notifiche solo se non già fatto in questa sessione
+        if (!notificationsScheduledThisSession) {
+            await schedulePresenceReminders();
+        }
     } else if (permission === 'default') {
         console.log('📢 Mostro banner richiesta notifiche');
         // Mostra banner per richiedere permesso
@@ -591,6 +598,21 @@ async function showTestNotification() {
 async function schedulePresenceReminders() {
     if (!swRegistration || Notification.permission !== 'granted') return;
     
+    // Evita scheduling multipli nella stessa sessione
+    if (notificationsScheduledThisSession) {
+        console.log('⚠️ Notifiche già schedulate in questa sessione');
+        return;
+    }
+    
+    // Controlla se abbiamo già schedulato oggi
+    const lastCheck = localStorage.getItem('lastNotificationSchedule');
+    const today = new Date().toDateString();
+    if (lastCheck === today) {
+        console.log('⚠️ Notifiche già schedulate oggi');
+        notificationsScheduledThisSession = true;
+        return;
+    }
+    
     const playerData = sessionStorage.getItem('playerData');
     if (!playerData) return;
     
@@ -622,7 +644,9 @@ async function schedulePresenceReminders() {
     
     console.log(`📅 Eventi senza presenza: ${upcomingEvents.length}`);
     
-    upcomingEvents.forEach(event => {
+    let scheduledCount = 0;
+    
+    for (const event of upcomingEvents) {
         const eventDate = new Date(event.date);
         const isMatch = ['friendly', 'match-home', 'match-away'].includes(event.type);
         const isTraining = ['training', 'specific'].includes(event.type);
@@ -644,7 +668,10 @@ async function schedulePresenceReminders() {
                 const title = `${eventEmoji} Partita tra ${daysBeforeMatch} giorn${daysBeforeMatch === 1 ? 'o' : 'i'}!`;
                 const body = `${eventTypeText}: ${event.title}\n📅 ${dateFormatted}\n📋 Inserisci la tua presenza!`;
                 
-                scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, `match-${daysBeforeMatch}`);
+                // Tag unico per evento+giorno
+                const uniqueTag = `match-d${daysBeforeMatch}-${event.date}`;
+                scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, uniqueTag);
+                scheduledCount++;
             }
         } else if (isTraining) {
             // ALLENAMENTI: notifica 4 ore prima
@@ -653,7 +680,7 @@ async function schedulePresenceReminders() {
             notificationTime.setHours(15, 30, 0, 0);
             
             // Se già passato, salta
-            if (notificationTime <= now) return;
+            if (notificationTime <= now) continue;
             
             const eventEmoji = getEventEmoji(event.type);
             const eventTypeText = getEventTypeText(event.type);
@@ -662,14 +689,16 @@ async function schedulePresenceReminders() {
             const title = `${eventEmoji} Allenamento tra 4 ore!`;
             const body = `${eventTypeText}\n📅 ${dateFormatted} ore 19:30\n📋 Hai inserito la presenza?`;
             
-            scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, 'training-4h');
+            const uniqueTag = `training-4h-${event.date}`;
+            scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, uniqueTag);
+            scheduledCount++;
         } else {
             // ALTRI EVENTI: notifica il giorno prima alle 18:00
             const notificationTime = new Date(eventDate);
             notificationTime.setDate(notificationTime.getDate() - 1);
             notificationTime.setHours(18, 0, 0, 0);
             
-            if (notificationTime <= now) return;
+            if (notificationTime <= now) continue;
             
             const eventEmoji = getEventEmoji(event.type);
             const eventTypeText = getEventTypeText(event.type);
@@ -678,13 +707,16 @@ async function schedulePresenceReminders() {
             const title = `${eventEmoji} Evento domani!`;
             const body = `${eventTypeText}: ${event.title}\n📅 ${dateFormatted}`;
             
-            scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, 'event-1d');
+            const uniqueTag = `event-1d-${event.date}`;
+            scheduleNotificationToSW(title, body, notificationTime, event.date, event.type, uniqueTag);
+            scheduledCount++;
         }
-    });
+    }
     
-    // Salva ultimo check
-    localStorage.setItem('lastNotificationCheck', now.toISOString());
-    console.log('✅ Notifiche schedulate!');
+    // Segna come schedulato per oggi
+    localStorage.setItem('lastNotificationSchedule', today);
+    notificationsScheduledThisSession = true;
+    console.log(`✅ ${scheduledCount} notifiche schedulate!`);
 }
 
 // Invia notifica schedulata al Service Worker
