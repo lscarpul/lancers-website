@@ -524,26 +524,62 @@ async function requestNotificationPermission() {
         console.log('🔔 Permesso notifiche:', permission);
         
         if (permission === 'granted') {
-            // Mostra notifica di conferma
-            showConfirmationNotification();
+            // Mostra notifica di test per confermare che funziona
+            await showTestNotification();
             // Schedula i promemoria
             await schedulePresenceReminders();
+        } else {
+            console.log('❌ Permesso notifiche negato');
         }
     } catch (error) {
         console.error('❌ Errore richiesta permesso:', error);
     }
 }
 
-// Mostra notifica di conferma
-function showConfirmationNotification() {
-    if (swRegistration) {
-        swRegistration.showNotification('⚾ Notifiche Attivate!', {
-            body: 'Riceverai un promemoria prima di ogni evento per inserire la presenza',
+// Mostra notifica di TEST per verificare che funzioni
+async function showTestNotification() {
+    console.log('🧪 Invio notifica di test...');
+    
+    // Prova prima con il Service Worker
+    if (swRegistration && swRegistration.showNotification) {
+        try {
+            await swRegistration.showNotification('⚾ Notifiche Attivate!', {
+                body: '✅ Funziona! Riceverai promemoria per inserire le presenze prima di ogni evento.',
+                icon: './icons/icon-192x192.png',
+                badge: './icons/icon-192x192.png',
+                tag: 'test-notification',
+                vibrate: [200, 100, 200, 100, 200],
+                requireInteraction: false,
+                actions: [
+                    { action: 'open', title: '👍 Perfetto!' }
+                ]
+            });
+            console.log('✅ Notifica di test inviata tramite SW');
+            return;
+        } catch (e) {
+            console.log('⚠️ SW notification fallita, provo con Notification API', e);
+        }
+    }
+    
+    // Fallback: usa Notification API direttamente
+    try {
+        const notification = new Notification('⚾ Notifiche Attivate!', {
+            body: '✅ Funziona! Riceverai promemoria per inserire le presenze prima di ogni evento.',
             icon: './icons/icon-192x192.png',
-            badge: '/icons/icon-192x192.png',
-            tag: 'welcome',
-            vibrate: [100, 50, 100]
+            tag: 'test-notification',
+            requireInteraction: false
         });
+        
+        notification.onclick = () => {
+            window.focus();
+            notification.close();
+        };
+        
+        console.log('✅ Notifica di test inviata tramite Notification API');
+    } catch (e) {
+        console.error('❌ Impossibile inviare notifica di test:', e);
+        // Mostra almeno un alert
+        alert('✅ Notifiche attivate! Riceverai promemoria prima di ogni evento.');
     }
 }
 
