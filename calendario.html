@@ -153,6 +153,66 @@
 
         <div class="calendar-container">
             
+            <!-- TEST NOTIFICHE -->
+            <h2 class="section-title" style="background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);">🧪 EVENTI TEST - Per verificare notifiche</h2>
+            
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header" style="background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);">
+                    <div class="match-date"><span class="day">01</span><span class="month">FEB</span></div>
+                    <div class="match-info"><h3>🧪 TEST Allenamento OGGI</h3><span>Notifica: ORA (dopo reset)</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>📋 Scopo:</strong><span>Testare che le notifiche arrivino</span></div>
+                        <div class="detail-row"><strong>⏰ Notifica:</strong><span>Dopo reset: immediata</span></div>
+                        <div class="detail-row"><strong>💡 Istruzioni:</strong><span>Clicca "Reset" poi ricarica la pagina</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header" style="background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);">
+                    <div class="match-date"><span class="day">02</span><span class="month">FEB</span></div>
+                    <div class="match-info"><h3>🧪 TEST Partita Domani</h3><span>Notifica: oggi ore 10:00</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>📋 Scopo:</strong><span>Testare notifiche partite</span></div>
+                        <div class="detail-row"><strong>⏰ Notifica:</strong><span>1 Feb ore 10:00 (se non passato)</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header" style="background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);">
+                    <div class="match-date"><span class="day">02</span><span class="month">FEB</span></div>
+                    <div class="match-info"><h3>🧪 TEST Allenamento Domani</h3><span>Notifica: domani ore 15:30</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>📋 Scopo:</strong><span>Testare notifiche allenamenti</span></div>
+                        <div class="detail-row"><strong>⏰ Notifica:</strong><span>2 Feb ore 15:30 (4h prima)</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header" style="background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);">
+                    <div class="match-date"><span class="day">04</span><span class="month">FEB</span></div>
+                    <div class="match-info"><h3>🧪 TEST Partita tra 3gg</h3><span>Notifiche: 1, 2, 3 Feb ore 10:00</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>📋 Scopo:</strong><span>Testare notifiche multiple giorni</span></div>
+                        <div class="detail-row"><strong>⏰ Notifiche:</strong><span>1 Feb 10:00, 2 Feb 10:00, 3 Feb 10:00</span></div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- AMICHEVOLI -->
             <h2 class="section-title">🤝 AMICHEVOLI - Marzo/Aprile</h2>
             
@@ -543,14 +603,35 @@
             try {
                 // Resetta flag locale
                 localStorage.removeItem('lastNotificationSchedule');
+                sessionStorage.removeItem('notificationsScheduledThisSession');
                 
                 // Chiedi al SW di cancellare tutte le notifiche
-                if (navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ALL_NOTIFICATIONS' });
+                const swReg = await navigator.serviceWorker.getRegistration();
+                if (swReg && swReg.active) {
+                    swReg.active.postMessage({ type: 'CLEAR_ALL_NOTIFICATIONS' });
                 }
                 
-                alert('✅ Notifiche resettate! Ricarica la pagina per rischedularle.');
+                // Schedula una notifica di test tra 30 secondi
+                if (swReg && Notification.permission === 'granted') {
+                    const testTime = Date.now() + (30 * 1000); // 30 secondi
+                    swReg.active.postMessage({
+                        type: 'SCHEDULE_NOTIFICATION',
+                        payload: {
+                            title: '🧪 TEST: Notifica Programmata',
+                            body: 'Questa notifica era programmata per 30 secondi fa! Il sistema funziona! 🎉',
+                            scheduledTime: testTime,
+                            eventDate: new Date().toISOString().split('T')[0],
+                            eventType: 'test',
+                            tag: 'test-scheduled-' + Date.now()
+                        }
+                    });
+                    
+                    alert('✅ Reset completato!\n\n📱 Notifica di test programmata tra 30 SECONDI\n⏰ Tieni il telefono sbloccato per vederla!\n\nDopo puoi chiudere l\'app e le notifiche future arriveranno automaticamente.');
+                } else {
+                    alert('✅ Notifiche resettate!\n\nRicarica la pagina per rischedularle.');
+                }
             } catch (e) {
+                console.error('Errore reset:', e);
                 alert('Errore: ' + e.message);
             }
         }
@@ -559,33 +640,55 @@
         async function mostraStatoNotifiche() {
             const statusDiv = document.getElementById('notif-status');
             statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '<p>⏳ Caricamento stato...</p>';
             
-            let html = '';
+            let html = '<h4 style="margin: 0 0 1rem 0; color: #60a5fa;">📊 Stato Sistema Notifiche</h4>';
             
             // Permesso
             const perm = Notification.permission;
             const permIcon = perm === 'granted' ? '✅' : perm === 'denied' ? '❌' : '⚠️';
-            html += `<p><strong>Permesso:</strong> ${permIcon} ${perm}</p>`;
+            const permText = perm === 'granted' ? 'Autorizzato' : perm === 'denied' ? 'BLOCCATO (abilita nelle impostazioni!)' : 'Non richiesto';
+            html += `<p><strong>1. Permesso notifiche:</strong> ${permIcon} ${permText}</p>`;
             
             // Service Worker
             const swReg = await navigator.serviceWorker.getRegistration();
-            const swIcon = swReg ? '✅' : '❌';
-            html += `<p><strong>Service Worker:</strong> ${swIcon} ${swReg ? 'Attivo' : 'Non attivo'}</p>`;
-            
-            // Ultimo scheduling
-            const lastSchedule = localStorage.getItem('lastNotificationSchedule') || 'Mai';
-            html += `<p><strong>Ultimo scheduling:</strong> ${lastSchedule}</p>`;
+            const swActive = swReg && swReg.active;
+            const swIcon = swActive ? '✅' : '❌';
+            html += `<p><strong>2. Service Worker:</strong> ${swIcon} ${swActive ? 'Attivo e pronto' : 'NON ATTIVO (ricarica pagina)'}</p>`;
             
             // Player data
             const playerData = sessionStorage.getItem('playerData');
-            html += `<p><strong>Utente loggato:</strong> ${playerData ? '✅ Sì' : '❌ No (notifiche non attive)'}</p>`;
+            const playerIcon = playerData ? '✅' : '❌';
+            html += `<p><strong>3. Login:</strong> ${playerIcon} ${playerData ? 'Loggato' : 'NON LOGGATO (notifiche disabilitate)'}</p>`;
             
-            // Eventi futuri test
-            html += `<p><strong>Eventi TEST futuri:</strong></p>`;
-            html += `<ul style="margin-left: 1rem; font-size: 0.8rem;">`;
-            html += `<li>🧪 Allenamento 2 Feb → notifica 2 Feb 15:30</li>`;
-            html += `<li>🧪 Partita 4 Feb → notifiche 1-3 Feb ore 10:00</li>`;
-            html += `<li>🧪 Partita 6 Feb → notifiche 1-5 Feb ore 10:00</li>`;
+            // Ultimo scheduling
+            const lastSchedule = localStorage.getItem('lastNotificationSchedule') || 'Mai';
+            const oggi = new Date().toDateString();
+            const schedIcon = lastSchedule === oggi ? '✅' : '⚠️';
+            html += `<p><strong>4. Scheduling:</strong> ${schedIcon} ${lastSchedule}</p>`;
+            
+            // Riepilogo
+            const tuttoOk = perm === 'granted' && swActive && playerData;
+            if (tuttoOk) {
+                html += `<p style="color: #22c55e; margin-top: 1rem;"><strong>✅ SISTEMA OK!</strong> Le notifiche dovrebbero arrivare.</p>`;
+            } else {
+                html += `<p style="color: #f59e0b; margin-top: 1rem;"><strong>⚠️ PROBLEMI RILEVATI:</strong></p><ul style="color: #f59e0b; margin-left: 1rem;">`;
+                if (perm !== 'granted') html += `<li>Abilita le notifiche nelle impostazioni del browser</li>`;
+                if (!swActive) html += `<li>Ricarica la pagina per attivare il Service Worker</li>`;
+                if (!playerData) html += `<li>Effettua il login per attivare le notifiche</li>`;
+                html += `</ul>`;
+            }
+            
+            // Ora corrente
+            html += `<p style="margin-top: 1rem; opacity: 0.7;"><strong>Ora:</strong> ${new Date().toLocaleString('it-IT')}</p>`;
+            
+            // Test prossimi
+            html += `<p style="margin-top: 0.5rem;"><strong>📅 Prossime notifiche TEST:</strong></p>`;
+            html += `<ul style="margin-left: 1rem; font-size: 0.8rem; opacity: 0.9;">`;
+            html += `<li>🔴 Reset → notifica tra 30 secondi</li>`;
+            html += `<li>🧪 Partita 2 Feb → 1 Feb ore 10:00</li>`;
+            html += `<li>🧪 Allenamento 2 Feb → 2 Feb ore 15:30</li>`;
+            html += `<li>🧪 Partita 4 Feb → 1,2,3 Feb ore 10:00</li>`;
             html += `</ul>`;
             
             statusDiv.innerHTML = html;

@@ -99,12 +99,14 @@ document.head.appendChild(style);
 // ===== DATABASE EVENTI =====
 const allEvents = [
     // ===== TEST NOTIFICHE - Per verificare che funzionino =====
+    // Allenamento OGGI per test immediato
+    { date: '2026-02-01', type: 'training', title: '🧪 TEST Allenamento OGGI', time: '🕐 21:00', tag: '🧪 TEST' },
     // Allenamento domani (2 Feb) - notifica alle 15:30 di domani
     { date: '2026-02-02', type: 'training', title: '🧪 TEST Allenamento Domani', time: '🕐 19:30', tag: '🧪 TEST' },
+    // Partita domani (2 Feb) - notifiche 1 Feb ore 10:00
+    { date: '2026-02-02', type: 'friendly', title: '🧪 TEST Partita Domani', time: '🕐 15:00', tag: '🧪 TEST' },
     // Partita tra 3 giorni (4 Feb) - notifiche il 1, 2, 3 Feb alle 10:00
-    { date: '2026-02-04', type: 'friendly', title: '🧪 TEST Partita 3gg', time: '🕐 15:00', tag: '🧪 TEST' },
-    // Partita tra 5 giorni (6 Feb) - notifiche dal 1 Feb alle 10:00
-    { date: '2026-02-06', type: 'match-home', title: '🧪 TEST Partita 5gg', time: '🕐 11:00', tag: '🧪 TEST' },
+    { date: '2026-02-04', type: 'match-home', title: '🧪 TEST Partita 3gg', time: '🕐 11:00', tag: '🧪 TEST' },
     
     // DICEMBRE 2025
     { date: '2025-12-23', type: 'event', title: 'Partita dei Babbi Natale', time: '🎅 Evento Speciale', tag: '🎄 Evento' },
@@ -657,13 +659,23 @@ async function schedulePresenceReminders() {
         
         if (isMatch) {
             // PARTITE: notifica 1 volta al giorno per 5 giorni prima
+            const isTestEvent = event.title && event.title.includes('TEST');
+            
             for (let daysBeforeMatch = 5; daysBeforeMatch >= 1; daysBeforeMatch--) {
                 const notificationTime = new Date(eventDate);
                 notificationTime.setDate(notificationTime.getDate() - daysBeforeMatch);
                 notificationTime.setHours(10, 0, 0, 0); // Alle 10:00 del mattino
                 
-                // Salta se già passato
-                if (notificationTime <= now) continue;
+                // Se è già passato
+                if (notificationTime <= now) {
+                    // Per eventi TEST, schedula la prima notifica tra 1 minuto
+                    if (isTestEvent && daysBeforeMatch === 1) {
+                        notificationTime.setTime(now.getTime() + 60 * 1000);
+                        console.log(`🧪 TEST: notifica partita schedulata tra 1 minuto`);
+                    } else {
+                        continue;
+                    }
+                }
                 
                 const eventEmoji = getEventEmoji(event.type);
                 const eventTypeText = getEventTypeText(event.type);
@@ -683,8 +695,19 @@ async function schedulePresenceReminders() {
             // Assumiamo allenamento alle 19:30, quindi notifica alle 15:30
             notificationTime.setHours(15, 30, 0, 0);
             
-            // Se già passato, salta
-            if (notificationTime <= now) continue;
+            // Se è un evento TEST di oggi e l'orario è passato, schedula tra 1 minuto
+            const isTestEvent = event.title && event.title.includes('TEST');
+            const isToday = eventDate.toDateString() === now.toDateString();
+            
+            if (notificationTime <= now) {
+                if (isTestEvent && isToday) {
+                    // Per eventi TEST oggi, schedula tra 1 minuto
+                    notificationTime.setTime(now.getTime() + 60 * 1000);
+                    console.log(`🧪 TEST: notifica allenamento schedulata tra 1 minuto`);
+                } else {
+                    continue; // Salta notifiche normali già passate
+                }
+            }
             
             const eventEmoji = getEventEmoji(event.type);
             const eventTypeText = getEventTypeText(event.type);

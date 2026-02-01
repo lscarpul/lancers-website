@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v14';
+const CACHE_NAME = 'lancers-app-v15';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -152,7 +152,7 @@ async function checkAndSendNotifications() {
 
 // ===== INSTALLAZIONE =====
 self.addEventListener('install', (event) => {
-  console.log('🔧 Service Worker v12 installazione...');
+  console.log('🔧 Service Worker v15 installazione...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS_TO_CACHE))
@@ -162,7 +162,7 @@ self.addEventListener('install', (event) => {
 
 // ===== ATTIVAZIONE =====
 self.addEventListener('activate', (event) => {
-  console.log('✅ Service Worker v12 attivato!');
+  console.log('✅ Service Worker v15 attivato!');
   event.waitUntil(
     Promise.all([
       caches.keys().then((keyList) => {
@@ -175,11 +175,25 @@ self.addEventListener('activate', (event) => {
       self.registration.periodicSync?.register('check-notifications', {
         minInterval: 60 * 60 * 1000
       }).catch(e => console.log('Periodic sync non supportato:', e)),
-      checkAndSendNotifications()
+      checkAndSendNotifications(),
+      // Avvia controllo periodico ogni 30 secondi
+      startPeriodicCheck()
     ])
   );
   self.clients.claim();
 });
+
+// ===== CONTROLLO PERIODICO NOTIFICHE =====
+let checkInterval = null;
+function startPeriodicCheck() {
+  if (checkInterval) clearInterval(checkInterval);
+  // Controlla ogni 30 secondi se ci sono notifiche da inviare
+  checkInterval = setInterval(async () => {
+    console.log('⏰ Controllo periodico notifiche...');
+    await checkAndSendNotifications();
+  }, 30 * 1000);
+  console.log('🔄 Controllo periodico avviato (ogni 30 secondi)');
+}
 
 // ===== FETCH =====
 self.addEventListener('fetch', (event) => {
