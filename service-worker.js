@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v2';
+const CACHE_NAME = 'lancers-app-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -134,6 +134,24 @@ self.addEventListener('message', (event) => {
   
   if (event.data.type === 'SCHEDULE_NOTIFICATION') {
     scheduleLocalNotification(event.data.payload);
+  }
+  
+  // Test notifica manuale
+  if (event.data.type === 'SHOW_TEST_NOTIFICATION') {
+    console.log('🧪 Invio notifica di test dal SW...');
+    self.registration.showNotification('⚾ Test Notifica Lancers!', {
+      body: '✅ Le notifiche funzionano correttamente! Riceverai promemoria per inserire le presenze.',
+      icon: './icons/icon-192x192.png',
+      badge: './icons/icon-192x192.png',
+      tag: 'test-notification-' + Date.now(),
+      vibrate: [200, 100, 200, 100, 200],
+      requireInteraction: false,
+      data: { url: './presenze.html' }
+    }).then(() => {
+      console.log('✅ Notifica di test inviata con successo');
+    }).catch(err => {
+      console.error('❌ Errore invio notifica:', err);
+    });
   }
 });
 
