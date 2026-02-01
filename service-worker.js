@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v18';
+const CACHE_NAME = 'lancers-app-v20';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
