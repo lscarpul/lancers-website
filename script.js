@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v15 - LOCALSTORAGE NOTIFICATION SYSTEM =====
-console.log('🚀 Script.js v15 caricato!');
+// ===== SCRIPT.JS v16 - FCM PUSH NOTIFICATIONS =====
+console.log('🚀 Script.js v16 caricato - FCM enabled!');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
@@ -418,26 +418,11 @@ async function initNotificationSystem(registration) {
     if (permission === 'granted') {
         console.log('✅ Notifiche già autorizzate');
         
-        // NUOVO: Controlla notifiche pendenti in localStorage (sistema catch-up)
+        // NUOVO: Inizializza FCM e salva token
+        await initFCM();
+        
+        // Controlla notifiche pendenti in localStorage (sistema catch-up fallback)
         await checkLocalPendingNotifications();
-        
-        // Usa swRegistration.active o controller
-        const sw = swRegistration?.active || navigator.serviceWorker.controller;
-        
-        // Chiedi al SW di controllare notifiche pendenti (per quando app era chiusa)
-        if (sw) {
-            console.log('📤 Invio CHECK_NOTIFICATIONS al SW');
-            sw.postMessage({ type: 'CHECK_NOTIFICATIONS' });
-        } else {
-            console.log('⚠️ SW non ancora pronto, aspetto...');
-            // Aspetta che il SW sia pronto
-            await navigator.serviceWorker.ready;
-            const readySW = swRegistration?.active || navigator.serviceWorker.controller;
-            if (readySW) {
-                console.log('📤 SW pronto, invio CHECK_NOTIFICATIONS');
-                readySW.postMessage({ type: 'CHECK_NOTIFICATIONS' });
-            }
-        }
         
         // Schedula nuove notifiche solo se non già fatto in questa sessione
         if (!notificationsScheduledThisSession) {
@@ -449,6 +434,61 @@ async function initNotificationSystem(registration) {
         showNotificationBanner();
     } else {
         console.log('🚫 Notifiche bloccate dall\'utente');
+    }
+}
+
+// ==========================================
+// FIREBASE CLOUD MESSAGING (FCM)
+// ==========================================
+
+async function initFCM() {
+    try {
+        // Controlla se LancersFCM è disponibile
+        if (typeof LancersFCM === 'undefined') {
+            console.log('⚠️ LancersFCM non disponibile, uso sistema localStorage');
+            return false;
+        }
+        
+        // Inizializza FCM
+        await LancersFCM.init();
+        
+        // Ottieni token
+        const token = await LancersFCM.getToken();
+        if (!token) {
+            console.log('⚠️ Impossibile ottenere token FCM');
+            return false;
+        }
+        
+        // Salva token per il giocatore corrente
+        const playerData = sessionStorage.getItem('playerData');
+        if (playerData) {
+            const player = JSON.parse(playerData);
+            await LancersFCM.saveToken(player.number);
+            console.log('✅ FCM configurato per giocatore', player.number);
+        }
+        
+        // Gestisci notifiche in foreground
+        LancersFCM.onForegroundMessage((payload) => {
+            console.log('📬 Notifica foreground ricevuta');
+            // Mostra notifica anche se app è aperta
+            if (swRegistration) {
+                swRegistration.showNotification(
+                    payload.notification?.title || payload.data?.title,
+                    {
+                        body: payload.notification?.body || payload.data?.body,
+                        icon: './icons/icon-192x192.png',
+                        badge: './icons/icon-192x192.png',
+                        tag: payload.data?.tag || 'lancers-foreground',
+                        vibrate: [200, 100, 200]
+                    }
+                );
+            }
+        });
+        
+        return true;
+    } catch (e) {
+        console.error('❌ Errore inizializzazione FCM:', e);
+        return false;
     }
 }
 
@@ -890,15 +930,33 @@ async function schedulePresenceReminders() {
     console.log(`✅ ${scheduledCount} notifiche schedulate!`);
 }
 
-// Invia notifica schedulata al Service Worker (ORA USA LOCALSTORAGE)
-function scheduleNotificationToSW(title, body, scheduledTime, eventDate, eventType, tag) {
-    // NUOVO: Usa il sistema localStorage "catch-up"
-    // Le notifiche vengono salvate in localStorage e controllate ogni volta che l'utente apre l'app
+// Invia notifica schedulata - FCM + localStorage fallback
+async function scheduleNotificationToSW(title, body, scheduledTime, eventDate, eventType, tag) {
     const fullTag = `${tag}-${eventDate}`;
     const time = scheduledTime.getTime();
     
+    // Prova FCM (funziona anche con app chiusa)
+    const playerData = sessionStorage.getItem('playerData');
+    if (playerData && typeof LancersFCM !== 'undefined') {
+        const player = JSON.parse(playerData);
+        const fcmScheduled = await LancersFCM.scheduleNotification(player.number, {
+            title,
+            body,
+            scheduledTime: time,
+            tag: fullTag,
+            eventDate,
+            eventType
+        });
+        
+        if (fcmScheduled) {
+            console.log(`🔥 Notifica schedulata via FCM: ${title} - ${scheduledTime.toLocaleString()}`);
+            return;
+        }
+    }
+    
+    // Fallback: localStorage (funziona solo quando app viene riaperta)
     scheduleLocalNotification(title, body, time, fullTag);
-    console.log(`⏰ Notifica schedulata (localStorage): ${title} - ${scheduledTime.toLocaleString()}`);
+    console.log(`💾 Notifica schedulata (localStorage fallback): ${title} - ${scheduledTime.toLocaleString()}`);
 }
 
 // Helper: emoji per tipo evento
