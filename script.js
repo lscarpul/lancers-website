@@ -98,9 +98,13 @@ document.head.appendChild(style);
 
 // ===== DATABASE EVENTI =====
 const allEvents = [
-    // TEST NOTIFICHE
-    { date: '2026-02-01', type: 'training', title: 'TEST Allenamento', time: '🕐 Tra 4 ore', tag: '🧪 TEST' },
-    { date: '2026-02-04', type: 'friendly', title: 'TEST Partita', time: '🕐 Tra 3 giorni', tag: '🧪 TEST' },
+    // ===== TEST NOTIFICHE - Per verificare che funzionino =====
+    // Allenamento domani (2 Feb) - notifica alle 15:30 di domani
+    { date: '2026-02-02', type: 'training', title: '🧪 TEST Allenamento Domani', time: '🕐 19:30', tag: '🧪 TEST' },
+    // Partita tra 3 giorni (4 Feb) - notifiche il 1, 2, 3 Feb alle 10:00
+    { date: '2026-02-04', type: 'friendly', title: '🧪 TEST Partita 3gg', time: '🕐 15:00', tag: '🧪 TEST' },
+    // Partita tra 5 giorni (6 Feb) - notifiche dal 1 Feb alle 10:00
+    { date: '2026-02-06', type: 'match-home', title: '🧪 TEST Partita 5gg', time: '🕐 11:00', tag: '🧪 TEST' },
     
     // DICEMBRE 2025
     { date: '2025-12-23', type: 'event', title: 'Partita dei Babbi Natale', time: '🎅 Evento Speciale', tag: '🎄 Evento' },

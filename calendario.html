@@ -143,7 +143,12 @@
         <div class="page-header">
             <h1>📅 Calendario Partite 2026</h1>
             <p>Clicca su ogni partita per vedere i dettagli</p>
-            <button class="test-notif-btn" onclick="testNotifica()">🔔 Testa Notifiche</button>
+            <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem;">
+                <button class="test-notif-btn" onclick="testNotifica()" style="margin: 0;">🔔 Testa Notifiche</button>
+                <button class="test-notif-btn" onclick="resetNotifiche()" style="margin: 0; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">🔄 Reset Notifiche</button>
+                <button class="test-notif-btn" onclick="mostraStatoNotifiche()" style="margin: 0; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">📊 Stato</button>
+            </div>
+            <div id="notif-status" style="margin-top: 1rem; padding: 1rem; background: rgba(10, 22, 40, 0.8); border-radius: 10px; font-size: 0.85rem; display: none;"></div>
         </div>
 
         <div class="calendar-container">
@@ -514,14 +519,15 @@
             try {
                 const registration = await navigator.serviceWorker.ready;
                 await registration.showNotification('⚾ Test Lancers!', {
-                    body: '✅ Le notifiche funzionano!',
+                    body: '✅ Le notifiche funzionano! Riceverai promemoria per le partite.',
                     icon: './icons/icon-192x192.png',
                     badge: './icons/icon-192x192.png',
                     tag: 'test-' + Date.now(),
-                    vibrate: [200, 100, 200]
+                    vibrate: [200, 100, 200],
+                    requireInteraction: false
                 });
                 btn.textContent = '✅ Notifica Inviata!';
-                btn.style.background = '#48bb78';
+                btn.style.background = '#22c55e';
                 setTimeout(() => {
                     btn.textContent = '🔔 Testa Notifiche';
                     btn.style.background = '';
@@ -530,6 +536,59 @@
                 console.error('Errore notifica:', e);
                 alert('Errore: ' + e.message);
             }
+        }
+        
+        // Reset notifiche schedulate
+        async function resetNotifiche() {
+            try {
+                // Resetta flag locale
+                localStorage.removeItem('lastNotificationSchedule');
+                
+                // Chiedi al SW di cancellare tutte le notifiche
+                if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ALL_NOTIFICATIONS' });
+                }
+                
+                alert('✅ Notifiche resettate! Ricarica la pagina per rischedularle.');
+            } catch (e) {
+                alert('Errore: ' + e.message);
+            }
+        }
+        
+        // Mostra stato notifiche
+        async function mostraStatoNotifiche() {
+            const statusDiv = document.getElementById('notif-status');
+            statusDiv.style.display = 'block';
+            
+            let html = '';
+            
+            // Permesso
+            const perm = Notification.permission;
+            const permIcon = perm === 'granted' ? '✅' : perm === 'denied' ? '❌' : '⚠️';
+            html += `<p><strong>Permesso:</strong> ${permIcon} ${perm}</p>`;
+            
+            // Service Worker
+            const swReg = await navigator.serviceWorker.getRegistration();
+            const swIcon = swReg ? '✅' : '❌';
+            html += `<p><strong>Service Worker:</strong> ${swIcon} ${swReg ? 'Attivo' : 'Non attivo'}</p>`;
+            
+            // Ultimo scheduling
+            const lastSchedule = localStorage.getItem('lastNotificationSchedule') || 'Mai';
+            html += `<p><strong>Ultimo scheduling:</strong> ${lastSchedule}</p>`;
+            
+            // Player data
+            const playerData = sessionStorage.getItem('playerData');
+            html += `<p><strong>Utente loggato:</strong> ${playerData ? '✅ Sì' : '❌ No (notifiche non attive)'}</p>`;
+            
+            // Eventi futuri test
+            html += `<p><strong>Eventi TEST futuri:</strong></p>`;
+            html += `<ul style="margin-left: 1rem; font-size: 0.8rem;">`;
+            html += `<li>🧪 Allenamento 2 Feb → notifica 2 Feb 15:30</li>`;
+            html += `<li>🧪 Partita 4 Feb → notifiche 1-3 Feb ore 10:00</li>`;
+            html += `<li>🧪 Partita 6 Feb → notifiche 1-5 Feb ore 10:00</li>`;
+            html += `</ul>`;
+            
+            statusDiv.innerHTML = html;
         }
     </script>
 </body>
