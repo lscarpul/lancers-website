@@ -221,8 +221,6 @@ function loadWeeklyEvents() {
     });
     
     console.log('   weekEvents trovati:', weekEvents.length);
-        return eventDate >= start && eventDate <= end;
-    });
     
     // Genera HTML
     if (weekEvents.length === 0) {
