@@ -533,7 +533,7 @@
         <p>&copy; 2026 Lancers Baseball Club - Area Riservata</p>
     </footer>
 
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=13"></script>
     <script>
         // Toggle per le card - SOLO event delegation (rimosso onclick inline)
         document.addEventListener('DOMContentLoaded', function() {
@@ -622,7 +622,7 @@
                 }
                 
                 // Invia notifica IMMEDIATA di conferma
-                if (swReg && swReg.active && Notification.permission === 'granted') {
+                if (swReg && Notification.permission === 'granted') {
                     console.log('📤 Invio notifica immediata...');
                     // Notifica immediata
                     await swReg.showNotification('🔄 Reset Completato!', {
@@ -635,28 +635,35 @@
                     });
                     console.log('✅ Notifica immediata inviata');
                     
-                    // Schedula notifica tra 10 secondi
-                    const testTime = Date.now() + (10 * 1000);
-                    swReg.active.postMessage({
-                        type: 'SCHEDULE_NOTIFICATION',
-                        payload: {
-                            title: '⏰ Notifica Programmata!',
-                            body: 'Il sistema di scheduling funziona! 🎉',
-                            scheduledTime: testTime,
-                            eventDate: new Date().toISOString().split('T')[0],
-                            eventType: 'test',
-                            tag: 'test-scheduled-' + Date.now()
+                    // USA setTimeout DALLA PAGINA invece che dal SW
+                    // (su mobile il SW va in sleep e il timer non funziona)
+                    console.log('⏰ Avvio timer 10 secondi dalla pagina...');
+                    setTimeout(async () => {
+                        console.log('⏰ Timer scaduto! Invio notifica...');
+                        try {
+                            const reg = await navigator.serviceWorker.getRegistration();
+                            if (reg) {
+                                await reg.showNotification('⏰ Notifica Programmata!', {
+                                    body: 'Questa notifica era programmata 10 secondi fa. Funziona! 🎉',
+                                    icon: './icons/icon-192x192.png',
+                                    badge: './icons/icon-192x192.png',
+                                    tag: 'test-timer-' + Date.now(),
+                                    vibrate: [200, 100, 200, 100, 200],
+                                    requireInteraction: false
+                                });
+                                console.log('✅ Notifica programmata inviata!');
+                            }
+                        } catch (e) {
+                            console.error('❌ Errore notifica programmata:', e);
                         }
-                    });
-                    console.log('✅ Notifica schedulata per tra 10 secondi');
+                    }, 10000);
                     
-                    alert('✅ Reset completato!\n\n1️⃣ Notifica immediata inviata ORA\n2️⃣ Notifica programmata tra 10 SECONDI');
+                    alert('✅ Reset completato!\\n\\n1️⃣ Notifica immediata inviata ORA\\n2️⃣ Notifica programmata tra 10 SECONDI\\n\\n⚠️ RESTA SU QUESTA PAGINA per 10 secondi!');
                 } else {
                     console.log('❌ SW non pronto o permessi mancanti');
                     console.log('  swReg:', swReg);
-                    console.log('  swReg.active:', swReg?.active);
                     console.log('  Notification.permission:', Notification.permission);
-                    alert('⚠️ Service Worker non pronto o permessi mancanti.\n\nPermesso: ' + Notification.permission + '\nSW: ' + (swReg?.active ? 'OK' : 'NO'));
+                    alert('⚠️ Service Worker non pronto o permessi mancanti.\\n\\nPermesso: ' + Notification.permission + '\\nSW: ' + (swReg ? 'OK' : 'NO'));
                 }
             } catch (e) {
                 console.error('❌ Errore reset:', e);
