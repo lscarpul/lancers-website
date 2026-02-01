@@ -533,24 +533,29 @@
         <p>&copy; 2026 Lancers Baseball Club - Area Riservata</p>
     </footer>
 
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=9"></script>
     <script>
-        // Toggle per le card - usando event delegation per sicurezza
+        // Toggle per le card - SOLO event delegation (rimosso onclick inline)
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.querySelector('.calendar-container');
             if (container) {
                 container.addEventListener('click', function(e) {
+                    // Ignora click su link e bottoni
+                    if (e.target.closest('a') || e.target.closest('button')) return;
+                    
                     const card = e.target.closest('.match-card');
-                    if (card && !e.target.closest('a')) {
+                    if (card) {
+                        e.stopPropagation();
                         card.classList.toggle('open');
                     }
                 });
             }
         });
 
-        // Funzione backup per onclick inline
+        // Funzione toggleCard disabilitata per evitare doppio toggle
         function toggleCard(card) {
-            card.classList.toggle('open');
+            // Non fare nulla - il toggle è gestito dall'event delegation
+            // Questo evita il doppio toggle quando onclick e delegation scattano insieme
         }
 
         // Test notifiche
