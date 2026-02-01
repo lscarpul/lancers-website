@@ -98,6 +98,10 @@ document.head.appendChild(style);
 
 // ===== DATABASE EVENTI =====
 const allEvents = [
+    // TEST NOTIFICHE
+    { date: '2026-02-01', type: 'training', title: 'TEST Allenamento', time: '🕐 Tra 4 ore', tag: '🧪 TEST' },
+    { date: '2026-02-04', type: 'friendly', title: 'TEST Partita', time: '🕐 Tra 3 giorni', tag: '🧪 TEST' },
+    
     // DICEMBRE 2025
     { date: '2025-12-23', type: 'event', title: 'Partita dei Babbi Natale', time: '🎅 Evento Speciale', tag: '🎄 Evento' },
     { date: '2025-12-30', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
