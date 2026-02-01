@@ -8,327 +8,103 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a365d">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        /* Stili specifici per le sezioni espandibili delle partite */
-        .match-card-full {
-            background: var(--white);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
+        .match-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .match-card-full:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
         }
         .match-header {
             display: flex;
             align-items: center;
-            padding: 1.5rem;
+            padding: 1rem 1.5rem;
             cursor: pointer;
-            gap: 1.5rem;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            gap: 1rem;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
             color: white;
+            user-select: none;
         }
-        .match-header.home-match {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        }
-        .match-header.away-match {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-        }
-        .match-header.friendly-match {
-            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
-        }
-        .match-date-badge {
+        .match-header.home { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
+        .match-header.away { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); }
+        .match-header.friendly { background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); }
+        
+        .match-date {
             background: rgba(255,255,255,0.2);
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
             text-align: center;
-            min-width: 80px;
+            min-width: 60px;
         }
-        .match-date-badge .day {
-            display: block;
-            font-size: 1.8rem;
-            font-weight: 700;
-            line-height: 1;
+        .match-date .day { display: block; font-size: 1.5rem; font-weight: 700; }
+        .match-date .month { font-size: 0.75rem; opacity: 0.9; }
+        
+        .match-info { flex: 1; }
+        .match-info h3 { margin: 0 0 0.25rem 0; font-size: 1.1rem; }
+        .match-info span { opacity: 0.9; font-size: 0.85rem; }
+        
+        .match-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
         }
-        .match-date-badge .month-year {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-        .match-main-info {
-            flex: 1;
-        }
-        .match-main-info h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.25rem;
-        }
-        .match-main-info .match-meta {
-            opacity: 0.9;
-            font-size: 0.95rem;
-        }
-        .match-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            background: rgba(255,255,255,0.2);
-        }
-        .expand-icon {
-            font-size: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        .match-card-full.expanded .expand-icon {
-            transform: rotate(180deg);
-        }
+        .match-card.open .match-arrow { transform: rotate(180deg); }
+        
         .match-details {
-            display: none;
-            padding: 0;
-            background: var(--bg-light);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #f8fafc;
         }
-        .match-card-full.expanded .match-details {
-            display: block;
+        .match-card.open .match-details { max-height: 500px; }
+        
+        .match-details-inner {
+            padding: 1.5rem;
         }
-        .detail-section {
-            padding: 1.25rem 1.5rem;
+        .detail-row {
+            display: flex;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid #e2e8f0;
         }
-        .detail-section:last-child {
-            border-bottom: none;
-        }
-        .detail-section h4 {
-            color: var(--primary-color);
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .detail-content {
-            color: var(--text-dark);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-        .detail-content p {
-            margin-bottom: 0.5rem;
-        }
-        .detail-content strong {
-            color: var(--primary-color);
-        }
-        .transport-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 0.75rem;
-        }
-        .transport-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-color);
-        }
-        .transport-item .driver {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        .transport-item .passengers {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: 0.25rem;
-        }
-        .map-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--accent-color);
+        .detail-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .detail-row strong { min-width: 120px; color: #1a365d; }
+        .detail-row span { color: #4a5568; }
+        
+        .section-title {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
             color: white;
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 0.75rem;
-            transition: all 0.3s ease;
-        }
-        .map-link:hover {
-            background: #dd6b20;
-            transform: translateY(-2px);
-        }
-        .scouting-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 0.75rem;
-        }
-        .stat-box {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .stat-box .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        .stat-box .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            text-transform: uppercase;
-        }
-        .tbd-notice {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 1rem;
-            border-radius: 8px;
-            color: #92400e;
-        }
-        .giornata-label {
-            display: inline-block;
-            background: var(--accent-color);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0 1rem 0;
+            font-size: 1.2rem;
         }
         
-        /* ===== ADMIN TRANSPORT CONTROLS ===== */
-        .admin-controls {
-            display: none;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: #e8f5e9;
-            border-radius: 10px;
-            border: 2px dashed #4caf50;
-        }
-        .admin-controls.visible {
-            display: block;
-        }
-        .admin-controls h5 {
-            color: #2e7d32;
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-        }
-        .transport-form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-        .transport-form input {
-            flex: 1;
-            min-width: 120px;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-        .transport-form input:focus {
-            outline: none;
-            border-color: #4caf50;
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-        }
-        .btn-add-transport {
-            background: #4caf50;
+        .map-btn {
+            display: inline-block;
+            background: #ed8936;
             color: white;
-            border: none;
             padding: 0.5rem 1rem;
             border-radius: 6px;
-            cursor: pointer;
+            text-decoration: none;
             font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
+            margin-top: 0.5rem;
         }
-        .btn-add-transport:hover {
-            background: #388e3c;
-        }
-        .transport-item {
-            position: relative;
-            background: white;
+        .map-btn:hover { background: #dd6b20; }
+
+        .test-notif-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem auto;
             padding: 1rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-color);
-        }
-        .transport-item .btn-remove {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: #ef4444;
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
             color: white;
             border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.8rem;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .transport-item .btn-remove:hover {
-            background: #dc2626;
-            transform: scale(1.1);
-        }
-        .admin-mode .transport-item .btn-remove {
-            display: flex;
-        }
-        .transport-item .driver {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        .transport-item .passengers {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: 0.25rem;
-        }
-        .transport-item .seats {
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 0.25rem;
-            font-style: italic;
-        }
-        .no-transport {
-            color: #9ca3af;
-            font-style: italic;
-            padding: 0.5rem 0;
-        }
-        .admin-badge {
-            display: none;
-            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: auto;
-        }
-        .admin-mode .admin-badge {
-            display: inline-block;
-        }
-        
-        @media (max-width: 768px) {
-            .match-header {
-                flex-wrap: wrap;
-            }
-            .match-date-badge {
-                min-width: 70px;
-            }
-            .match-main-info h3 {
-                font-size: 1.1rem;
-            }
-            .transport-form {
-                flex-direction: column;
-            }
-            .transport-form input {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -361,1345 +137,378 @@
     <main class="page-content">
         <div class="page-header">
             <h1>📅 Calendario Partite 2026</h1>
-            <p>Tutte le partite della stagione - Clicca su ogni partita per i dettagli</p>
-            <button id="testNotifBtn" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 1rem;">🔔 Testa Notifiche</button>
+            <p>Clicca su ogni partita per vedere i dettagli</p>
+            <button class="test-notif-btn" onclick="testNotifica()">🔔 Testa Notifiche</button>
         </div>
 
         <div class="calendar-container">
-            <!-- AMICHEVOLI MARZO/APRILE -->
-            <div class="calendar-section">
-                <h2 class="section-title">🤝 AMICHEVOLI - Marzo/Aprile 2026</h2>
-                
-                <!-- Amichevole 1 Marzo -->
-                <div class="match-card-full" >
-                    <div class="match-header friendly-match">
-                        <div class="match-date-badge">
-                            <span class="day">01</span>
-                            <span class="month-year">MAR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <h3>🏠 Amichevole Interna</h3>
-                            <span class="match-meta">Domenica - Casa</span>
-                        </div>
-                        <span class="match-badge">✅ Confermata</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Inizio partita:</strong> 10:30</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p>Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📝 Note</h4>
-                            <div class="detail-content">
-                                <p>Amichevole interna per preparazione stagione</p>
-                            </div>
-                        </div>
-                    </div>
+            
+            <!-- AMICHEVOLI -->
+            <h2 class="section-title">🤝 AMICHEVOLI - Marzo/Aprile</h2>
+            
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">01</span><span class="month">MAR</span></div>
+                    <div class="match-info"><h3>🏠 Amichevole Interna</h3><span>Domenica - Casa</span></div>
+                    <span class="match-arrow">▼</span>
                 </div>
-
-                <!-- Amichevole 8 Marzo -->
-                <div class="match-card-full" >
-                    <div class="match-header friendly-match">
-                        <div class="match-date-badge">
-                            <span class="day">08</span>
-                            <span class="month-year">MAR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <h3>🏠 vs Lucca/Phoenix/Castenaso</h3>
-                            <span class="match-meta">Domenica - Casa</span>
-                        </div>
-                        <span class="match-badge">✅ Confermata</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Inizio partita:</strong> 10:30</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p>Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📝 Note</h4>
-                            <div class="detail-content">
-                                <p>Avversario da definire tra Lucca, Phoenix o Castenaso</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Amichevole 14 Marzo - Fortitudo -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">14</span>
-                            <span class="month-year">MAR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <h3>✈️ @ Fortitudo Bologna</h3>
-                            <span class="match-meta">Sabato - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✅ Confermata</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-03-14">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-03-14">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-03-14">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-03-14">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-03-14" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-03-14', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Stadio Gianni Falchi, Bologna</p>
-                                <p><strong>Indirizzo:</strong> Via Achille Casanova, 40135 Bologna BO</p>
-                                <a href="https://maps.google.com/?q=Stadio+Gianni+Falchi+Bologna" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Fortitudo Bologna</strong> - Serie A</p>
-                                <p>Squadra di alto livello, ottima opportunità di confronto</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Amichevole 22 Marzo - Fiorentina -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">22</span>
-                            <span class="month-year">MAR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <h3>✈️ @ Fiorentina</h3>
-                            <span class="match-meta">Domenica - Trasferta</span>
-                        </div>
-                        <span class="match-badge">❔ Da confermare</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <div class="tbd-notice">
-                                    ⚠️ In attesa di conferma - Dettagli da definire
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-03-22">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-03-22">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-03-22">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-03-22">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-03-22" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-03-22', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Fiorentina Baseball, Firenze</p>
-                                <a href="https://maps.google.com/?q=Fiorentina+Baseball+Firenze" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Amichevole 29 Marzo - Arezzo -->
-                <div class="match-card-full" >
-                    <div class="match-header friendly-match">
-                        <div class="match-date-badge">
-                            <span class="day">29</span>
-                            <span class="month-year">MAR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <h3>🏠 vs Arezzo</h3>
-                            <span class="match-meta">Domenica - Casa</span>
-                        </div>
-                        <span class="match-badge">✅ Confermata</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Inizio partita:</strong> 10:30</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p>Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>A.S.D BSC Arezzo</strong></p>
-                                <p>Squadra del nostro girone - Ottima occasione per studiare l'avversario</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Evento 4 Aprile - Trekking -->
-                <div class="match-card-full" >
-                        <div class="match-main-info">
-                            <h3>🥾 Trekking + Grigliata</h3>
-                            <span class="match-meta">Sabato - Evento Squadra</span>
-                        </div>
-                        <span class="match-badge">🎉 Team Building</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>📝 Dettagli Evento</h4>
-                            <div class="detail-content">
-                                <p>Trekking di squadra seguito da grigliata per rafforzare lo spirito di gruppo</p>
-                                <p><strong>Orari e dettagli:</strong> Da definire</p>
-                            </div>
-                        </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
+                        <div class="detail-row"><strong>📝 Note:</strong><span>Amichevole interna preparazione stagione</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ==================== ANDATA ==================== -->
-            <div class="calendar-section">
-                <h2 class="section-title">🏠 CAMPIONATO - ANDATA</h2>
-                
-                <!-- GIORNATA 1 - 12 Aprile - Health & Performance CASA -->
-                <div class="match-card-full" >
-                    <div class="match-header home-match">
-                        <div class="match-date-badge">
-                            <span class="day">12</span>
-                            <span class="month-year">APR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">1ª Giornata</span>
-                            <h3>🏠 vs Health & Performance S.S.D</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Casa</span>
-                        </div>
-                        <span class="match-badge">🏠 Casa</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Riscaldamento:</strong> 10:00</p>
-                                <p><strong>Inizio partita:</strong> 11:00</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Health & Performance S.S.D</strong></p>
-                                <p>Dettagli scouting da aggiornare prima della partita</p>
-                                <div class="scouting-stats">
-                                    <div class="stat-box">
-                                        <span class="stat-value">-</span>
-                                        <span class="stat-label">Vittorie</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-value">-</span>
-                                        <span class="stat-label">Sconfitte</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-value">-</span>
-                                        <span class="stat-label">Media Battuta</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">08</span><span class="month">MAR</span></div>
+                    <div class="match-info"><h3>🏠 vs Lucca/Phoenix/Castenaso</h3><span>Domenica - Casa</span></div>
+                    <span class="match-arrow">▼</span>
                 </div>
-
-                <!-- GIORNATA 2 - 19 Aprile - Livorno TRASFERTA -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">19</span>
-                            <span class="month-year">APR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">2ª Giornata</span>
-                            <h3>✈️ @ Livorno 1940 Baseball</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✈️ Trasferta</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-04-19">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-04-19">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-04-19">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-04-19">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-04-19" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-04-19', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Livorno 1940 Baseball</p>
-                                <p><strong>Indirizzo:</strong> Livorno</p>
-                                <a href="https://maps.google.com/?q=Livorno+1940+Baseball" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Livorno 1940 Baseball</strong></p>
-                                <p>Dettagli scouting da aggiornare prima della partita</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 3 - 26 Aprile - Longbridge CASA -->
-                <div class="match-card-full" >
-                    <div class="match-header home-match">
-                        <div class="match-date-badge">
-                            <span class="day">26</span>
-                            <span class="month-year">APR 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">3ª Giornata</span>
-                            <h3>🏠 vs Longbridge 2000 B.C</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Casa</span>
-                        </div>
-                        <span class="match-badge">🏠 Casa</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Riscaldamento:</strong> 10:00</p>
-                                <p><strong>Inizio partita:</strong> 11:00</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Longbridge 2000 B.C</strong></p>
-                                <p>Dettagli scouting da aggiornare prima della partita</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 4 - 3 Maggio - Colorno TRASFERTA -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">03</span>
-                            <span class="month-year">MAG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">4ª Giornata</span>
-                            <h3>✈️ @ Colorno B.C.</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✈️ Trasferta</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-05-03">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-05-03">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-05-03">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-05-03">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-05-03" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-05-03', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Colorno B.C.</p>
-                                <p><strong>Indirizzo:</strong> Colorno (PR)</p>
-                                <a href="https://maps.google.com/?q=Colorno+Baseball+Parma" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Colorno B.C.</strong></p>
-                                <p>Dettagli scouting da aggiornare prima della partita</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 5 - 10 Maggio - Arezzo CASA -->
-                <div class="match-card-full" >
-                    <div class="match-header home-match">
-                        <div class="match-date-badge">
-                            <span class="day">10</span>
-                            <span class="month-year">MAG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">5ª Giornata</span>
-                            <h3>🏠 vs A.S.D BSC Arezzo</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Casa</span>
-                        </div>
-                        <span class="match-badge">🏠 Casa</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Riscaldamento:</strong> 10:00</p>
-                                <p><strong>Inizio partita:</strong> 11:00</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>A.S.D BSC Arezzo</strong></p>
-                                <p>Dettagli scouting da aggiornare prima della partita</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 6 - 17 Maggio - Cali Roma CASA -->
-                <div class="match-card-full" >
-                    <div class="match-header home-match">
-                        <div class="match-date-badge">
-                            <span class="day">17</span>
-                            <span class="month-year">MAG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">6ª Giornata</span>
-                            <h3>🏠 vs Cali Roma XII</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Casa</span>
-                        </div>
-                        <span class="match-badge">🏠 Casa</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Riscaldamento:</strong> 10:00</p>
-                                <p><strong>Inizio partita:</strong> 11:00</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Cali Roma XII</strong></p>
-                                <p>Dettagli scouting da aggiornare prima della partita</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RECUPERI 24 Maggio -->
-                <div class="match-card-full" >
-                    <div class="match-header" style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);">
-                        <div class="match-date-badge">
-                            <span class="day">24</span>
-                            <span class="month-year">MAG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <h3>🔄 Eventuali Recuperi</h3>
-                            <span class="match-meta">Domenica - Da definire</span>
-                        </div>
-                        <span class="match-badge">🔄 Recuperi</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>📝 Note</h4>
-                            <div class="detail-content">
-                                <div class="tbd-notice">
-                                    ⚠️ Data riservata per eventuali recuperi di partite rinviate
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 7 - 30 Maggio - Padule TRASFERTA -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">30</span>
-                            <span class="month-year">MAG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">7ª Giornata</span>
-                            <h3>✈️ @ Padule Baseball A.S.D</h3>
-                            <span class="match-meta">Sabato ore 15:00 - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✈️ Trasferta</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-05-30">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-05-30">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-05-30">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-05-30">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-05-30" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-05-30', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Padule Baseball A.S.D</p>
-                                <a href="https://maps.google.com/?q=Padule+Baseball" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Padule Baseball A.S.D</strong></p>
-                                <p>Dettagli scouting da aggiornare prima della partita</p>
-                            </div>
-                        </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
+                        <div class="detail-row"><strong>📝 Note:</strong><span>Avversario da definire</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ==================== RITORNO ==================== -->
-            <div class="calendar-section">
-                <h2 class="section-title">✈️ CAMPIONATO - RITORNO</h2>
-
-                <!-- GIORNATA 8 - 7 Giugno - Health & Performance TRASFERTA -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">07</span>
-                            <span class="month-year">GIU 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">8ª Giornata</span>
-                            <h3>✈️ @ Health & Performance S.S.D</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✈️ Trasferta</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-06-07">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-06-07">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-06-07">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-06-07">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-06-07" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-06-07', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Health & Performance S.S.D</p>
-                                <a href="https://maps.google.com/?q=Health+Performance+Baseball" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Health & Performance S.S.D</strong></p>
-                                <p>Partita di ritorno - Analisi basata su gara d'andata</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">14</span><span class="month">MAR</span></div>
+                    <div class="match-info"><h3>✈️ @ Fortitudo Bologna</h3><span>Sabato - Trasferta</span></div>
+                    <span class="match-arrow">▼</span>
                 </div>
-
-                <!-- GIORNATA 9 - 14 Giugno - Livorno CASA -->
-                <div class="match-card-full" >
-                    <div class="match-header home-match">
-                        <div class="match-date-badge">
-                            <span class="day">14</span>
-                            <span class="month-year">GIU 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">9ª Giornata</span>
-                            <h3>🏠 vs Livorno 1940 Baseball</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Casa</span>
-                        </div>
-                        <span class="match-badge">🏠 Casa</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Riscaldamento:</strong> 10:00</p>
-                                <p><strong>Inizio partita:</strong> 11:00</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Livorno 1940 Baseball</strong></p>
-                                <p>Partita di ritorno - Analisi basata su gara d'andata</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 10 - 21 Giugno - Longbridge TRASFERTA -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">21</span>
-                            <span class="month-year">GIU 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">10ª Giornata</span>
-                            <h3>✈️ @ Longbridge 2000 B.C</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✈️ Trasferta</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-06-21">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-06-21">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-06-21">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-06-21">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-06-21" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-06-21', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Longbridge 2000 B.C</p>
-                                <a href="https://maps.google.com/?q=Longbridge+2000+Baseball" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Longbridge 2000 B.C</strong></p>
-                                <p>Partita di ritorno - Analisi basata su gara d'andata</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 11 - 28 Giugno - Colorno CASA -->
-                <div class="match-card-full" >
-                    <div class="match-header home-match">
-                        <div class="match-date-badge">
-                            <span class="day">28</span>
-                            <span class="month-year">GIU 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">11ª Giornata</span>
-                            <h3>🏠 vs Colorno B.C.</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Casa</span>
-                        </div>
-                        <span class="match-badge">🏠 Casa</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Riscaldamento:</strong> 10:00</p>
-                                <p><strong>Inizio partita:</strong> 11:00</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Colorno B.C.</strong></p>
-                                <p>Partita di ritorno - Analisi basata su gara d'andata</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 12 - 5 Luglio - Arezzo TRASFERTA -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">05</span>
-                            <span class="month-year">LUG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">12ª Giornata</span>
-                            <h3>✈️ @ A.S.D BSC Arezzo</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✈️ Trasferta</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="transport-grid" id="transport-2026-07-05">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-07-05">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-07-05">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-07-05">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-07-05" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-07-05', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo A.S.D BSC Arezzo</p>
-                                <p><strong>Indirizzo:</strong> Arezzo</p>
-                                <a href="https://maps.google.com/?q=BSC+Arezzo+Baseball" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>A.S.D BSC Arezzo</strong></p>
-                                <p>Partita di ritorno - Analisi basata su gara d'andata</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 13 - 12 Luglio - Cali Roma TRASFERTA -->
-                <div class="match-card-full" >
-                    <div class="match-header away-match">
-                        <div class="match-date-badge">
-                            <span class="day">12</span>
-                            <span class="month-year">LUG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">13ª Giornata</span>
-                            <h3>✈️ @ Cali Roma XII</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Trasferta</span>
-                        </div>
-                        <span class="match-badge">✈️ Trasferta</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari Ritrovo/Partenza</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> Da definire</p>
-                                <p><strong>Partenza:</strong> Da definire</p>
-                                <p><strong>Arrivo stimato:</strong> Da definire</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🚗 Organizzazione Trasporti <span class="admin-badge">👑 Admin</span></h4>
-                            <div class="detail-content">
-                                <div class="tbd-notice">
-                                    ⚠️ Trasferta lunga a Roma - Organizzazione trasporti fondamentale!
-                                </div>
-                                <div class="transport-grid" id="transport-2026-07-12">
-                                    <!-- Trasporti caricati da Firebase -->
-                                </div>
-                                <div class="admin-controls" id="admin-2026-07-12">
-                                    <h5>➕ Aggiungi Trasporto</h5>
-                                    <div class="transport-form">
-                                        <input type="text" placeholder="🚗 Autista" id="driver-2026-07-12">
-                                        <input type="text" placeholder="👥 Passeggeri (es: Mario, Luca)" id="passengers-2026-07-12">
-                                        <input type="number" placeholder="🪑 Posti" id="seats-2026-07-12" min="1" max="9" style="max-width: 80px;">
-                                        <button class="btn-add-transport" onclick="addTransport('2026-07-12', event)">Aggiungi</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🗺️ Mappa Campo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Cali Roma XII</p>
-                                <p><strong>Indirizzo:</strong> Roma</p>
-                                <a href="https://maps.google.com/?q=Cali+Roma+XII+Baseball" target="_blank" class="map-link">
-                                    📍 Apri in Google Maps
-                                </a>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Cali Roma XII</strong></p>
-                                <p>Partita di ritorno - Analisi basata su gara d'andata</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIORNATA 14 - 26 Luglio - Padule CASA -->
-                <div class="match-card-full" >
-                    <div class="match-header home-match">
-                        <div class="match-date-badge">
-                            <span class="day">26</span>
-                            <span class="month-year">LUG 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <span class="giornata-label">14ª Giornata</span>
-                            <h3>🏠 vs Padule Baseball A.S.D</h3>
-                            <span class="match-meta">Domenica ore 11:00 - Casa</span>
-                        </div>
-                        <span class="match-badge">🏠 Casa</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>🕐 Orari</h4>
-                            <div class="detail-content">
-                                <p><strong>Ritrovo:</strong> 09:30 al campo</p>
-                                <p><strong>Riscaldamento:</strong> 10:00</p>
-                                <p><strong>Inizio partita:</strong> 11:00</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>📍 Luogo</h4>
-                            <div class="detail-content">
-                                <p><strong>Campo:</strong> Campo Lancers - Casa</p>
-                            </div>
-                        </div>
-                        <div class="detail-section">
-                            <h4>🔍 Scouting Avversario</h4>
-                            <div class="detail-content">
-                                <p><strong>Padule Baseball A.S.D</strong></p>
-                                <p>Partita di ritorno - Analisi basata su gara d'andata</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RECUPERI 2 Agosto -->
-                <div class="match-card-full" >
-                    <div class="match-header" style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);">
-                        <div class="match-date-badge">
-                            <span class="day">02</span>
-                            <span class="month-year">AGO 2026</span>
-                        </div>
-                        <div class="match-main-info">
-                            <h3>🔄 Eventuali Recuperi</h3>
-                            <span class="match-meta">Domenica - Da definire</span>
-                        </div>
-                        <span class="match-badge">🔄 Recuperi</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                    <div class="match-details">
-                        <div class="detail-section">
-                            <h4>📝 Note</h4>
-                            <div class="detail-content">
-                                <div class="tbd-notice">
-                                    ⚠️ Data riservata per eventuali recuperi di partite rinviate
-                                </div>
-                            </div>
-                        </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Stadio Gianni Falchi, Bologna</span></div>
+                        <a href="https://maps.google.com/?q=Stadio+Gianni+Falchi+Bologna" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Legenda -->
-        <div class="legend">
-            <h3>Legenda</h3>
-            <div class="legend-items">
-                <div class="legend-item">
-                    <span class="legend-color friendly-color"></span>
-                    <span>Amichevole</span>
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">22</span><span class="month">MAR</span></div>
+                    <div class="match-info"><h3>✈️ @ Fiorentina</h3><span>Domenica - Trasferta</span></div>
+                    <span class="match-arrow">▼</span>
                 </div>
-                <div class="legend-item">
-                    <span class="legend-color home-color"></span>
-                    <span>Partita in Casa</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-color away-color"></span>
-                    <span>Partita in Trasferta</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-color recovery-color"></span>
-                    <span>Eventuali Recuperi</span>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Fiorentina Baseball</span></div>
+                        <a href="https://maps.google.com/?q=Fiorentina+Baseball+Firenze" target="_blank" class="map-btn">📍 Apri Maps</a>
+                    </div>
                 </div>
             </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">29</span><span class="month">MAR</span></div>
+                    <div class="match-info"><h3>🏠 vs Arezzo</h3><span>Domenica - Casa</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">05</span><span class="month">APR</span></div>
+                    <div class="match-info"><h3>🏠 vs Avigliana</h3><span>Sabato - Casa</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAMPIONATO ANDATA -->
+            <h2 class="section-title">⚾ CAMPIONATO - Girone di Andata</h2>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">19</span><span class="month">APR</span></div>
+                    <div class="match-info"><h3>✈️ Giornata 1 - @ Trasferta</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header home">
+                    <div class="match-date"><span class="day">27</span><span class="month">APR</span></div>
+                    <div class="match-info"><h3>🏠 Giornata 2 - Casa</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">03</span><span class="month">MAG</span></div>
+                    <div class="match-info"><h3>✈️ Giornata 3 - @ Trasferta</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header home">
+                    <div class="match-date"><span class="day">11</span><span class="month">MAG</span></div>
+                    <div class="match-info"><h3>🏠 Giornata 4 - Casa</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header home">
+                    <div class="match-date"><span class="day">18</span><span class="month">MAG</span></div>
+                    <div class="match-info"><h3>🏠 Giornata 5 - Casa</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">30</span><span class="month">MAG</span></div>
+                    <div class="match-info"><h3>✈️ Giornata 6 - @ Trasferta</h3><span>Sabato</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">07</span><span class="month">GIU</span></div>
+                    <div class="match-info"><h3>✈️ Giornata 7 - @ Trasferta</h3><span>Sabato</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAMPIONATO RITORNO -->
+            <h2 class="section-title">⚾ CAMPIONATO - Girone di Ritorno</h2>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header home">
+                    <div class="match-date"><span class="day">15</span><span class="month">GIU</span></div>
+                    <div class="match-info"><h3>🏠 Giornata 8 - Casa</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">21</span><span class="month">GIU</span></div>
+                    <div class="match-info"><h3>✈️ Giornata 9 - @ Trasferta</h3><span>Sabato</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header home">
+                    <div class="match-date"><span class="day">29</span><span class="month">GIU</span></div>
+                    <div class="match-info"><h3>🏠 Giornata 10 - Casa</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">05</span><span class="month">LUG</span></div>
+                    <div class="match-info"><h3>✈️ Giornata 11 - @ Trasferta</h3><span>Sabato</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">12</span><span class="month">LUG</span></div>
+                    <div class="match-info"><h3>✈️ Giornata 12 - @ Trasferta</h3><span>Sabato</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header home">
+                    <div class="match-date"><span class="day">20</span><span class="month">LUG</span></div>
+                    <div class="match-info"><h3>🏠 Giornata 13 - Casa</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header home">
+                    <div class="match-date"><span class="day">27</span><span class="month">LUG</span></div>
+                    <div class="match-info"><h3>🏠 Giornata 14 - Casa</h3><span>Domenica</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <footer>
-        <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
-        <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
+    <footer class="footer">
+        <p>&copy; 2026 Lancers Baseball Club - Area Riservata</p>
     </footer>
 
     <script src="script.js"></script>
-    <script src="firebase-config.js"></script>
     <script>
-        // ===== CONFIGURAZIONE =====
-        const FIREBASE_DB_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
-        let isAdmin = false;
+        // Toggle semplice per le card
+        function toggleCard(card) {
+            card.classList.toggle('open');
+        }
 
-        // ===== INIZIALIZZAZIONE =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Controlla se l'utente è admin
-            checkAdminStatus();
+        // Test notifiche
+        async function testNotifica() {
+            const btn = document.querySelector('.test-notif-btn');
             
-            // Carica i trasporti per tutte le trasferte
-            loadAllTransports();
+            if (!('Notification' in window)) {
+                alert('❌ Browser non supporta le notifiche');
+                return;
+            }
             
-            console.log('✅ Calendario inizializzato');
-        });
-
-        // ===== CONTROLLO ADMIN =====
-        function checkAdminStatus() {
-            const playerData = sessionStorage.getItem('playerData');
-            if (playerData) {
-                const player = JSON.parse(playerData);
-                isAdmin = player.isAdmin === true;
-                
-                if (isAdmin) {
-                    document.body.classList.add('admin-mode');
-                    // Mostra tutti i controlli admin
-                    document.querySelectorAll('.admin-controls').forEach(el => {
-                        el.classList.add('visible');
-                    });
-                    console.log('👑 Modalità Admin attivata');
+            if (Notification.permission === 'default') {
+                const perm = await Notification.requestPermission();
+                if (perm !== 'granted') {
+                    alert('❌ Devi autorizzare le notifiche');
+                    return;
                 }
             }
-        }
-
-        // ===== CARICAMENTO TRASPORTI =====
-        async function loadAllTransports() {
-            const matchDates = [
-                '2026-03-14', '2026-03-22', // Amichevoli trasferta
-                '2026-04-19', '2026-05-03', '2026-05-30', // Andata trasferte
-                '2026-06-07', '2026-06-21', '2026-07-05', '2026-07-12' // Ritorno trasferte
-            ];
-
-            for (const date of matchDates) {
-                await loadTransports(date);
+            
+            if (Notification.permission === 'denied') {
+                alert('❌ Notifiche bloccate. Vai nelle impostazioni del browser.');
+                return;
             }
-        }
-
-        async function loadTransports(matchDate) {
-            const gridElement = document.getElementById(`transport-${matchDate}`);
-            if (!gridElement) return;
-
+            
+            // Crea notifica
             try {
-                const response = await fetch(`${FIREBASE_DB_URL}/trasporti/${matchDate.replace(/-/g, '_')}.json`);
-                const data = await response.json();
-
-                if (data && Object.keys(data).length > 0) {
-                    gridElement.innerHTML = '';
-                    
-                    Object.entries(data).forEach(([id, transport]) => {
-                        gridElement.appendChild(createTransportElement(matchDate, id, transport));
-                    });
-                } else {
-                    gridElement.innerHTML = '<p class="no-transport">🚗 Nessun trasporto organizzato ancora</p>';
-                }
-            } catch (error) {
-                console.error('Errore caricamento trasporti:', error);
-                gridElement.innerHTML = '<p class="no-transport">⚠️ Errore nel caricamento</p>';
-            }
-        }
-
-        // ===== CREAZIONE ELEMENTO TRASPORTO =====
-        function createTransportElement(matchDate, id, transport) {
-            const div = document.createElement('div');
-            div.className = 'transport-item';
-            div.dataset.id = id;
-            
-            div.innerHTML = `
-                <button class="btn-remove" onclick="removeTransport('${matchDate}', '${id}', event)">✕</button>
-                <div class="driver">🚗 ${transport.driver}</div>
-                <div class="passengers">👥 ${transport.passengers || 'Nessun passeggero'}</div>
-                ${transport.seats ? `<div class="seats">🪑 ${transport.seats} posti disponibili</div>` : ''}
-            `;
-            
-            return div;
-        }
-
-        // ===== AGGIUNGI TRASPORTO =====
-        async function addTransport(matchDate, event) {
-            event.stopPropagation(); // Previene l'espansione/compressione della card
-            
-            if (!isAdmin) {
-                alert('Solo gli admin possono modificare i trasporti');
-                return;
-            }
-
-            const driverInput = document.getElementById(`driver-${matchDate}`);
-            const passengersInput = document.getElementById(`passengers-${matchDate}`);
-            const seatsInput = document.getElementById(`seats-${matchDate}`);
-
-            const driver = driverInput.value.trim();
-            const passengers = passengersInput.value.trim();
-            const seats = seatsInput.value;
-
-            if (!driver) {
-                alert('Inserisci il nome dell\'autista');
-                driverInput.focus();
-                return;
-            }
-
-            const transportData = {
-                driver: driver,
-                passengers: passengers,
-                seats: seats ? parseInt(seats) : null,
-                addedBy: JSON.parse(sessionStorage.getItem('playerData')).name,
-                timestamp: new Date().toISOString()
-            };
-
-            try {
-                // Genera ID univoco
-                const transportId = 'T' + Date.now();
-                const url = `${FIREBASE_DB_URL}/trasporti/${matchDate.replace(/-/g, '_')}/${transportId}.json`;
-                
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(transportData)
+                new Notification('⚾ Test Lancers!', {
+                    body: '✅ Le notifiche funzionano!',
+                    icon: './icons/icon-192x192.png',
+                    tag: 'test-' + Date.now()
                 });
-
-                if (response.ok) {
-                    console.log('✅ Trasporto aggiunto');
-                    
-                    // Pulisci i campi
-                    driverInput.value = '';
-                    passengersInput.value = '';
-                    seatsInput.value = '';
-                    
-                    // Ricarica i trasporti
-                    await loadTransports(matchDate);
-                } else {
-                    throw new Error('Errore salvataggio');
-                }
-            } catch (error) {
-                console.error('❌ Errore:', error);
-                alert('Errore durante il salvataggio');
+                btn.textContent = '✅ Notifica Inviata!';
+                btn.style.background = '#48bb78';
+                setTimeout(() => {
+                    btn.textContent = '🔔 Testa Notifiche';
+                    btn.style.background = '';
+                }, 3000);
+            } catch (e) {
+                alert('Errore: ' + e.message);
             }
         }
-
-        // ===== RIMUOVI TRASPORTO =====
-        async function removeTransport(matchDate, transportId, event) {
-            event.stopPropagation(); // Previene l'espansione/compressione della card
-            
-            if (!isAdmin) {
-                alert('Solo gli admin possono modificare i trasporti');
-                return;
-            }
-
-            if (!confirm('Sei sicuro di voler rimuovere questo trasporto?')) {
-                return;
-            }
-
-            try {
-                const url = `${FIREBASE_DB_URL}/trasporti/${matchDate.replace(/-/g, '_')}/${transportId}.json`;
-                
-                const response = await fetch(url, {
-                    method: 'DELETE'
-                });
-
-                if (response.ok) {
-                    console.log('✅ Trasporto rimosso');
-                    await loadTransports(matchDate);
-                } else {
-                    throw new Error('Errore eliminazione');
-                }
-            } catch (error) {
-                console.error('❌ Errore:', error);
-                alert('Errore durante l\'eliminazione');
-            }
-        }
-
-        // ===== TOGGLE CARD FUNCTION =====
-        function toggleMatchCard(header) {
-            const card = header.closest('.match-card-full');
-            if (card) {
-                card.classList.toggle('expanded');
-                console.log('🔄 Card toggled:', card.classList.contains('expanded') ? 'aperta' : 'chiusa');
-            }
-        }
-
-        // ===== EVENT DELEGATION PER TOGGLE CARD =====
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Inizializzazione calendario...');
-            
-            // Usa event delegation sul container invece che su ogni header
-            const container = document.querySelector('.calendar-container');
-            if (container) {
-                container.addEventListener('click', function(e) {
-                    // Se clicco su input, button, link, o form: non fare nulla
-                    if (e.target.tagName === 'INPUT' || 
-                        e.target.tagName === 'BUTTON' || 
-                        e.target.tagName === 'A' ||
-                        e.target.tagName === 'SELECT' ||
-                        e.target.closest('.admin-controls') ||
-                        e.target.closest('.transport-form') ||
-                        e.target.closest('.detail-section')) {
-                        return;
-                    }
-                    
-                    // Trova l'header più vicino
-                    const header = e.target.closest('.match-header');
-                    if (header) {
-                        toggleMatchCard(header);
-                    }
-                });
-                console.log('✅ Event delegation su container impostata');
-            }
-            
-            // Pulsante test notifiche
-            const testBtn = document.getElementById('testNotifBtn');
-            if (testBtn) {
-                testBtn.addEventListener('click', async function() {
-                    console.log('🔔 Test notifica manuale...');
-                    
-                    if (!('Notification' in window)) {
-                        alert('❌ Il tuo browser non supporta le notifiche');
-                        return;
-                    }
-                    
-                    if (Notification.permission === 'default') {
-                        const permission = await Notification.requestPermission();
-                        if (permission !== 'granted') {
-                            alert('❌ Devi autorizzare le notifiche per testarle');
-                            return;
-                        }
-                    }
-                    
-                    if (Notification.permission === 'denied') {
-                        alert('❌ Le notifiche sono bloccate. Vai nelle impostazioni del browser per abilitarle.');
-                        return;
-                    }
-                    
-                    // Invia notifica di test
-                    try {
-                        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                            navigator.serviceWorker.controller.postMessage({
-                                type: 'SHOW_TEST_NOTIFICATION'
-                            });
-                            console.log('✅ Richiesta notifica inviata al SW');
-                        } else {
-                            // Fallback
-                            new Notification('⚾ Test Notifica Lancers!', {
-                                body: '✅ Le notifiche funzionano! Riceverai promemoria per le presenze.',
-                                icon: './icons/icon-192x192.png',
-                                tag: 'test-' + Date.now()
-                            });
-                        }
-                        this.textContent = '✅ Notifica Inviata!';
-                        this.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
-                        setTimeout(() => {
-                            this.textContent = '🔔 Testa Notifiche';
-                            this.style.background = 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)';
-                        }, 3000);
-                    } catch (err) {
-                        console.error('❌ Errore notifica:', err);
-                        alert('❌ Errore: ' + err.message);
-                    }
-                });
-            }
-            
-            console.log('✅ Event handlers calendario inizializzati');
-        });
     </script>
 </body>
 </html>
