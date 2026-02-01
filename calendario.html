@@ -616,14 +616,25 @@
                     swReg.active.postMessage({ type: 'CLEAR_ALL_NOTIFICATIONS' });
                 }
                 
-                // Schedula una notifica di test tra 30 secondi
-                if (swReg && Notification.permission === 'granted') {
-                    const testTime = Date.now() + (30 * 1000); // 30 secondi
+                // Invia notifica IMMEDIATA di conferma + schedula una tra 10 secondi
+                if (swReg && swReg.active && Notification.permission === 'granted') {
+                    // Notifica immediata
+                    await swReg.showNotification('🔄 Reset Completato!', {
+                        body: '✅ Notifiche resettate. Tra 10 secondi arriverà una notifica di test programmata.',
+                        icon: './icons/icon-192x192.png',
+                        badge: './icons/icon-192x192.png',
+                        tag: 'reset-confirm-' + Date.now(),
+                        vibrate: [200, 100, 200],
+                        requireInteraction: false
+                    });
+                    
+                    // Schedula notifica tra 10 secondi (più breve per test)
+                    const testTime = Date.now() + (10 * 1000);
                     swReg.active.postMessage({
                         type: 'SCHEDULE_NOTIFICATION',
                         payload: {
-                            title: '🧪 TEST: Notifica Programmata',
-                            body: 'Questa notifica era programmata per 30 secondi fa! Il sistema funziona! 🎉',
+                            title: '⏰ Notifica Programmata!',
+                            body: 'Questa notifica era programmata 10 secondi fa. Il sistema di scheduling funziona! 🎉',
                             scheduledTime: testTime,
                             eventDate: new Date().toISOString().split('T')[0],
                             eventType: 'test',
@@ -631,9 +642,9 @@
                         }
                     });
                     
-                    alert('✅ Reset completato!\n\n📱 Notifica di test programmata tra 30 SECONDI\n⏰ Tieni il telefono sbloccato per vederla!\n\nDopo puoi chiudere l\'app e le notifiche future arriveranno automaticamente.');
+                    alert('✅ Reset completato!\\n\\n1️⃣ Notifica immediata inviata ORA\\n2️⃣ Notifica programmata tra 10 SECONDI\\n\\n⏰ Resta sulla pagina per vedere se arriva!');
                 } else {
-                    alert('✅ Notifiche resettate!\n\nRicarica la pagina per rischedularle.');
+                    alert('⚠️ Service Worker non pronto o permessi mancanti.\\n\\nRicarica la pagina e riprova.');
                 }
             } catch (e) {
                 console.error('Errore reset:', e);
