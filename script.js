@@ -341,9 +341,302 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js')
             .then((registration) => {
                 console.log('✅ Service Worker registrato con successo! Scope:', registration.scope);
+                
+                // Inizializza sistema notifiche
+                initNotificationSystem(registration);
             })
             .catch((err) => {
                 console.error('❌ Registrazione Service Worker fallita:', err);
             });
     });
+}
+
+// ==========================================
+// SISTEMA NOTIFICHE PRESENZE
+// ==========================================
+
+let swRegistration = null;
+
+async function initNotificationSystem(registration) {
+    swRegistration = registration;
+    
+    // Controlla se le notifiche sono supportate
+    if (!('Notification' in window)) {
+        console.log('❌ Notifiche non supportate');
+        return;
+    }
+    
+    // Controlla lo stato attuale del permesso
+    const permission = Notification.permission;
+    console.log('🔔 Stato permesso notifiche:', permission);
+    
+    if (permission === 'granted') {
+        // Già autorizzato, schedula le notifiche
+        await schedulePresenceReminders();
+    } else if (permission === 'default') {
+        // Mostra banner per richiedere permesso
+        showNotificationBanner();
+    }
+}
+
+// Mostra banner per richiedere permesso notifiche
+function showNotificationBanner() {
+    // Non mostrare se già mostrato in questa sessione
+    if (sessionStorage.getItem('notificationBannerShown')) return;
+    
+    // Aspetta che la pagina sia caricata
+    setTimeout(() => {
+        const banner = document.createElement('div');
+        banner.id = 'notification-banner';
+        banner.innerHTML = `
+            <div class="notification-banner-content">
+                <div class="notification-banner-icon">🔔</div>
+                <div class="notification-banner-text">
+                    <strong>Vuoi ricevere promemoria?</strong>
+                    <p>Ti avviseremo di inserire la presenza prima di ogni allenamento e partita</p>
+                </div>
+                <div class="notification-banner-actions">
+                    <button id="acceptNotifications" class="btn-accept">Attiva</button>
+                    <button id="declineNotifications" class="btn-decline">No grazie</button>
+                </div>
+            </div>
+        `;
+        banner.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: 90%;
+            width: 450px;
+            animation: slideUp 0.4s ease;
+        `;
+        
+        // Aggiungi stili
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+                to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            }
+            .notification-banner-content {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            .notification-banner-icon {
+                font-size: 2rem;
+            }
+            .notification-banner-text {
+                flex: 1;
+                min-width: 200px;
+            }
+            .notification-banner-text strong {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+            .notification-banner-text p {
+                font-size: 0.85rem;
+                opacity: 0.9;
+                margin: 0;
+            }
+            .notification-banner-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+            .notification-banner-actions button {
+                padding: 0.5rem 1rem;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .btn-accept {
+                background: #48bb78;
+                color: white;
+            }
+            .btn-accept:hover {
+                background: #38a169;
+                transform: scale(1.05);
+            }
+            .btn-decline {
+                background: rgba(255,255,255,0.2);
+                color: white;
+            }
+            .btn-decline:hover {
+                background: rgba(255,255,255,0.3);
+            }
+        `;
+        document.head.appendChild(style);
+        document.body.appendChild(banner);
+        
+        sessionStorage.setItem('notificationBannerShown', 'true');
+        
+        // Event listeners
+        document.getElementById('acceptNotifications').addEventListener('click', async () => {
+            banner.remove();
+            await requestNotificationPermission();
+        });
+        
+        document.getElementById('declineNotifications').addEventListener('click', () => {
+            banner.remove();
+            localStorage.setItem('notificationsDeclined', 'true');
+        });
+    }, 2000);
+}
+
+// Richiedi permesso notifiche
+async function requestNotificationPermission() {
+    try {
+        const permission = await Notification.requestPermission();
+        console.log('🔔 Permesso notifiche:', permission);
+        
+        if (permission === 'granted') {
+            // Mostra notifica di conferma
+            showConfirmationNotification();
+            // Schedula i promemoria
+            await schedulePresenceReminders();
+        }
+    } catch (error) {
+        console.error('❌ Errore richiesta permesso:', error);
+    }
+}
+
+// Mostra notifica di conferma
+function showConfirmationNotification() {
+    if (swRegistration) {
+        swRegistration.showNotification('⚾ Notifiche Attivate!', {
+            body: 'Riceverai un promemoria prima di ogni evento per inserire la presenza',
+            icon: '/icons/icon-192x192.png',
+            badge: '/icons/icon-192x192.png',
+            tag: 'welcome',
+            vibrate: [100, 50, 100]
+        });
+    }
+}
+
+// Schedula promemoria per tutti gli eventi futuri
+async function schedulePresenceReminders() {
+    if (!swRegistration || Notification.permission !== 'granted') return;
+    
+    const playerData = sessionStorage.getItem('playerData');
+    if (!playerData) return;
+    
+    const player = JSON.parse(playerData);
+    const now = new Date();
+    
+    // Carica le presenze già inserite
+    let existingPresences = {};
+    try {
+        const response = await fetch(`https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app/presenze/${player.number}.json`);
+        existingPresences = await response.json() || {};
+    } catch (e) {
+        console.log('Utilizzo presenze locali');
+    }
+    
+    // Filtra eventi futuri che richiedono presenza
+    const upcomingEvents = allEvents.filter(event => {
+        const eventDate = new Date(event.date);
+        // Evento futuro
+        if (eventDate <= now) return false;
+        // Tipi che richiedono presenza
+        const needsPresence = ['training', 'specific', 'friendly', 'match-home', 'match-away', 'event'].includes(event.type);
+        if (!needsPresence) return false;
+        // Non già inserita
+        const dateKey = event.date.replace(/-/g, '_');
+        if (existingPresences[dateKey]) return false;
+        return true;
+    });
+    
+    console.log(`📅 Eventi senza presenza: ${upcomingEvents.length}`);
+    
+    // Schedula notifiche per i prossimi 7 giorni
+    const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    upcomingEvents.forEach(event => {
+        const eventDate = new Date(event.date);
+        
+        // Schedula solo eventi entro una settimana
+        if (eventDate > oneWeekFromNow) return;
+        
+        // Calcola quando inviare la notifica (giorno prima alle 18:00)
+        const notificationTime = new Date(eventDate);
+        notificationTime.setDate(notificationTime.getDate() - 1);
+        notificationTime.setHours(18, 0, 0, 0);
+        
+        // Se il tempo è già passato, prova 3 ore prima dell'evento
+        if (notificationTime <= now) {
+            notificationTime.setTime(eventDate.getTime() - 3 * 60 * 60 * 1000);
+        }
+        
+        // Se ancora passato, salta
+        if (notificationTime <= now) return;
+        
+        // Crea il messaggio
+        const eventEmoji = getEventEmoji(event.type);
+        const eventTypeText = getEventTypeText(event.type);
+        const dateFormatted = formatDateItalian(eventDate);
+        
+        const title = `${eventEmoji} Inserisci la presenza!`;
+        const body = `${eventTypeText}: ${event.title}\n📅 ${dateFormatted}`;
+        
+        // Invia al service worker
+        if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+                type: 'SCHEDULE_NOTIFICATION',
+                payload: {
+                    title,
+                    body,
+                    scheduledTime: notificationTime.getTime(),
+                    eventDate: event.date,
+                    eventType: event.type
+                }
+            });
+        }
+    });
+    
+    // Salva ultimo check
+    localStorage.setItem('lastNotificationCheck', now.toISOString());
+}
+
+// Helper: emoji per tipo evento
+function getEventEmoji(type) {
+    const emojis = {
+        'training': '🏋️',
+        'specific': '🎯',
+        'friendly': '🤝',
+        'match-home': '🏠',
+        'match-away': '✈️',
+        'event': '🎉'
+    };
+    return emojis[type] || '⚾';
+}
+
+// Helper: testo tipo evento
+function getEventTypeText(type) {
+    const texts = {
+        'training': 'Allenamento',
+        'specific': 'Allenamento Specifico',
+        'friendly': 'Amichevole',
+        'match-home': 'Partita in Casa',
+        'match-away': 'Partita in Trasferta',
+        'event': 'Evento'
+    };
+    return texts[type] || 'Evento';
+}
+
+// Helper: formatta data in italiano
+function formatDateItalian(date) {
+    const days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+    const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
+                    'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+    
+    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
 }
