@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v16';
+const CACHE_NAME = 'lancers-app-v17';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -329,6 +329,19 @@ self.addEventListener('message', async (event) => {
     const count = await checkAndSendNotifications();
     if (event.source) {
       event.source.postMessage({ type: 'NOTIFICATIONS_CHECKED', count });
+    }
+  }
+  
+  // Richiesta conteggio notifiche pendenti
+  if (event.data.type === 'GET_PENDING_COUNT') {
+    try {
+      const pending = await getPendingNotifications();
+      // Rispondi sulla porta del MessageChannel
+      if (event.ports && event.ports[0]) {
+        event.ports[0].postMessage({ count: pending.length });
+      }
+    } catch (e) {
+      console.error('Errore get pending count:', e);
     }
   }
   

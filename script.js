@@ -393,10 +393,25 @@ async function initNotificationSystem(registration) {
     
     if (permission === 'granted') {
         console.log('✅ Notifiche già autorizzate');
+        
+        // Usa swRegistration.active o controller
+        const sw = swRegistration?.active || navigator.serviceWorker.controller;
+        
         // Chiedi al SW di controllare notifiche pendenti (per quando app era chiusa)
-        if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({ type: 'CHECK_NOTIFICATIONS' });
+        if (sw) {
+            console.log('📤 Invio CHECK_NOTIFICATIONS al SW');
+            sw.postMessage({ type: 'CHECK_NOTIFICATIONS' });
+        } else {
+            console.log('⚠️ SW non ancora pronto, aspetto...');
+            // Aspetta che il SW sia pronto
+            await navigator.serviceWorker.ready;
+            const readySW = swRegistration?.active || navigator.serviceWorker.controller;
+            if (readySW) {
+                console.log('📤 SW pronto, invio CHECK_NOTIFICATIONS');
+                readySW.postMessage({ type: 'CHECK_NOTIFICATIONS' });
+            }
         }
+        
         // Schedula nuove notifiche solo se non già fatto in questa sessione
         if (!notificationsScheduledThisSession) {
             await schedulePresenceReminders();
@@ -602,7 +617,14 @@ async function showTestNotification() {
 
 // Schedula promemoria per tutti gli eventi futuri
 async function schedulePresenceReminders() {
-    if (!swRegistration || Notification.permission !== 'granted') return;
+    console.log('📅 schedulePresenceReminders() chiamata');
+    console.log('   - swRegistration:', swRegistration ? 'presente' : 'assente');
+    console.log('   - Notification.permission:', Notification.permission);
+    
+    if (!swRegistration || Notification.permission !== 'granted') {
+        console.log('❌ Impossibile schedulare: SW o permessi mancanti');
+        return;
+    }
     
     // Evita scheduling multipli nella stessa sessione
     if (notificationsScheduledThisSession) {
@@ -748,16 +770,23 @@ async function schedulePresenceReminders() {
 
 // Invia notifica schedulata al Service Worker
 function scheduleNotificationToSW(title, body, scheduledTime, eventDate, eventType, tag) {
-    if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-            type: 'SCHEDULE_NOTIFICATION',
-            payload: {
-                title,
-                body,
-                scheduledTime: scheduledTime.getTime(),
-                eventDate: eventDate,
-                eventType: eventType,
-                tag: `${tag}-${eventDate}`
+    // Usa swRegistration.active o navigator.serviceWorker.controller
+    const sw = swRegistration?.active || navigator.serviceWorker.controller;
+    
+    if (!sw) {
+        console.error('❌ Service Worker non disponibile per scheduling notifica');
+        return;
+    }
+    
+    sw.postMessage({
+        type: 'SCHEDULE_NOTIFICATION',
+        payload: {
+            title,
+            body,
+            scheduledTime: scheduledTime.getTime(),
+            eventDate: eventDate,
+            eventType: eventType,
+            tag: `${tag}-${eventDate}`
             }
         });
         console.log(`⏰ Notifica schedulata: ${title} - ${scheduledTime.toLocaleString()}`);

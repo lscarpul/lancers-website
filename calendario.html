@@ -658,43 +658,58 @@
             // Service Worker
             const swReg = await navigator.serviceWorker.getRegistration();
             const swActive = swReg && swReg.active;
+            const swController = navigator.serviceWorker.controller;
             const swIcon = swActive ? '✅' : '❌';
-            html += `<p><strong>2. Service Worker:</strong> ${swIcon} ${swActive ? 'Attivo e pronto' : 'NON ATTIVO (ricarica pagina)'}</p>`;
+            html += `<p><strong>2. Service Worker:</strong> ${swIcon} ${swActive ? 'Attivo' : 'NON ATTIVO'}</p>`;
+            html += `<p style="font-size: 0.75rem; opacity: 0.7; margin-left: 1rem;">Controller: ${swController ? '✅' : '❌'} | Active: ${swActive ? '✅' : '❌'}</p>`;
             
             // Player data
             const playerData = sessionStorage.getItem('playerData');
             const playerIcon = playerData ? '✅' : '❌';
-            html += `<p><strong>3. Login:</strong> ${playerIcon} ${playerData ? 'Loggato' : 'NON LOGGATO (notifiche disabilitate)'}</p>`;
+            html += `<p><strong>3. Login:</strong> ${playerIcon} ${playerData ? 'Loggato' : 'NON LOGGATO'}</p>`;
             
             // Ultimo scheduling
             const lastSchedule = localStorage.getItem('lastNotificationSchedule') || 'Mai';
             const oggi = new Date().toDateString();
             const schedIcon = lastSchedule === oggi ? '✅' : '⚠️';
-            html += `<p><strong>4. Scheduling:</strong> ${schedIcon} ${lastSchedule}</p>`;
+            html += `<p><strong>4. Scheduling oggi:</strong> ${schedIcon} ${lastSchedule}</p>`;
+            
+            // Notifiche pendenti in IndexedDB
+            html += `<p><strong>5. Notifiche salvate:</strong> <span id="pending-count">⏳</span></p>`;
+            
+            // Chiedi al SW quante notifiche ci sono
+            if (swActive) {
+                try {
+                    // Messaggio al SW per ottenere count
+                    const messageChannel = new MessageChannel();
+                    messageChannel.port1.onmessage = (event) => {
+                        const countEl = document.getElementById('pending-count');
+                        if (countEl && event.data.count !== undefined) {
+                            countEl.textContent = `${event.data.count} notifiche pendenti`;
+                        }
+                    };
+                    swActive.postMessage({ type: 'GET_PENDING_COUNT' }, [messageChannel.port2]);
+                } catch(e) {
+                    console.log('Errore comunicazione SW:', e);
+                }
+            }
             
             // Riepilogo
             const tuttoOk = perm === 'granted' && swActive && playerData;
             if (tuttoOk) {
-                html += `<p style="color: #22c55e; margin-top: 1rem;"><strong>✅ SISTEMA OK!</strong> Le notifiche dovrebbero arrivare.</p>`;
+                html += `<p style="color: #22c55e; margin-top: 1rem;"><strong>✅ SISTEMA OK!</strong></p>`;
+                html += `<p style="font-size: 0.85rem;">Prova: clicca "🔔 Testa" per una notifica immediata, oppure "🔄 Reset" per una tra 30 secondi.</p>`;
             } else {
-                html += `<p style="color: #f59e0b; margin-top: 1rem;"><strong>⚠️ PROBLEMI RILEVATI:</strong></p><ul style="color: #f59e0b; margin-left: 1rem;">`;
-                if (perm !== 'granted') html += `<li>Abilita le notifiche nelle impostazioni del browser</li>`;
-                if (!swActive) html += `<li>Ricarica la pagina per attivare il Service Worker</li>`;
-                if (!playerData) html += `<li>Effettua il login per attivare le notifiche</li>`;
+                html += `<p style="color: #f59e0b; margin-top: 1rem;"><strong>⚠️ PROBLEMI:</strong></p><ul style="color: #f59e0b; margin-left: 1rem; font-size: 0.85rem;">`;
+                if (perm === 'denied') html += `<li>⛔ Notifiche BLOCCATE - vai in Impostazioni del telefono → App → Browser → Notifiche → Abilita</li>`;
+                else if (perm !== 'granted') html += `<li>Clicca "🔔 Testa" per abilitare le notifiche</li>`;
+                if (!swActive) html += `<li>Ricarica la pagina (pull down) per attivare il SW</li>`;
+                if (!playerData) html += `<li>Effettua il login dalla pagina principale</li>`;
                 html += `</ul>`;
             }
             
             // Ora corrente
-            html += `<p style="margin-top: 1rem; opacity: 0.7;"><strong>Ora:</strong> ${new Date().toLocaleString('it-IT')}</p>`;
-            
-            // Test prossimi
-            html += `<p style="margin-top: 0.5rem;"><strong>📅 Prossime notifiche TEST:</strong></p>`;
-            html += `<ul style="margin-left: 1rem; font-size: 0.8rem; opacity: 0.9;">`;
-            html += `<li>🔴 Reset → notifica tra 30 secondi</li>`;
-            html += `<li>🧪 Partita 2 Feb → 1 Feb ore 10:00</li>`;
-            html += `<li>🧪 Allenamento 2 Feb → 2 Feb ore 15:30</li>`;
-            html += `<li>🧪 Partita 4 Feb → 1,2,3 Feb ore 10:00</li>`;
-            html += `</ul>`;
+            html += `<p style="margin-top: 1rem; opacity: 0.7; font-size: 0.8rem;"><strong>Ora:</strong> ${new Date().toLocaleString('it-IT')}</p>`;
             
             statusDiv.innerHTML = html;
         }
