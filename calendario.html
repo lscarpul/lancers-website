@@ -533,7 +533,7 @@
         <p>&copy; 2026 Lancers Baseball Club - Area Riservata</p>
     </footer>
 
-    <script src="script.js?v=14"></script>
+    <script src="script.js?v=15"></script>
     <script>
         // Toggle per le card - SOLO event delegation (rimosso onclick inline)
         document.addEventListener('DOMContentLoaded', function() {
@@ -610,67 +610,105 @@
                 // Resetta flag locale
                 localStorage.removeItem('lastNotificationSchedule');
                 sessionStorage.removeItem('notificationsScheduledThisSession');
-                console.log('✅ Flag locali rimossi');
                 
                 // Chiedi al SW di cancellare tutte le notifiche
                 const swReg = await navigator.serviceWorker.getRegistration();
-                console.log('SW Registration:', swReg);
-                
                 if (swReg && swReg.active) {
                     swReg.active.postMessage({ type: 'CLEAR_ALL_NOTIFICATIONS' });
-                    console.log('✅ Messaggio CLEAR inviato al SW');
                 }
                 
-                // Invia notifica IMMEDIATA di conferma
                 if (swReg && Notification.permission === 'granted') {
-                    console.log('📤 Invio notifica immediata...');
                     // Notifica immediata
                     await swReg.showNotification('🔄 Reset Completato!', {
-                        body: '✅ Notifiche resettate. Tra 10 secondi arriverà una notifica di test.',
+                        body: '✅ Notifiche resettate. Test programmato tra 10 secondi.',
                         icon: './icons/icon-192x192.png',
                         badge: './icons/icon-192x192.png',
-                        tag: 'reset-confirm-' + Date.now(),
-                        vibrate: [200, 100, 200],
-                        requireInteraction: false
+                        tag: 'reset-confirm',
+                        vibrate: [200, 100, 200]
                     });
-                    console.log('✅ Notifica immediata inviata');
                     
-                    // Mostra alert PRIMA di avviare il timer
-                    alert('✅ Reset completato!\n\n1️⃣ Notifica immediata inviata ORA\n2️⃣ Notifica programmata tra 10 SECONDI\n\n⚠️ RESTA SU QUESTA PAGINA!');
+                    // NUOVO SISTEMA: Salva in localStorage quando deve arrivare la notifica test
+                    const testTime = Date.now() + (10 * 1000); // 10 secondi da ora
+                    localStorage.setItem('pendingTestNotification', testTime.toString());
+                    console.log('📝 Test notifica salvata per:', new Date(testTime).toLocaleTimeString());
                     
-                    // USA setTimeout DALLA PAGINA invece che dal SW
-                    console.log('⏰ Avvio timer 10 secondi dalla pagina...');
-                    setTimeout(async () => {
-                        console.log('⏰ Timer scaduto! Invio notifica...');
-                        try {
-                            const reg = await navigator.serviceWorker.getRegistration();
-                            if (reg) {
-                                await reg.showNotification('⏰ Notifica Programmata!', {
-                                    body: 'Questa notifica era programmata 10 secondi fa. Funziona! 🎉',
-                                    icon: './icons/icon-192x192.png',
-                                    badge: './icons/icon-192x192.png',
-                                    tag: 'test-timer-' + Date.now(),
-                                    vibrate: [200, 100, 200, 100, 200],
-                                    requireInteraction: false
-                                });
-                                console.log('✅ Notifica programmata inviata!');
-                            }
-                        } catch (e) {
-                            console.error('❌ Errore notifica programmata:', e);
-                        }
-                    }, 10000);
+                    // Avvia controllo periodico sulla pagina
+                    startNotificationChecker();
                     
+                    alert('✅ Reset completato!\n\n1️⃣ Notifica immediata inviata ORA\n2️⃣ Notifica test tra 10 SECONDI\n\n💡 Puoi anche chiudere e riaprire la pagina!');
                 } else {
-                    console.log('❌ SW non pronto o permessi mancanti');
-                    console.log('  swReg:', swReg);
-                    console.log('  Notification.permission:', Notification.permission);
-                    alert('⚠️ Service Worker non pronto o permessi mancanti.\n\nPermesso: ' + Notification.permission + '\nSW: ' + (swReg ? 'OK' : 'NO'));
+                    alert('⚠️ Permessi notifiche mancanti o SW non pronto');
                 }
             } catch (e) {
                 console.error('❌ Errore reset:', e);
                 alert('Errore: ' + e.message);
             }
         }
+        
+        // NUOVO SISTEMA: Controlla notifiche pendenti
+        let notificationCheckerInterval = null;
+        
+        function startNotificationChecker() {
+            // Ferma checker esistente
+            if (notificationCheckerInterval) {
+                clearInterval(notificationCheckerInterval);
+            }
+            
+            // Controlla subito
+            checkPendingTestNotification();
+            
+            // Poi controlla ogni 2 secondi (funziona solo se pagina aperta)
+            notificationCheckerInterval = setInterval(checkPendingTestNotification, 2000);
+        }
+        
+        async function checkPendingTestNotification() {
+            const pendingTime = localStorage.getItem('pendingTestNotification');
+            if (!pendingTime) return;
+            
+            const targetTime = parseInt(pendingTime);
+            const now = Date.now();
+            
+            // Se il tempo è passato, invia la notifica
+            if (now >= targetTime) {
+                console.log('⏰ Tempo scaduto! Invio notifica test...');
+                localStorage.removeItem('pendingTestNotification');
+                
+                // Ferma il checker
+                if (notificationCheckerInterval) {
+                    clearInterval(notificationCheckerInterval);
+                    notificationCheckerInterval = null;
+                }
+                
+                try {
+                    const reg = await navigator.serviceWorker.getRegistration();
+                    if (reg && Notification.permission === 'granted') {
+                        await reg.showNotification('⏰ Notifica Programmata!', {
+                            body: '🎉 Funziona! Questa notifica era programmata 10 secondi fa.',
+                            icon: './icons/icon-192x192.png',
+                            badge: './icons/icon-192x192.png',
+                            tag: 'test-scheduled',
+                            vibrate: [200, 100, 200, 100, 200],
+                            requireInteraction: true
+                        });
+                        console.log('✅ Notifica test inviata!');
+                    }
+                } catch (e) {
+                    console.error('Errore invio notifica:', e);
+                }
+            } else {
+                const remaining = Math.ceil((targetTime - now) / 1000);
+                console.log(`⏳ Notifica test tra ${remaining} secondi...`);
+            }
+        }
+        
+        // Controlla notifiche pendenti all'apertura della pagina
+        document.addEventListener('DOMContentLoaded', () => {
+            const pendingTime = localStorage.getItem('pendingTestNotification');
+            if (pendingTime) {
+                console.log('📬 Trovata notifica test pendente, avvio checker...');
+                startNotificationChecker();
+            }
+        });
         
         // Mostra stato notifiche
         async function mostraStatoNotifiche() {

@@ -1,5 +1,5 @@
-// ===== LOGOUT BUTTON HANDLER =====
-console.log('🚀 Script.js caricato!');
+// ===== SCRIPT.JS v15 - LOCALSTORAGE NOTIFICATION SYSTEM =====
+console.log('🚀 Script.js v15 caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
@@ -418,6 +418,9 @@ async function initNotificationSystem(registration) {
     if (permission === 'granted') {
         console.log('✅ Notifiche già autorizzate');
         
+        // NUOVO: Controlla notifiche pendenti in localStorage (sistema catch-up)
+        await checkLocalPendingNotifications();
+        
         // Usa swRegistration.active o controller
         const sw = swRegistration?.active || navigator.serviceWorker.controller;
         
@@ -447,6 +450,101 @@ async function initNotificationSystem(registration) {
     } else {
         console.log('🚫 Notifiche bloccate dall\'utente');
     }
+}
+
+// ==========================================
+// SISTEMA NOTIFICHE CATCH-UP (localStorage)
+// ==========================================
+
+async function checkLocalPendingNotifications() {
+    console.log('📬 Controllo notifiche pendenti in localStorage...');
+    
+    const pendingNotifications = localStorage.getItem('pendingNotifications');
+    if (!pendingNotifications) {
+        console.log('   Nessuna notifica pendente');
+        return;
+    }
+    
+    try {
+        const notifications = JSON.parse(pendingNotifications);
+        const now = Date.now();
+        const remaining = [];
+        let sentCount = 0;
+        
+        for (const notif of notifications) {
+            if (notif.time <= now) {
+                // Notifica scaduta - inviali subito!
+                console.log(`⏰ Notifica scaduta trovata: ${notif.title}`);
+                await sendLocalNotification(notif.title, notif.body, notif.tag);
+                sentCount++;
+            } else if (notif.time > now + (7 * 24 * 60 * 60 * 1000)) {
+                // Notifica troppo vecchia (> 7 giorni nel futuro), scarta
+                console.log(`🗑️ Notifica troppo lontana, scartata: ${notif.title}`);
+            } else {
+                // Notifica ancora nel futuro, mantienila
+                remaining.push(notif);
+            }
+        }
+        
+        // Aggiorna localStorage
+        if (remaining.length > 0) {
+            localStorage.setItem('pendingNotifications', JSON.stringify(remaining));
+        } else {
+            localStorage.removeItem('pendingNotifications');
+        }
+        
+        console.log(`📬 Notifiche inviate: ${sentCount}, rimanenti: ${remaining.length}`);
+    } catch (e) {
+        console.error('Errore parsing notifiche:', e);
+        localStorage.removeItem('pendingNotifications');
+    }
+}
+
+async function sendLocalNotification(title, body, tag) {
+    try {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg && Notification.permission === 'granted') {
+            await reg.showNotification(title, {
+                body: body,
+                icon: './icons/icon-192x192.png',
+                badge: './icons/icon-192x192.png',
+                tag: tag || 'lancers-' + Date.now(),
+                vibrate: [200, 100, 200],
+                requireInteraction: true,
+                actions: [
+                    { action: 'open', title: '📋 Inserisci Presenza' },
+                    { action: 'dismiss', title: '❌ Chiudi' }
+                ],
+                data: { url: './presenze.html' }
+            });
+            return true;
+        }
+    } catch (e) {
+        console.error('Errore invio notifica:', e);
+    }
+    return false;
+}
+
+function scheduleLocalNotification(title, body, time, tag) {
+    console.log(`📝 Salvo notifica locale: ${title} per ${new Date(time).toLocaleString()}`);
+    
+    let notifications = [];
+    const stored = localStorage.getItem('pendingNotifications');
+    if (stored) {
+        try {
+            notifications = JSON.parse(stored);
+        } catch (e) {
+            notifications = [];
+        }
+    }
+    
+    // Evita duplicati (stesso tag)
+    notifications = notifications.filter(n => n.tag !== tag);
+    
+    // Aggiungi nuova
+    notifications.push({ title, body, time, tag });
+    
+    localStorage.setItem('pendingNotifications', JSON.stringify(notifications));
 }
 
 // Mostra banner per richiedere permesso notifiche
@@ -792,28 +890,15 @@ async function schedulePresenceReminders() {
     console.log(`✅ ${scheduledCount} notifiche schedulate!`);
 }
 
-// Invia notifica schedulata al Service Worker
+// Invia notifica schedulata al Service Worker (ORA USA LOCALSTORAGE)
 function scheduleNotificationToSW(title, body, scheduledTime, eventDate, eventType, tag) {
-    // Usa swRegistration.active o navigator.serviceWorker.controller
-    const sw = swRegistration?.active || navigator.serviceWorker.controller;
+    // NUOVO: Usa il sistema localStorage "catch-up"
+    // Le notifiche vengono salvate in localStorage e controllate ogni volta che l'utente apre l'app
+    const fullTag = `${tag}-${eventDate}`;
+    const time = scheduledTime.getTime();
     
-    if (!sw) {
-        console.error('❌ Service Worker non disponibile per scheduling notifica');
-        return;
-    }
-    
-    sw.postMessage({
-        type: 'SCHEDULE_NOTIFICATION',
-        payload: {
-            title,
-            body,
-            scheduledTime: scheduledTime.getTime(),
-            eventDate: eventDate,
-            eventType: eventType,
-            tag: `${tag}-${eventDate}`
-        }
-    });
-    console.log(`⏰ Notifica schedulata: ${title} - ${scheduledTime.toLocaleString()}`);
+    scheduleLocalNotification(title, body, time, fullTag);
+    console.log(`⏰ Notifica schedulata (localStorage): ${title} - ${scheduledTime.toLocaleString()}`);
 }
 
 // Helper: emoji per tipo evento
