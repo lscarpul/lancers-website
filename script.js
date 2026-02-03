@@ -329,6 +329,7 @@ async function loadEventPresenceStatus() {
     } catch (error) {
         console.error('Errore caricamento presenze:', error);
     }
+}
 
 // Ottieni range della settimana (Lunedì - Domenica)
 function getWeekRange(date) {
