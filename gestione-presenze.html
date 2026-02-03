@@ -521,6 +521,32 @@
             .players-table th, .players-table td { padding: 0.75rem 0.5rem; font-size: 0.85rem; }
             .action-buttons { flex-direction: column; }
             .action-btn { width: 100%; justify-content: center; }
+            .admin-actions { gap: 0.2rem; }
+            .admin-btn { width: 28px; height: 28px; font-size: 0.75rem; }
+            .presence-list { grid-template-columns: 1fr; }
+            .players-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-value { font-size: 1.8rem; }
+            .tabs { flex-direction: column; }
+            .tab-btn { width: 100%; text-align: center; }
+            .glass-card { padding: 1rem; }
+            .event-card { padding: 1rem; }
+            .event-stats { justify-content: center; }
+            .status-badge { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+        }
+
+        @media (max-width: 480px) {
+            .admin-hero { padding: 4rem 3% 2rem; }
+            .admin-hero h1 { font-size: 1.5rem; }
+            .admin-hero p { font-size: 0.9rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+            .stat-card { padding: 0.75rem; }
+            .stat-value { font-size: 1.5rem; }
+            .stat-label { font-size: 0.7rem; }
+            .players-table { font-size: 0.8rem; }
+            .players-table th, .players-table td { padding: 0.5rem 0.3rem; }
+            .player-number { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
+            .admin-btn { width: 26px; height: 26px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -670,7 +696,6 @@
             { number: 1, name: 'Alessandro', surname: 'Ferrini', role: 'P/SS' },
             { number: 3, name: 'Ettore', surname: 'Della Nave', role: 'OF/P' },
             { number: 4, name: 'Giovanni G.', surname: 'Beudean', role: 'P/OF' },
-            { number: 5, name: 'Marco', surname: 'Mastroianni', role: '2B/3B' },
             { number: 6, name: 'Simone', surname: 'Geri', role: 'OF' },
             { number: 7, name: 'Silvano', surname: 'Albano', role: 'OF/IF' },
             { number: 8, name: 'Tommaso', surname: 'Panichi', role: 'OF' },
