@@ -7,12 +7,17 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            background: linear-gradient(135deg, #0a1929 0%, #0f2847 50%, #1a365d 100%);
+            min-height: 100vh;
+        }
+
         .presence-hero {
             min-height: 30vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            background: transparent;
             padding: 3rem 5%;
             text-align: center;
         }
@@ -21,10 +26,11 @@
             color: white;
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .presence-hero p {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
         }
 
@@ -32,17 +38,21 @@
             max-width: 700px;
             margin: -2rem auto 2rem;
             padding: 2rem;
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .next-event {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 2rem;
             margin-bottom: 2rem;
-            border-left: 5px solid #ed8936;
+            border-left: 5px solid #f59e0b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 5px solid #f59e0b;
         }
 
         .event-type {
@@ -55,34 +65,34 @@
         }
 
         .event-type.training {
-            background: #c6f6d5;
-            color: #276749;
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
         }
 
         .event-type.match {
-            background: #fed7d7;
-            color: #c53030;
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
         }
 
         .event-type.friendly {
-            background: #feebc8;
-            color: #c05621;
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
         }
 
         .event-title {
             font-size: 1.5rem;
-            color: #1a365d;
+            color: white;
             margin-bottom: 0.5rem;
         }
 
         .event-details {
-            color: #718096;
+            color: #94a3b8;
             margin-bottom: 0.5rem;
         }
 
         .event-date {
             font-size: 1.2rem;
-            color: #2d3748;
+            color: white;
             font-weight: 600;
         }
 
@@ -92,12 +102,12 @@
         }
 
         .presence-question h2 {
-            color: #1a365d;
+            color: white;
             margin-bottom: 0.5rem;
         }
 
         .presence-question p {
-            color: #718096;
+            color: #94a3b8;
         }
 
         .presence-buttons {
@@ -123,43 +133,44 @@
         }
 
         .presence-btn.yes {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
             color: white;
         }
 
         .presence-btn.yes:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
         }
 
         .presence-btn.no {
-            background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
         }
 
         .presence-btn.no:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(229, 62, 62, 0.3);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
         }
 
         .presence-btn.maybe {
-            background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
         }
 
         .presence-btn.maybe:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(214, 158, 46, 0.3);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
         }
 
         .whatsapp-note {
             text-align: center;
             margin-top: 2rem;
             padding: 1rem;
-            background: #f0fff4;
+            background: rgba(37, 211, 102, 0.1);
             border-radius: 10px;
-            color: #276749;
+            color: #4ade80;
             font-size: 0.9rem;
+            border: 1px solid rgba(37, 211, 102, 0.2);
         }
 
         .whatsapp-note strong {
@@ -170,17 +181,18 @@
             text-align: center;
             margin-bottom: 2rem;
             padding: 1rem;
-            background: #ebf8ff;
+            background: rgba(59, 130, 246, 0.1);
             border-radius: 10px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .player-info h3 {
-            color: #1a365d;
+            color: white;
             margin: 0;
         }
 
         .player-info p {
-            color: #4a5568;
+            color: #94a3b8;
             margin: 0.25rem 0 0;
             font-size: 0.9rem;
         }
@@ -188,7 +200,7 @@
         .no-event {
             text-align: center;
             padding: 3rem;
-            color: #718096;
+            color: #94a3b8;
         }
 
         .no-event .emoji {
@@ -196,32 +208,37 @@
             margin-bottom: 1rem;
         }
 
+        .no-event h2 {
+            color: white;
+        }
+
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1.5rem;
-            background: #1a365d;
+            background: rgba(59, 130, 246, 0.2);
             color: white;
             text-decoration: none;
             border-radius: 10px;
             margin-top: 2rem;
             transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
         .back-btn:hover {
-            background: #2c5282;
+            background: rgba(59, 130, 246, 0.3);
             transform: translateY(-2px);
         }
 
         .history-section {
             margin-top: 2rem;
             padding-top: 2rem;
-            border-top: 2px solid #e2e8f0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .history-section h3 {
-            color: #1a365d;
+            color: white;
             margin-bottom: 1rem;
             text-align: center;
         }
@@ -231,14 +248,15 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.75rem 1rem;
-            background: #f7fafc;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             margin-bottom: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .history-item .event-name {
             font-weight: 600;
-            color: #2d3748;
+            color: white;
         }
 
         .history-item .response {
@@ -249,18 +267,18 @@
         }
 
         .history-item .response.yes {
-            background: #c6f6d5;
-            color: #276749;
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
         }
 
         .history-item .response.no {
-            background: #fed7d7;
-            color: #c53030;
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
         }
 
         .history-item .response.maybe {
-            background: #fefcbf;
-            color: #975a16;
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
         }
     </style>
 </head>
@@ -311,7 +329,7 @@
         <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
 
-    <script src="script.js?v=37"></script>
+    <script src="script.js?v=38"></script>
     <script>
         // Numero WhatsApp dello staff (formato internazionale senza +)
         const WHATSAPP_NUMBER = '393331549353';
@@ -319,59 +337,7 @@
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
 
-        // Database eventi (stesso di script.js)
-        const allEvents = [
-            // GENNAIO 2026
-            { date: '2026-01-15', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-01-20', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-01-22', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-01-27', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-01-29', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            
-            // FEBBRAIO 2026
-            { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-02-04', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
-            { date: '2026-02-05', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-02-10', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-02-11', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
-            { date: '2026-02-12', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-02-17', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-02-18', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
-            { date: '2026-02-19', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-02-24', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-02-25', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica', tag: 'Specifico' },
-            { date: '2026-02-26', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            
-            // MARZO 2026
-            { date: '2026-03-01', type: 'friendly', title: 'Amichevole Interna', time: 'Domenica', tag: 'Amichevole' },
-            { date: '2026-03-03', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
-            { date: '2026-03-08', type: 'friendly', title: 'vs Lucca/Phoenix/Castenaso', time: 'Domenica', tag: 'Amichevole' },
-            { date: '2026-03-14', type: 'friendly', title: '@ Fortitudo', time: 'Sabato', tag: 'Trasferta' },
-            { date: '2026-03-22', type: 'friendly', title: '@ Fiorentina', time: 'Domenica', tag: 'Amichevole' },
-            { date: '2026-03-29', type: 'friendly', title: 'vs Arezzo', time: 'Domenica', tag: 'Amichevole' },
-            
-            // APRILE 2026 - Campionato
-            { date: '2026-04-12', type: 'match-home', title: 'vs Health & Performance S.S.D', time: '11:00', tag: 'Campionato Casa' },
-            { date: '2026-04-19', type: 'match-away', title: '@ Livorno 1940 Baseball', time: '11:00', tag: 'Campionato Trasferta' },
-            { date: '2026-04-26', type: 'match-home', title: 'vs Longbridge 2000 B.C', time: '11:00', tag: 'Campionato Casa' },
-            
-            // MAGGIO 2026
-            { date: '2026-05-03', type: 'match-away', title: '@ Colorno B.C.', time: '11:00', tag: 'Campionato Trasferta' },
-            { date: '2026-05-10', type: 'match-home', title: 'vs A.S.D BSC Arezzo', time: '11:00', tag: 'Campionato Casa' },
-            { date: '2026-05-17', type: 'match-home', title: 'vs Cali Roma XII', time: '11:00', tag: 'Campionato Casa' },
-            { date: '2026-05-30', type: 'match-away', title: '@ Padule Baseball A.S.D', time: '15:00', tag: 'Campionato Trasferta' },
-            
-            // GIUGNO 2026
-            { date: '2026-06-07', type: 'match-away', title: '@ Health & Performance S.S.D', time: '11:00', tag: 'Campionato Trasferta' },
-            { date: '2026-06-14', type: 'match-home', title: 'vs Livorno 1940 Baseball', time: '11:00', tag: 'Campionato Casa' },
-            { date: '2026-06-21', type: 'match-away', title: '@ Longbridge 2000 B.C', time: '11:00', tag: 'Campionato Trasferta' },
-            { date: '2026-06-28', type: 'match-home', title: 'vs Colorno B.C.', time: '11:00', tag: 'Campionato Casa' },
-            
-            // LUGLIO 2026
-            { date: '2026-07-05', type: 'match-away', title: '@ A.S.D BSC Arezzo', time: '11:00', tag: 'Campionato Trasferta' },
-            { date: '2026-07-12', type: 'match-away', title: '@ Cali Roma XII', time: '11:00', tag: 'Campionato Trasferta' },
-            { date: '2026-07-26', type: 'match-home', title: 'vs Padule Baseball A.S.D', time: '11:00', tag: 'Campionato Casa' },
-        ];
+        // Usa allEvents dal file script.js (già caricato)
 
         // Funzione per ottenere il prossimo evento
         function getNextEvent() {
@@ -513,15 +479,15 @@
             switch(response) {
                 case 'yes':
                     responseText = '✅ Presenza confermata!';
-                    bgColor = '#c6f6d5';
+                    bgColor = 'rgba(34, 197, 94, 0.2)';
                     break;
                 case 'no':
                     responseText = '❌ Assenza registrata';
-                    bgColor = '#fed7d7';
+                    bgColor = 'rgba(239, 68, 68, 0.2)';
                     break;
                 case 'maybe':
                     responseText = '⚠️ Risposta incerta registrata';
-                    bgColor = '#fefcbf';
+                    bgColor = 'rgba(251, 191, 36, 0.2)';
                     break;
             }
             
@@ -529,9 +495,9 @@
             const buttonsSection = document.querySelector('.presence-buttons');
             if (buttonsSection) {
                 buttonsSection.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; background: ${bgColor}; border-radius: 12px; width: 100%;">
-                        <p style="font-size: 1.3rem; font-weight: 600; margin: 0;">${responseText}</p>
-                        <p style="color: #718096; margin-top: 0.5rem;">Il messaggio WhatsApp è stato preparato</p>
+                    <div style="text-align: center; padding: 2rem; background: ${bgColor}; border-radius: 12px; width: 100%; border: 1px solid rgba(255,255,255,0.1);">
+                        <p style="font-size: 1.3rem; font-weight: 600; margin: 0; color: white;">${responseText}</p>
+                        <p style="color: #94a3b8; margin-top: 0.5rem;">Il messaggio WhatsApp è stato preparato</p>
                     </div>
                 `;
             }
@@ -559,7 +525,7 @@
             container.innerHTML = `
                 <div style="text-align: center; padding: 3rem;">
                     <div style="font-size: 2rem; animation: spin 1s linear infinite;">⚾</div>
-                    <p style="color: #718096; margin-top: 1rem;">Caricamento...</p>
+                    <p style="color: #94a3b8; margin-top: 1rem;">Caricamento...</p>
                 </div>
                 <style>@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
             `;
@@ -593,21 +559,21 @@
                 switch(alreadyResponded.response) {
                     case 'yes':
                         responseText = '✅ Hai confermato la presenza';
-                        bgColor = '#c6f6d5';
+                        bgColor = 'rgba(34, 197, 94, 0.2)';
                         break;
                     case 'no':
                         responseText = '❌ Hai indicato che sarai assente';
-                        bgColor = '#fed7d7';
+                        bgColor = 'rgba(239, 68, 68, 0.2)';
                         break;
                     case 'maybe':
                         responseText = '⚠️ Hai indicato che sei incerto';
-                        bgColor = '#fefcbf';
+                        bgColor = 'rgba(251, 191, 36, 0.2)';
                         break;
                 }
                 buttonsHTML = `
-                    <div style="text-align: center; padding: 1.5rem; background: ${bgColor}; border-radius: 12px; width: 100%;">
-                        <p style="font-size: 1.1rem; font-weight: 600; margin: 0;">${responseText}</p>
-                        <p style="color: #718096; margin-top: 0.5rem; font-size: 0.9rem;">Vuoi modificare la risposta?</p>
+                    <div style="text-align: center; padding: 1.5rem; background: ${bgColor}; border-radius: 12px; width: 100%; border: 1px solid rgba(255,255,255,0.1);">
+                        <p style="font-size: 1.1rem; font-weight: 600; margin: 0; color: white;">${responseText}</p>
+                        <p style="color: #94a3b8; margin-top: 0.5rem; font-size: 0.9rem;">Vuoi modificare la risposta?</p>
                     </div>
                     <div class="presence-buttons" style="margin-top: 1rem;">
                         <button class="presence-btn yes" onclick="sendWhatsApp('yes')">✅ Presente</button>

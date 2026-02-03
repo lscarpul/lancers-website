@@ -14,43 +14,41 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
         
         :root {
-            --primary: #0f172a; /* Slate 900 */
-            --secondary: #334155; /* Slate 700 */
-            --accent: #f59e0b; /* Amber 500 */
-            --success: #10b981; /* Emerald 500 */
+            --primary: #ffffff;
+            --secondary: #94a3b8;
+            --accent: #f59e0b;
+            --success: #22c55e;
             --danger: #ef4444;
             --info: #3b82f6;
-            --bg-body: #f1f5f9;
-            --surface: #ffffff;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --gradient-card: linear-gradient(145deg, #ffffff, #f8fafc);
+            --bg-body: linear-gradient(135deg, #0a1929 0%, #0f2847 50%, #1a365d 100%);
+            --surface: rgba(255, 255, 255, 0.05);
+            --surface-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-body);
+            background: var(--bg-body);
             color: var(--secondary);
             margin: 0;
             line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
         /* Hero Section */
         .personal-hero {
-            background: var(--gradient-hero);
-            min-height: 45vh;
+            background: transparent;
+            min-height: 40vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 6rem 1rem 8rem;
+            padding: 6rem 1rem 6rem;
             position: relative;
             color: white;
             text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-            margin-bottom: -5rem;
         }
         
         .hero-content {
@@ -86,11 +84,12 @@
             background: linear-gradient(to right, #ffffff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .player-role {
             font-size: 1.25rem;
-            color: #cbd5e1;
+            color: #94a3b8;
             font-weight: 400;
             margin-bottom: 2rem;
         }
@@ -103,18 +102,19 @@
         }
         
         .hero-tag {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             padding: 0.5rem 1.2rem;
             border-radius: 12px;
             font-size: 0.9rem;
             font-weight: 500;
             backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         /* Dashboard Grid */
         .dashboard-container {
             max-width: 1200px;
-            margin: 0 auto 4rem;
+            margin: -2rem auto 4rem;
             padding: 0 1.5rem;
             display: grid;
             grid-template-columns: repeat(12, 1fr);
@@ -132,34 +132,38 @@
         /* Cards */
         .card {
             background: var(--surface);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 2rem;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
             transition: all 0.3s ease;
         }
         
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background: var(--surface-hover);
+            box-shadow: var(--shadow-lg);
         }
 
         /* Stats Boxes */
         .stat-box {
-            background: white;
+            background: var(--surface);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 2rem;
             text-align: center;
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--border);
             border-bottom: 4px solid var(--accent);
         }
         
         .stat-value {
             font-size: 2.5rem;
             font-weight: 800;
-            color: var(--primary);
+            color: white;
             line-height: 1;
             margin-bottom: 0.5rem;
         }
@@ -168,7 +172,7 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: #64748b;
+            color: #94a3b8;
             font-weight: 700;
         }
 
@@ -187,19 +191,19 @@
             margin-bottom: 0.5rem;
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--secondary);
+            color: white;
         }
         
         .progress-bg {
             height: 10px;
-            background-color: #e2e8f0;
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 999px;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--success), #34d399);
+            background: linear-gradient(90deg, var(--success), #4ade80);
             border-radius: 999px;
             transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -208,7 +212,7 @@
         .eval-title {
             font-size: 1.2rem;
             font-weight: 800;
-            color: var(--primary);
+            color: white;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -235,13 +239,19 @@
         }
         
         .eval-item {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             padding: 1.5rem;
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid var(--info);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 4px solid var(--info);
         }
         
-        .eval-item p { margin: 0; font-size: 0.95rem; }
+        .eval-item p { 
+            margin: 0; 
+            font-size: 0.95rem; 
+            color: #cbd5e1;
+        }
 
         /* Quadrant Grid */
         .quad-grid {
@@ -254,12 +264,13 @@
             padding: 1.5rem;
             border-radius: 16px;
             border: 1px solid transparent;
+            backdrop-filter: blur(5px);
         }
         
-        .quad-box:nth-child(1) { background: #ecfdf5; border-color: #a7f3d0; } /* Strengths */
-        .quad-box:nth-child(2) { background: #fef2f2; border-color: #fecaca; } /* Weaknesses */
-        .quad-box:nth-child(3) { background: #fff7ed; border-color: #fed7aa; } /* Work */
-        .quad-box:nth-child(4) { background: #eff6ff; border-color: #bfdbfe; } /* Goal */
+        .quad-box:nth-child(1) { background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); } /* Strengths */
+        .quad-box:nth-child(2) { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); } /* Weaknesses */
+        .quad-box:nth-child(3) { background: rgba(251, 146, 60, 0.15); border-color: rgba(251, 146, 60, 0.3); } /* Work */
+        .quad-box:nth-child(4) { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); } /* Goal */
 
         .quad-title {
             font-size: 0.75rem;
@@ -267,14 +278,13 @@
             font-weight: 800;
             letter-spacing: 0.05em;
             margin-bottom: 0.75rem;
-            color: var(--secondary);
-            opacity: 0.7;
+            color: #94a3b8;
         }
         
         .quad-content {
             font-weight: 600;
             font-size: 1.1rem;
-            color: var(--primary);
+            color: white;
             line-height: 1.4;
         }
 
@@ -282,17 +292,18 @@
         .goal-list { list-style: none; padding: 0; margin: 0; }
         .goal-list li {
             padding: 1rem;
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: flex-start;
             gap: 1rem;
+            color: #cbd5e1;
         }
         .goal-list li:last-child { border-bottom: none; }
         .goal-list li::before {
             content: '✓';
             color: var(--success);
             font-weight: 800;
-            background: #d1fae5;
+            background: rgba(34, 197, 94, 0.2);
             width: 24px;
             height: 24px;
             display: flex;
@@ -308,29 +319,30 @@
         .table-container {
             overflow-x: auto;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
         }
         .stats-table { width: 100%; border-collapse: collapse; min-width: 600px; }
         .stats-table th {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
             padding: 1rem;
             text-align: left;
             font-weight: 700;
-            color: #64748b;
+            color: #94a3b8;
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         .stats-table td {
             padding: 1rem;
-            border-bottom: 1px solid #f1f5f9;
-            color: var(--secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
             font-variant-numeric: tabular-nums;
         }
         .stats-table tr:last-child td {
-            background: #fffbf0;
+            background: rgba(245, 158, 11, 0.1);
             font-weight: 700;
-            color: var(--primary);
+            color: white;
             border-top: 2px solid var(--accent);
         }
 
@@ -338,104 +350,93 @@
         .back-btn {
             display: inline-block;
             margin-top: 1rem;
-            background: white;
-            color: var(--primary);
+            background: rgba(59, 130, 246, 0.2);
+            color: white;
             padding: 1rem 2.5rem;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             transition: all 0.2s;
         }
         .back-btn:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
-            color: var(--accent);
+            background: rgba(59, 130, 246, 0.3);
+            color: white;
         }
 
         /* --- INIZIO NUOVO CODICE RESPONSIVE --- */
 @media (max-width: 768px) {
-    /* 1. Riduciamo l'altezza e il padding dell'intestazione colorata */
     .personal-hero { 
-        padding: 6rem 1rem 4rem; /* Meno spazio sotto */
-        min-height: auto;        /* Altezza automatica */
-        clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%); /* Taglio meno obliquo */
-        margin-bottom: -2rem;    /* Avvicina il contenuto */
+        padding: 6rem 1rem 4rem;
+        min-height: auto;
     }
 
     .player-name {
-        font-size: 2.2rem;       /* Nome più piccolo */
+        font-size: 2.2rem;
     }
 
-    /* 2. Sistemiamo la griglia principale */
     .dashboard-container { 
-        display: flex;           /* Passiamo a Flexbox per colonna verticale */
+        display: flex;
         flex-direction: column;
-        gap: 1rem;               /* Meno spazio tra le card */
+        gap: 1rem;
         margin-top: -1rem; 
         padding: 0 1rem; 
     }
 
-    /* Reset di tutte le colonne per occupare tutto lo spazio */
     .col-span-12, .col-span-8, .col-span-6, .col-span-4, .col-span-3 { 
         width: 100%; 
     }
 
-    /* 3. TRUCCO: Mettiamo i due box statistiche (K% e BB%) affiancati */
-    /* Selezioniamo i primi due elementi della dashboard che sono i stat-box */
     .dashboard-container > .stat-box {
-        width: 48%;              /* Quasi metà larghezza */
-        display: inline-block;   /* Li mettiamo in linea */
-        padding: 1rem;           /* Meno imbottitura interna */
+        width: 48%;
+        display: inline-block;
+        padding: 1rem;
         margin-bottom: 0;
     }
     
-    /* Contenitore wrapper per i stat-box se necessario, o forzatura flex */
-    /* Per farli stare sulla stessa riga, usiamo un trucco sull'ordine o flex-wrap */
     .dashboard-container {
-        flex-direction: row;     /* Permette affiancamento */
-        flex-wrap: wrap;         /* Va a capo se serve */
+        flex-direction: row;
+        flex-wrap: wrap;
         justify-content: space-between;
     }
     
-    /* Le card grandi tornano al 100% */
     .card {
         width: 100%;
-        padding: 1.25rem;        /* Meno spazio interno nelle card */
+        padding: 1.25rem;
     }
 
     .stat-value {
-        font-size: 1.8rem;       /* Numeri più piccoli */
+        font-size: 1.8rem;
     }
 
-    /* 4. Ottimizzazione Griglia Punti Forza (Quad Grid) */
     .quad-grid { 
-        grid-template-columns: 1fr; /* Una colonna */
+        grid-template-columns: 1fr;
         gap: 1rem;
     }
     
     .quad-box {
-        padding: 1rem;           /* Più compatto */
+        padding: 1rem;
     }
 
-    /* 5. Tabella più compatta */
     .table-container {
-        margin: 0 -0.5rem;       /* Guadagna spazio ai lati */
-        border: none;            /* Rimuovi bordo esterno su mobile */
+        margin: 0 -0.5rem;
+        border: none;
     }
     
     .stats-table th, 
     .stats-table td {
-        padding: 0.5rem 0.25rem; /* Celle molto più strette */
-        font-size: 0.8rem;       /* Testo più piccolo */
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8rem;
     }
     
-    /* Riduce la dimensione del font solo per la tabella */
     .stats-table {
-        min-width: auto;         /* Lascia che si adatti se possibile */
-        display: block;          /* Necessario per scroll orizzontale fluido */
+        min-width: auto;
+        display: block;
         overflow-x: auto;
-        white-space: nowrap;     /* Evita che i numeri vadano a capo */
+        white-space: nowrap;
     }
 }
 /* --- FINE NUOVO CODICE RESPONSIVE --- */
@@ -482,7 +483,7 @@
         <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
 
-    <script src="script.js?v=37"></script>
+    <script src="script.js?v=38"></script>
     <script>
         // Database completo giocatori - Stagione 2026
         // Include valutazioni staff, statistiche e obiettivi
