@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v34 =====
-const APP_VERSION = '34';
+// ===== SCRIPT.JS v35 =====
+const APP_VERSION = '35';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -32,37 +32,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
 // ===== HAMBURGER MENU =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🍔 Hamburger menu init');
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
     
-    console.log('   hamburger:', hamburger);
-    console.log('   navLinks:', navLinks);
+    // Usa setTimeout per assicurare che il DOM sia completamente pronto
+    setTimeout(function() {
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        console.log('   hamburger:', hamburger);
+        console.log('   navLinks:', navLinks);
 
-    if (hamburger && navLinks) {
-        console.log('✅ Hamburger elements found, adding listener');
-        hamburger.addEventListener('click', function() {
-            console.log('🖱️ Hamburger clicked!');
-            navLinks.classList.toggle('active');
+        if (hamburger && navLinks) {
+            console.log('✅ Hamburger elements found, adding listener');
             
-            // Animate hamburger
-            const spans = hamburger.querySelectorAll('span');
-            spans.forEach((span, index) => {
-                span.classList.toggle('active');
+            // Rimuovi eventuali listener precedenti
+            hamburger.replaceWith(hamburger.cloneNode(true));
+            const newHamburger = document.querySelector('.hamburger');
+            
+            newHamburger.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🖱️ Hamburger clicked!');
+                navLinks.classList.toggle('active');
+                newHamburger.classList.toggle('active');
+                console.log('   nav-links classes:', navLinks.className);
             });
-        });
 
-        // Close menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
+            // Close menu when clicking on a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    newHamburger.classList.remove('active');
+                });
             });
-        });
-    } else {
-        console.log('❌ Hamburger elements NOT found');
-    }
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navLinks.contains(e.target) && !newHamburger.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    newHamburger.classList.remove('active');
+                }
+            });
+        } else {
+            console.log('❌ Hamburger elements NOT found');
+        }
+    }, 100);
 
     // ===== EASTER EGG =====
     setupEasterEgg();
