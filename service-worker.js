@@ -198,7 +198,14 @@ function startPeriodicCheck() {
 
 // ===== FETCH =====
 self.addEventListener('fetch', (event) => {
+  // Non cachare Firebase
   if (event.request.url.includes('firebase')) {
+    return;
+  }
+  
+  // Non cachare version.json - sempre fetch dal server
+  if (event.request.url.includes('version.json')) {
+    event.respondWith(fetch(event.request));
     return;
   }
   

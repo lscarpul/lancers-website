@@ -1,8 +1,12 @@
 // ===== SCRIPT.JS v31 - NOTIFICHE PERSISTENTI =====
-console.log('🚀 Script.js v31 caricato!');
+const APP_VERSION = '31';
+console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
+    
+    // 🔄 Controlla versione e aggiorna se necessario
+    checkAppVersion();
     
     // Avvia controllo periodico notifiche appena la pagina carica
     startPersistentNotificationCheck();
@@ -1179,4 +1183,192 @@ function formatDateItalian(date) {
                     'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
     
     return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+}
+// ==========================================
+// 🔄 VERSION CHECK & AUTO-UPDATE
+// ==========================================
+
+async function checkAppVersion() {
+    try {
+        // Fetch version.json dal server (bypassa cache)
+        const response = await fetch('./version.json?t=' + Date.now(), {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+        });
+        
+        if (!response.ok) {
+            console.log('⚠️ version.json non trovato');
+            return;
+        }
+        
+        const serverVersion = await response.json();
+        const localVersion = localStorage.getItem('appVersion');
+        
+        console.log(`📦 Versione locale: ${localVersion || 'nessuna'}`);
+        console.log(`📦 Versione server: ${serverVersion.version}`);
+        
+        // Prima installazione o versione diversa
+        if (!localVersion || localVersion !== serverVersion.version) {
+            console.log('🔄 Nuova versione rilevata! Aggiornamento in corso...');
+            await forceUpdate(serverVersion);
+        } else {
+            console.log('✅ App aggiornata alla versione ' + localVersion);
+        }
+    } catch (error) {
+        console.error('❌ Errore controllo versione:', error);
+    }
+}
+
+async function forceUpdate(serverVersion) {
+    const localVersion = localStorage.getItem('appVersion');
+    
+    // Mostra notifica di aggiornamento
+    showUpdateBanner(localVersion, serverVersion.version);
+    
+    try {
+        // 1. Cancella tutte le cache
+        if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            console.log('🗑️ Cancello cache:', cacheNames);
+            await Promise.all(cacheNames.map(name => caches.delete(name)));
+        }
+        
+        // 2. Aggiorna il Service Worker
+        if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (const registration of registrations) {
+                console.log('🔄 Aggiorno Service Worker...');
+                await registration.update();
+            }
+        }
+        
+        // 3. Salva nuova versione
+        localStorage.setItem('appVersion', serverVersion.version);
+        localStorage.setItem('appVersionDate', serverVersion.date);
+        
+        console.log('✅ Aggiornamento completato alla versione ' + serverVersion.version);
+        
+    } catch (error) {
+        console.error('❌ Errore durante aggiornamento:', error);
+    }
+}
+
+function showUpdateBanner(oldVersion, newVersion) {
+    // Rimuovi banner esistente
+    const existing = document.getElementById('update-banner');
+    if (existing) existing.remove();
+    
+    const isFirstInstall = !oldVersion;
+    
+    const banner = document.createElement('div');
+    banner.id = 'update-banner';
+    banner.innerHTML = `
+        <div class="update-banner-content">
+            <div class="update-icon">${isFirstInstall ? '🎉' : '🔄'}</div>
+            <div class="update-text">
+                <strong>${isFirstInstall ? 'Benvenuto!' : 'Aggiornamento disponibile!'}</strong>
+                <span>${isFirstInstall ? 'App installata - v' + newVersion : 'v' + oldVersion + ' → v' + newVersion}</span>
+            </div>
+            <button class="update-btn" onclick="location.reload(true)">
+                ${isFirstInstall ? '✓ OK' : '🔄 Aggiorna'}
+            </button>
+            <button class="update-close" onclick="this.parentElement.parentElement.remove()">✕</button>
+        </div>
+    `;
+    
+    banner.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
+        padding: 12px 16px;
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.3s ease;
+    `;
+    
+    // Aggiungi stili per il banner
+    if (!document.getElementById('update-banner-styles')) {
+        const style = document.createElement('style');
+        style.id = 'update-banner-styles';
+        style.textContent = `
+            @keyframes slideDown {
+                from { transform: translateY(-100%); }
+                to { transform: translateY(0); }
+            }
+            .update-banner-content {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                max-width: 1200px;
+                margin: 0 auto;
+                flex-wrap: wrap;
+            }
+            .update-icon {
+                font-size: 1.5rem;
+            }
+            .update-text {
+                flex: 1;
+                min-width: 200px;
+            }
+            .update-text strong {
+                display: block;
+                font-size: 0.95rem;
+            }
+            .update-text span {
+                font-size: 0.8rem;
+                opacity: 0.9;
+            }
+            .update-btn {
+                background: white;
+                color: #1e40af;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 20px;
+                font-weight: 700;
+                cursor: pointer;
+                font-family: 'Montserrat', sans-serif;
+                transition: transform 0.2s;
+            }
+            .update-btn:hover {
+                transform: scale(1.05);
+            }
+            .update-close {
+                background: transparent;
+                border: none;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+                padding: 4px 8px;
+                opacity: 0.7;
+            }
+            .update-close:hover {
+                opacity: 1;
+            }
+            @media (max-width: 500px) {
+                .update-banner-content {
+                    justify-content: center;
+                    text-align: center;
+                }
+                .update-text {
+                    width: 100%;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.insertBefore(banner, document.body.firstChild);
+    
+    // Se non è prima installazione, auto-reload dopo 5 secondi
+    if (!isFirstInstall) {
+        setTimeout(() => {
+            if (document.getElementById('update-banner')) {
+                console.log('🔄 Auto-reload per aggiornamento...');
+                location.reload(true);
+            }
+        }, 5000);
+    }
 }
