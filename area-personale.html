@@ -1077,32 +1077,33 @@
         };
 
         // Database allenamenti mercoledì personalizzati
+        // Solo i giocatori assegnati vedranno questi allenamenti nella loro area personale
         const allenamentMercoledi = {
-            // MARZO
-            '2026-03-04': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7] }, // Grassi, Albano (Vergara non in sistema)
+            // MARZO - BATTUTA
+            '2026-03-04': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7, 99] }, // Grassi, Albano, Vergara
             '2026-03-11': { tipo: 'BATTUTA POTENZA 2', giocatori: [4, 3, 25] }, // Beudean, Della Nave, Scarpulla Lo.
             '2026-03-18': { tipo: 'BATTUTA CONTROLLO/RISP', giocatori: [19, 38, 59] }, // Baratella, Parrini, Biondi
             '2026-03-25': { tipo: 'BATTUTA CAMPO OPPOSTO', giocatori: [6, 32, 77, 8] }, // Geri, Anichini, Rinaldi, Panichi
-            // APRILE
+            // APRILE - BATTUTA + DIFESA
             '2026-04-01': { tipo: 'BATTUTA RAPIDITÀ', giocatori: [98, 14, 90] }, // Paperini, Scarpulla Le., Rrethatori
             '2026-04-08': { tipo: 'DIFESA INTERNI 1', giocatori: [32, 59, 12] }, // Anichini, Biondi, Grassi
             '2026-04-15': { tipo: 'DIFESA INTERNI 2', giocatori: [19, 7, 38] }, // Baratella, Albano, Parrini
             '2026-04-22': { tipo: 'DIFESA ESTERNI 1', giocatori: [3, 8, 98] }, // Della Nave, Panichi, Paperini
             '2026-04-29': { tipo: 'DIFESA ESTERNI 2', giocatori: [6, 14, 4] }, // Geri, Scarpulla Le., Beudean
-            // MAGGIO
-            '2026-05-06': { tipo: 'DIFESA RICEVITORI', giocatori: [90, 25] }, // Rrethatori, Scarpulla Lo. (+ Vergara e Rinaldi)
-            '2026-05-13': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7] }, // Grassi, Albano
+            // MAGGIO - DIFESA + BATTUTA
+            '2026-05-06': { tipo: 'DIFESA ESTERNI 2 + RICEVITORI', giocatori: [77, 99, 90, 25] }, // Rinaldi, Vergara, Rrethatori, Scarpulla Lo.
+            '2026-05-13': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7, 99] }, // Grassi, Albano, Vergara
             '2026-05-20': { tipo: 'BATTUTA POTENZA 2', giocatori: [4, 3, 25] }, // Beudean, Della Nave, Scarpulla Lo.
             '2026-05-27': { tipo: 'BATTUTA CONTROLLO/RISP', giocatori: [19, 38, 59] }, // Baratella, Parrini, Biondi
-            // GIUGNO
+            // GIUGNO - BATTUTA + DIFESA
             '2026-06-03': { tipo: 'BATTUTA CAMPO OPPOSTO', giocatori: [6, 32, 77] }, // Geri, Anichini, Rinaldi
-            '2026-06-10': { tipo: 'BATTUTA RAPIDITÀ', giocatori: [8, 98, 14, 90] }, // Panichi, Paperini, Scarpulla Le., Rrethatori
+            '2026-06-10': { tipo: 'BATTUTA CAMPO OPPOSTO + RAPIDITÀ', giocatori: [8, 98, 14, 90] }, // Panichi, Paperini, Scarpulla Le., Rrethatori
             '2026-06-17': { tipo: 'DIFESA INTERNI 1', giocatori: [32, 59, 12] }, // Anichini, Biondi, Grassi
             '2026-06-24': { tipo: 'DIFESA INTERNI 2', giocatori: [19, 7, 38] }, // Baratella, Albano, Parrini
-            // LUGLIO
+            // LUGLIO - DIFESA
             '2026-07-01': { tipo: 'DIFESA ESTERNI 1', giocatori: [3, 8, 98] }, // Della Nave, Panichi, Paperini
             '2026-07-08': { tipo: 'DIFESA ESTERNI 2', giocatori: [6, 14, 4] }, // Geri, Scarpulla Le., Beudean
-            '2026-07-15': { tipo: 'DIFESA RICEVITORI', giocatori: [90, 25, 77] } // Rrethatori, Scarpulla Lo., Rinaldi
+            '2026-07-15': { tipo: 'DIFESA ESTERNI 2 + RICEVITORI', giocatori: [77, 99, 90, 25] } // Rinaldi, Vergara, Rrethatori, Scarpulla Lo.
         };
 
         // Funzione per ottenere allenamenti di un giocatore

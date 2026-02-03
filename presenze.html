@@ -79,6 +79,11 @@
             color: #fbbf24;
         }
 
+        .event-type.wednesday {
+            background: rgba(167, 139, 250, 0.2);
+            color: #a78bfa;
+        }
+
         .event-title {
             font-size: 1.5rem;
             color: white;
@@ -430,20 +435,27 @@
         <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
 
-    <script src="script.js?v=39"></script>
+    <script src="script.js?v=40"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
 
-        // Usa allEvents dal file script.js (già caricato)
-
-        // Funzione per ottenere i prossimi N eventi
+        // Funzione per ottenere i prossimi N eventi (personalizzati per il giocatore)
         function getNextEvents(count = 10) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
+            // Ottieni il numero del giocatore loggato
+            const playerData = JSON.parse(sessionStorage.getItem('playerData') || '{}');
+            const playerNumber = playerData.number;
+            
+            // Usa getPlayerEvents se disponibile (include mercoledì personalizzati)
+            const eventsToUse = (typeof getPlayerEvents === 'function' && playerNumber) 
+                ? getPlayerEvents(playerNumber) 
+                : allEvents;
+            
             const futureEvents = [];
-            for (const event of allEvents) {
+            for (const event of eventsToUse) {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) {
                     futureEvents.push({ ...event, dateObj: eventDate });
@@ -465,6 +477,7 @@
         function getEventTypeClass(type) {
             if (type.includes('match')) return 'match';
             if (type === 'friendly') return 'friendly';
+            if (type === 'wednesday-specific') return 'wednesday';
             return 'training';
         }
 

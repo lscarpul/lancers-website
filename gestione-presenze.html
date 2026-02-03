@@ -617,7 +617,7 @@
         <p>⚾ © 2026 Lancers Baseball Club - Serie B</p>
     </footer>
 
-    <script src="script.js?v=39"></script>
+    <script src="script.js?v=40"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
@@ -670,15 +670,48 @@
             return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
         }
 
-        // Prossimo evento
+        // Prossimo evento (include mercoledì specifici)
         function getNextEvent() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            for (const event of allEvents) {
+            const allEventsWithWed = getAllEventsWithWednesdays();
+            for (const event of allEventsWithWed) {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) return event;
             }
             return null;
+        }
+        
+        // Ottieni i giocatori per un evento (tutti o solo assegnati per mercoledì)
+        function getPlayersForEvent(event) {
+            // Se è un mercoledì specifico, ritorna solo i giocatori assegnati
+            if (wednesdayTrainings && wednesdayTrainings[event.date]) {
+                const assignedNumbers = wednesdayTrainings[event.date].giocatori;
+                return allPlayers.filter(p => assignedNumbers.includes(p.number));
+            }
+            // Altrimenti tutti i giocatori
+            return allPlayers;
+        }
+        
+        // Costruisce lista eventi completa (allEvents + mercoledì specifici)
+        function getAllEventsWithWednesdays() {
+            const events = [...allEvents];
+            
+            if (typeof wednesdayTrainings !== 'undefined') {
+                for (const [date, info] of Object.entries(wednesdayTrainings)) {
+                    events.push({
+                        date: date,
+                        type: 'wednesday-specific',
+                        title: `Mercoledì ${info.tipo}`,
+                        time: '🕐 19:30 - 21:30',
+                        tag: '🎯 Specifico',
+                        assignedPlayers: info.giocatori
+                    });
+                }
+            }
+            
+            events.sort((a, b) => a.date.localeCompare(b.date));
+            return events;
         }
 
         // Carica presenze da Firebase
@@ -742,15 +775,18 @@
             // Prossimo evento
             loadNextEvent();
 
-            // Popola select eventi
+            // Popola select eventi (include mercoledì specifici)
             const eventSelect = document.getElementById('eventSelect');
             const today = new Date();
             today.setHours(0, 0, 0, 0);
+            const allEventsWithWed = getAllEventsWithWednesdays();
             eventSelect.innerHTML = '<option value="">-- Seleziona un evento --</option>';
-            allEvents.forEach((event, index) => {
+            allEventsWithWed.forEach((event, index) => {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) {
-                    eventSelect.innerHTML += `<option value="${index}">${formatDate(event.date)} - ${event.title}</option>`;
+                    const isWed = event.type === 'wednesday-specific';
+                    const label = isWed ? `🎯 ${formatDate(event.date)} - ${event.title}` : `${formatDate(event.date)} - ${event.title}`;
+                    eventSelect.innerHTML += `<option value="${event.date}" data-type="${event.type}">${label}</option>`;
                 }
             });
 
@@ -766,9 +802,11 @@
                 return;
             }
 
+            // Ottieni i giocatori rilevanti per questo evento
+            const relevantPlayers = getPlayersForEvent(nextEvent);
             const presentList = [], maybeList = [], absentList = [], pendingList = [];
 
-            allPlayers.forEach(player => {
+            relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, nextEvent.date);
                 const playerInfo = { ...player, status };
                 
@@ -777,11 +815,15 @@
                 else if (status === 'no') absentList.push(playerInfo);
                 else pendingList.push(playerInfo);
             });
+            
+            const isWednesday = nextEvent.type === 'wednesday-specific';
+            const eventTypeLabel = isWednesday ? '🎯 Mercoledì Specifico' : '';
 
             document.getElementById('nextEventInfo').innerHTML = `
                 <div class="event-card">
                     <h4>${nextEvent.title}</h4>
                     <p>📅 ${formatDateLong(nextEvent.date)} - 🕐 ${nextEvent.time}</p>
+                    ${isWednesday ? `<p style="color: #a78bfa; font-size: 0.9rem; margin-top: 0.5rem;">${eventTypeLabel} - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
                     <div class="event-stats">
                         <span class="status-badge present">✅ ${presentList.length}</span>
                         <span class="status-badge maybe">⚠️ ${maybeList.length}</span>
@@ -846,16 +888,25 @@
 
         // Mostra dettagli evento selezionato
         function showEventDetails() {
-            const eventIndex = document.getElementById('eventSelect').value;
-            if (!eventIndex) {
+            const selectedDate = document.getElementById('eventSelect').value;
+            if (!selectedDate) {
                 document.getElementById('eventDetails').innerHTML = '';
                 return;
             }
 
-            const event = allEvents[eventIndex];
+            // Trova l'evento dalla lista completa
+            const allEventsWithWed = getAllEventsWithWednesdays();
+            const event = allEventsWithWed.find(e => e.date === selectedDate);
+            if (!event) {
+                document.getElementById('eventDetails').innerHTML = '<p style="color: #94a3b8;">Evento non trovato</p>';
+                return;
+            }
+            
+            // Ottieni i giocatori rilevanti per questo evento
+            const relevantPlayers = getPlayersForEvent(event);
             const presentList = [], maybeList = [], absentList = [], pendingList = [];
 
-            allPlayers.forEach(player => {
+            relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, event.date);
                 const playerInfo = { ...player, status };
                 
@@ -864,11 +915,14 @@
                 else if (status === 'no') absentList.push(playerInfo);
                 else pendingList.push(playerInfo);
             });
+            
+            const isWednesday = event.type === 'wednesday-specific';
 
             document.getElementById('eventDetails').innerHTML = `
                 <div class="event-card">
                     <h4>${event.title}</h4>
                     <p>📅 ${formatDateLong(event.date)} - 🕐 ${event.time}</p>
+                    ${isWednesday ? `<p style="color: #a78bfa; font-size: 0.9rem; margin-top: 0.5rem;">🎯 Mercoledì Specifico - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
                     <div class="event-stats">
                         <span class="status-badge present">✅ ${presentList.length}</span>
                         <span class="status-badge maybe">⚠️ ${maybeList.length}</span>
@@ -940,8 +994,9 @@
             const nextEvent = getNextEvent();
             if (!nextEvent) { alert('Nessun evento in programma'); return; }
 
+            const relevantPlayers = getPlayersForEvent(nextEvent);
             const presentList = [], maybeList = [], absentList = [], pendingList = [];
-            allPlayers.forEach(player => {
+            relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, nextEvent.date);
                 const name = `#${player.number} ${player.name} ${player.surname}`;
                 if (status === 'yes') presentList.push(name);
@@ -950,13 +1005,16 @@
                 else pendingList.push(name);
             });
 
+            const isWednesday = nextEvent.type === 'wednesday-specific';
             let message = `⚾ *PRESENZE LANCERS*\n\n`;
-            message += `📅 *${nextEvent.title}*\n📆 ${formatDateLong(nextEvent.date)}\n🕐 ${nextEvent.time}\n\n`;
+            message += `📅 *${nextEvent.title}*\n📆 ${formatDateLong(nextEvent.date)}\n🕐 ${nextEvent.time}\n`;
+            if (isWednesday) message += `🎯 _Mercoledì Specifico_\n`;
+            message += `\n`;
             message += `✅ *PRESENTI (${presentList.length}):*\n${presentList.join('\n') || '(nessuno)'}\n\n`;
             message += `⚠️ *FORSE (${maybeList.length}):*\n${maybeList.join('\n') || '(nessuno)'}\n\n`;
             message += `❌ *ASSENTI (${absentList.length}):*\n${absentList.join('\n') || '(nessuno)'}\n\n`;
             message += `⏳ *IN ATTESA (${pendingList.length}):*\n${pendingList.join('\n') || '(nessuno)'}\n\n`;
-            message += `━━━━━━━━━━━━\n👥 Disponibili: ${presentList.length + maybeList.length}/${allPlayers.length}`;
+            message += `━━━━━━━━━━━━\n👥 Disponibili: ${presentList.length + maybeList.length}/${relevantPlayers.length}`;
 
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
         }
@@ -966,8 +1024,9 @@
             const nextEvent = getNextEvent();
             if (!nextEvent) { alert('Nessun evento in programma'); return; }
 
+            const relevantPlayers = getPlayersForEvent(nextEvent);
             const presentList = [], maybeList = [], absentList = [], pendingList = [];
-            allPlayers.forEach(player => {
+            relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, nextEvent.date);
                 const name = `#${player.number} ${player.name} ${player.surname}`;
                 if (status === 'yes') presentList.push(name);
@@ -976,14 +1035,17 @@
                 else pendingList.push(name);
             });
 
-            const subject = `⚾ Presenze Lancers - ${nextEvent.title} (${formatDate(nextEvent.date)})`;
+            const isWednesday = nextEvent.type === 'wednesday-specific';
+            const subject = `⚾ Presenze Lancers - ${nextEvent.title} (${formatDate(nextEvent.date)})${isWednesday ? ' - Mercoledì Specifico' : ''}`;
             let body = `RIEPILOGO PRESENZE LANCERS BASEBALL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            body += `📅 Evento: ${nextEvent.title}\n📆 Data: ${formatDateLong(nextEvent.date)}\n🕐 Orario: ${nextEvent.time}\n\n`;
+            body += `📅 Evento: ${nextEvent.title}\n📆 Data: ${formatDateLong(nextEvent.date)}\n🕐 Orario: ${nextEvent.time}\n`;
+            if (isWednesday) body += `🎯 Tipo: Mercoledì Specifico (solo giocatori assegnati)\n`;
+            body += `\n`;
             body += `✅ PRESENTI (${presentList.length}):\n${presentList.join('\n') || '(nessuno)'}\n\n`;
             body += `⚠️ FORSE (${maybeList.length}):\n${maybeList.join('\n') || '(nessuno)'}\n\n`;
             body += `❌ ASSENTI (${absentList.length}):\n${absentList.join('\n') || '(nessuno)'}\n\n`;
             body += `⏳ IN ATTESA (${pendingList.length}):\n${pendingList.join('\n') || '(nessuno)'}\n\n`;
-            body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTotale disponibili: ${presentList.length + maybeList.length}/${allPlayers.length}`;
+            body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTotale disponibili: ${presentList.length + maybeList.length}/${relevantPlayers.length}`;
 
             window.open(`mailto:${STAFF_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
         }

@@ -144,8 +144,7 @@ style.textContent = `
 document.head.appendChild(style);
 
 // ===== DATABASE EVENTI =====
-// Nota: Gli allenamenti del mercoledì (specifici) sono autonomi e gestiti separatamente nell'area personale
-// Non contano come assenze se il giocatore non è assegnato a quella sessione
+// Eventi comuni a tutti i giocatori
 const allEvents = [
     // FEBBRAIO 2026 (dal 3 febbraio in poi)
     { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
@@ -177,7 +176,69 @@ const allEvents = [
     { date: '2026-03-29', type: 'friendly', title: 'vs Arezzo', time: '🏠 Domenica', tag: '✅ Confermata' },
     
     // APRILE 2026
+    { date: '2026-04-02', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-04-04', type: 'event', title: 'Trekking + Grigliata', time: '🥾 Sabato', tag: '🎉 Evento squadra' },
+    { date: '2026-04-07', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-04-09', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-04-14', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-04-16', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-04-21', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-04-23', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-04-28', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-04-30', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    
+    // MAGGIO 2026
+    { date: '2026-05-05', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-05-07', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-05-12', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-05-14', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-05-19', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-05-21', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-05-26', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-05-28', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    
+    // GIUGNO 2026
+    { date: '2026-06-02', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-04', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-09', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-11', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-16', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-18', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-23', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-25', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-06-30', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    
+    // LUGLIO 2026
+    { date: '2026-07-02', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-07', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-09', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-14', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-16', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-21', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-23', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-28', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-07-30', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    
+    // AGOSTO 2026
+    { date: '2026-08-04', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-08-06', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-08-11', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-08-13', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-08-18', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-08-20', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-08-25', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-08-27', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    
+    // SETTEMBRE 2026
+    { date: '2026-09-01', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-08', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-10', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-15', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-17', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-22', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-24', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-09-29', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     
     // PARTITE CAMPIONATO (Aprile - Agosto 2026)
     { date: '2026-04-12', type: 'match-home', title: 'Health & Performance S.S.D', time: '🕐 11:00', tag: '🏠 Casa' },
@@ -195,6 +256,60 @@ const allEvents = [
     { date: '2026-07-12', type: 'match-away', title: 'Cali Roma XII', time: '🕐 11:00', tag: '✈️ Trasferta' },
     { date: '2026-07-26', type: 'match-home', title: 'Padule Baseball A.S.D', time: '🕐 11:00', tag: '🏠 Casa' },
 ];
+
+// ===== ALLENAMENTI MERCOLEDÌ PERSONALIZZATI =====
+// Ogni giocatore vede solo i mercoledì a cui è assegnato nel sistema presenze
+const wednesdayTrainings = {
+    // MARZO - BATTUTA
+    '2026-03-04': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7, 99] }, // Grassi, Albano, Vergara
+    '2026-03-11': { tipo: 'BATTUTA POTENZA 2', giocatori: [4, 3, 25] }, // Beudean, Della Nave, Scarpulla Lo.
+    '2026-03-18': { tipo: 'BATTUTA CONTROLLO/RISP', giocatori: [19, 38, 59] }, // Baratella, Parrini, Biondi
+    '2026-03-25': { tipo: 'BATTUTA CAMPO OPPOSTO', giocatori: [6, 32, 77, 8] }, // Geri, Anichini, Rinaldi, Panichi
+    // APRILE - BATTUTA + DIFESA
+    '2026-04-01': { tipo: 'BATTUTA RAPIDITÀ', giocatori: [98, 14, 90] }, // Paperini, Scarpulla Le., Rrethatori
+    '2026-04-08': { tipo: 'DIFESA INTERNI 1', giocatori: [32, 59, 12] }, // Anichini, Biondi, Grassi
+    '2026-04-15': { tipo: 'DIFESA INTERNI 2', giocatori: [19, 7, 38] }, // Baratella, Albano, Parrini
+    '2026-04-22': { tipo: 'DIFESA ESTERNI 1', giocatori: [3, 8, 98] }, // Della Nave, Panichi, Paperini
+    '2026-04-29': { tipo: 'DIFESA ESTERNI 2', giocatori: [6, 14, 4] }, // Geri, Scarpulla Le., Beudean
+    // MAGGIO - DIFESA + BATTUTA
+    '2026-05-06': { tipo: 'DIFESA ESTERNI 2 + RICEVITORI', giocatori: [77, 99, 90, 25] }, // Rinaldi, Vergara, Rrethatori, Scarpulla Lo.
+    '2026-05-13': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7, 99] }, // Grassi, Albano, Vergara
+    '2026-05-20': { tipo: 'BATTUTA POTENZA 2', giocatori: [4, 3, 25] }, // Beudean, Della Nave, Scarpulla Lo.
+    '2026-05-27': { tipo: 'BATTUTA CONTROLLO/RISP', giocatori: [19, 38, 59] }, // Baratella, Parrini, Biondi
+    // GIUGNO - BATTUTA + DIFESA
+    '2026-06-03': { tipo: 'BATTUTA CAMPO OPPOSTO', giocatori: [6, 32, 77] }, // Geri, Anichini, Rinaldi
+    '2026-06-10': { tipo: 'BATTUTA CAMPO OPPOSTO + RAPIDITÀ', giocatori: [8, 98, 14, 90] }, // Panichi, Paperini, Scarpulla Le., Rrethatori
+    '2026-06-17': { tipo: 'DIFESA INTERNI 1', giocatori: [32, 59, 12] }, // Anichini, Biondi, Grassi
+    '2026-06-24': { tipo: 'DIFESA INTERNI 2', giocatori: [19, 7, 38] }, // Baratella, Albano, Parrini
+    // LUGLIO - DIFESA
+    '2026-07-01': { tipo: 'DIFESA ESTERNI 1', giocatori: [3, 8, 98] }, // Della Nave, Panichi, Paperini
+    '2026-07-08': { tipo: 'DIFESA ESTERNI 2', giocatori: [6, 14, 4] }, // Geri, Scarpulla Le., Beudean
+    '2026-07-15': { tipo: 'DIFESA ESTERNI 2 + RICEVITORI', giocatori: [77, 99, 90, 25] } // Rinaldi, Vergara, Rrethatori, Scarpulla Lo.
+};
+
+// Funzione per ottenere gli eventi personalizzati per un giocatore (include i suoi mercoledì)
+function getPlayerEvents(playerNumber) {
+    // Copia tutti gli eventi comuni
+    const playerEvents = [...allEvents];
+    
+    // Aggiungi i mercoledì assegnati a questo giocatore
+    for (const [date, info] of Object.entries(wednesdayTrainings)) {
+        if (info.giocatori.includes(playerNumber)) {
+            playerEvents.push({
+                date: date,
+                type: 'wednesday-specific',
+                title: `Mercoledì ${info.tipo}`,
+                time: '🕐 19:30 - 21:30',
+                tag: '🎯 Specifico'
+            });
+        }
+    }
+    
+    // Ordina per data
+    playerEvents.sort((a, b) => a.date.localeCompare(b.date));
+    
+    return playerEvents;
+}
 
 // ===== LOAD WEEKLY EVENTS =====
 function loadWeeklyEvents() {

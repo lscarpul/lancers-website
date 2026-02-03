@@ -95,10 +95,15 @@
         
         async function checkPresenceReminder(player) {
             // Verifica se c'è un evento nelle prossime 72 ore senza risposta
-            // Usa allEvents dal file script.js (già caricato)
+            // Usa getPlayerEvents per includere i mercoledì personalizzati del giocatore
             
             const now = new Date();
             const hoursAhead = 72; // Controlla eventi nelle prossime 72 ore
+            
+            // Ottieni eventi personalizzati per questo giocatore
+            const playerEvents = (typeof getPlayerEvents === 'function') 
+                ? getPlayerEvents(player.number) 
+                : allEvents;
             
             // Carica le risposte da Firebase (usa LancersDB se disponibile, altrimenti fetch manuale)
             let responses = {};
@@ -123,7 +128,7 @@
                 return;
             }
             
-            for (const event of allEvents) {
+            for (const event of playerEvents) {
                 const eventDate = new Date(event.date);
                 const diffHours = (eventDate - now) / (1000 * 60 * 60);
                 
