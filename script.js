@@ -5,11 +5,11 @@ console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
     
-    // 🔄 Controlla versione e aggiorna se necessario
-    checkAppVersion();
+    // 🔄 Controlla versione e aggiorna se necessario (usa setTimeout per garantire che la funzione sia definita)
+    setTimeout(() => checkAppVersion(), 100);
     
     // Avvia controllo periodico notifiche appena la pagina carica
-    startPersistentNotificationCheck();
+    setTimeout(() => startPersistentNotificationCheck(), 200);
     
     // Ripristina sessione da localStorage se necessario
     if (localStorage.getItem('authenticated') === 'true' && !sessionStorage.getItem('authenticated')) {
