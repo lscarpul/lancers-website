@@ -6,17 +6,13 @@
     <title>Gestione Presenze - Lancers Baseball</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a365d">
-<link rel="apple-touch-icon" href="icons/icon-192x192.png"> <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         .admin-hero {
             min-height: 25vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
             padding: 3rem 5%;
             text-align: center;
         }
@@ -36,11 +32,9 @@
             max-width: 1200px;
             margin: -2rem auto 2rem;
             padding: 2rem;
-            background: rgba(15, 40, 71, 0.9);
+            background: white;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         .access-denied {
@@ -54,7 +48,7 @@
         }
 
         .access-denied h2 {
-            color: #f87171;
+            color: #c53030;
             margin-bottom: 1rem;
         }
 
@@ -66,57 +60,54 @@
         }
 
         .stat-card {
-            background: rgba(10, 22, 40, 0.8);
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
             padding: 1.5rem;
             border-radius: 16px;
             text-align: center;
-            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
-        .stat-card.green { border-left: 5px solid #22c55e; }
-        .stat-card.red { border-left: 5px solid #dc2626; }
-        .stat-card.yellow { border-left: 5px solid #eab308; }
-        .stat-card.blue { border-left: 5px solid #3b82f6; }
+        .stat-card.green { border-left: 5px solid #48bb78; }
+        .stat-card.red { border-left: 5px solid #e53e3e; }
+        .stat-card.yellow { border-left: 5px solid #ecc94b; }
+        .stat-card.blue { border-left: 5px solid #4299e1; }
 
         .stat-value {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #ffffff;
+            color: #1a365d;
         }
 
         .stat-label {
-            color: #94a3b8;
+            color: #718096;
             font-size: 0.9rem;
         }
 
         .event-selector {
-            background: rgba(10, 22, 40, 0.8);
+            background: #f7fafc;
             padding: 1.5rem;
             border-radius: 16px;
             margin-bottom: 2rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .event-selector h3 {
-            color: #ffffff;
+            color: #1a365d;
             margin-bottom: 1rem;
         }
 
         .event-selector select {
             width: 100%;
             padding: 1rem;
-            border: 2px solid rgba(59, 130, 246, 0.3);
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 1rem;
             font-family: 'Montserrat', sans-serif;
-            background: rgba(10, 22, 40, 0.9);
-            color: #ffffff;
+            background: white;
             cursor: pointer;
         }
 
         .event-selector select:focus {
             outline: none;
-            border-color: #dc2626;
+            border-color: #ed8936;
         }
 
         .players-table {
@@ -129,19 +120,18 @@
         .players-table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-            color: #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .players-table th {
-            background: linear-gradient(135deg, #1e3a5f 0%, #3b82f6 100%);
+            background: #1a365d;
             color: white;
             font-weight: 600;
         }
 
         .players-table th:first-child { border-radius: 12px 0 0 0; }
         .players-table th:last-child { border-radius: 0 12px 0 0; }
-        .players-table tr:hover { background: rgba(59, 130, 246, 0.1); }
+        .players-table tr:hover { background: #f7fafc; }
 
         .status-badge {
             display: inline-block;
@@ -151,13 +141,13 @@
             font-weight: 600;
         }
 
-        .status-badge.present { background: rgba(34, 197, 94, 0.3); color: #4ade80; }
-        .status-badge.absent { background: rgba(220, 38, 38, 0.3); color: #f87171; }
-        .status-badge.maybe { background: rgba(234, 179, 8, 0.3); color: #fde047; }
-        .status-badge.pending { background: rgba(100, 116, 139, 0.3); color: #94a3b8; }
+        .status-badge.present { background: #c6f6d5; color: #276749; }
+        .status-badge.absent { background: #fed7d7; color: #c53030; }
+        .status-badge.maybe { background: #fefcbf; color: #975a16; }
+        .status-badge.pending { background: #e2e8f0; color: #718096; }
 
         .player-number {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            background: #1a365d;
             color: white;
             padding: 0.25rem 0.5rem;
             border-radius: 6px;
@@ -165,8 +155,8 @@
             font-size: 0.85rem;
         }
 
-        .summary-section { margin-top: 2rem; padding-top: 2rem; border-top: 2px solid rgba(59, 130, 246, 0.2); }
-        .summary-section h3 { color: #ffffff; margin-bottom: 1.5rem; }
+        .summary-section { margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e2e8f0; }
+        .summary-section h3 { color: #1a365d; margin-bottom: 1.5rem; }
 
         .player-summary {
             display: grid;
@@ -175,38 +165,37 @@
         }
 
         .player-card {
-            background: rgba(10, 22, 40, 0.8);
+            background: #f7fafc;
             border-radius: 12px;
             padding: 1rem;
             display: flex;
             align-items: center;
             gap: 1rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .player-card-info { flex: 1; }
-        .player-card-name { font-weight: 600; color: #ffffff; }
-        .player-card-role { color: #94a3b8; font-size: 0.85rem; }
+        .player-card-name { font-weight: 600; color: #1a365d; }
+        .player-card-role { color: #718096; font-size: 0.85rem; }
         .player-card-stats { display: flex; gap: 0.5rem; }
 
         .mini-stat { text-align: center; padding: 0.5rem; border-radius: 8px; min-width: 45px; }
-        .mini-stat.green { background: rgba(34, 197, 94, 0.3); color: #4ade80; }
-        .mini-stat.red { background: rgba(220, 38, 38, 0.3); color: #f87171; }
-        .mini-stat.yellow { background: rgba(234, 179, 8, 0.3); color: #fde047; }
+        .mini-stat.green { background: #c6f6d5; color: #276749; }
+        .mini-stat.red { background: #fed7d7; color: #c53030; }
+        .mini-stat.yellow { background: #fefcbf; color: #975a16; }
         .mini-stat-value { font-weight: 700; font-size: 1.1rem; }
         .mini-stat-label { font-size: 0.7rem; }
 
         .attendance-rate { font-size: 1.5rem; font-weight: 700; }
-        .attendance-rate.high { color: #4ade80; }
-        .attendance-rate.medium { color: #fde047; }
-        .attendance-rate.low { color: #f87171; }
+        .attendance-rate.high { color: #276749; }
+        .attendance-rate.medium { color: #975a16; }
+        .attendance-rate.low { color: #c53030; }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            background: #1a365d;
             color: white;
             text-decoration: none;
             border-radius: 10px;
@@ -214,7 +203,7 @@
             transition: all 0.3s ease;
         }
 
-        .back-btn:hover { background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); transform: translateY(-2px); }
+        .back-btn:hover { background: #2c5282; transform: translateY(-2px); }
 
         .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
 
@@ -222,16 +211,16 @@
             padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 10px;
-            background: rgba(59, 130, 246, 0.2);
-            color: #94a3b8;
+            background: #e2e8f0;
+            color: #4a5568;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Montserrat', sans-serif;
         }
 
-        .tab-btn:hover { background: rgba(59, 130, 246, 0.3); }
-        .tab-btn.active { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
+        .tab-btn:hover { background: #cbd5e0; }
+        .tab-btn.active { background: #1a365d; color: white; }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -253,26 +242,26 @@
         }
 
         .action-btn:hover { transform: translateY(-2px); }
-        .action-btn.refresh { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
-        .action-btn.email { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; }
-        .action-btn.whatsapp { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; }
-        .action-btn.sync { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; }
-        .action-btn.export { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; }
-        .action-btn.import { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
+        .action-btn.refresh { background: #ed8936; color: white; }
+        .action-btn.email { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .action-btn.whatsapp { background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); color: white; }
+        .action-btn.sync { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: white; }
+        .action-btn.export { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; }
+        .action-btn.import { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: white; }
 
         .sync-section {
-            background: rgba(59, 130, 246, 0.15);
+            background: #ebf8ff;
             padding: 1.5rem;
             border-radius: 16px;
             margin-bottom: 2rem;
-            border-left: 5px solid #3b82f6;
+            border-left: 5px solid #4299e1;
         }
 
-        .sync-section h4 { color: #60a5fa; margin-bottom: 0.5rem; }
-        .sync-section p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem; }
+        .sync-section h4 { color: #2b6cb0; margin-bottom: 0.5rem; }
+        .sync-section p { color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem; }
 
         .sync-code {
-            background: rgba(10, 22, 40, 0.9);
+            background: white;
             padding: 1rem;
             border-radius: 8px;
             font-family: monospace;
@@ -281,18 +270,15 @@
             max-height: 100px;
             overflow-y: auto;
             margin-bottom: 1rem;
-            color: #e2e8f0;
         }
 
         .sync-input {
             width: 100%;
             padding: 0.75rem;
-            border: 2px solid rgba(59, 130, 246, 0.3);
+            border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-family: 'Montserrat', sans-serif;
             margin-bottom: 0.5rem;
-            background: rgba(10, 22, 40, 0.9);
-            color: #e2e8f0;
         }
 
         .header-actions {
@@ -305,11 +291,11 @@
         }
 
         .send-buttons {
-            background: rgba(34, 197, 94, 0.15);
+            background: #f0fff4;
             padding: 1.5rem;
             border-radius: 16px;
             margin: 1.5rem 0;
-            border-left: 5px solid #22c55e;
+            border-left: 5px solid #48bb78;
         }
 
         .send-buttons h4 { color: #276749; margin-bottom: 1rem; }
@@ -350,7 +336,6 @@
     </script>
 
     <nav class="navbar">
-        <button id="logoutBtn" class="back-btn" style="background: #ef4444; color: white; float: right; margin: 1rem 2rem 0 0;">Logout</button>
         <div class="nav-brand">
             <span class="logo">⚾</span>
             <span class="team-name">Lancers Baseball</span>
@@ -378,13 +363,12 @@
 
     <div id="mainContent">
         <section class="admin-section">
-            <!-- Sezione Firebase -->
-            <div class="sync-section" style="border-left-color: #48bb78; background: #f0fff4;">
-                <h4>☁️ Firebase Database Attivo</h4>
-                <p>Le presenze sono sincronizzate automaticamente su tutti i dispositivi tramite Firebase!</p>
+            <!-- Sezione Sincronizzazione -->
+            <div class="sync-section">
+                <h4>📱 Sincronizzazione tra dispositivi</h4>
+                <p>Le presenze sono salvate localmente. Per condividerle con altri dispositivi, esporta e importa i dati.</p>
                 <div class="action-buttons">
-                    <button class="action-btn refresh" onclick="loadAllData()">🔄 Ricarica da Firebase</button>
-                    <button class="action-btn export" onclick="exportData()">📤 Esporta Backup</button>
+                    <button class="action-btn export" onclick="exportData()">📤 Esporta Dati</button>
                     <button class="action-btn import" onclick="showImportDialog()">📥 Importa Dati</button>
                 </div>
                 <div id="exportCode" style="display: none;">
@@ -393,7 +377,7 @@
                 </div>
                 <div id="importSection" style="display: none;">
                     <textarea class="sync-input" id="importInput" rows="3" placeholder="Incolla qui il codice da importare..."></textarea>
-                    <button class="action-btn sync" onclick="importData()">✅ Importa su Firebase</button>
+                    <button class="action-btn sync" onclick="importData()">✅ Importa</button>
                 </div>
             </div>
 
@@ -418,14 +402,6 @@
                         <button class="action-btn whatsapp" onclick="sendWhatsAppReport('next')">💬 Invia via WhatsApp</button>
                     </div>
                 </div>
-                <div class="send-buttons" style="background: #ebf8ff; border-left-color: #4299e1;">
-                    <h4>📊 Scarica Report Excel - Riepilogo Generale</h4>
-                    <p style="color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem;">Esporta le statistiche generali e il prossimo evento</p>
-                    <div class="action-buttons">
-                        <button class="action-btn" style="background: linear-gradient(135deg, #38a169 0%, #276749 100%); color: white;" onclick="downloadExcelOverview()">📥 Scarica Excel (.xlsx)</button>
-                        <button class="action-btn" style="background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%); color: white;" onclick="downloadCSVOverview()">📄 Scarica CSV</button>
-                    </div>
-                </div>
             </div>
 
             <!-- TAB: Per Evento -->
@@ -444,14 +420,6 @@
                         <button class="action-btn whatsapp" onclick="sendWhatsAppReport('selected')">💬 Invia via WhatsApp</button>
                     </div>
                 </div>
-                <div class="send-buttons" id="eventExcelButtons" style="display: none; background: #ebf8ff; border-left-color: #4299e1;">
-                    <h4>📊 Scarica Report Excel - Evento Selezionato</h4>
-                    <p style="color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem;">Esporta le presenze dell'evento selezionato</p>
-                    <div class="action-buttons">
-                        <button class="action-btn" style="background: linear-gradient(135deg, #38a169 0%, #276749 100%); color: white;" onclick="downloadExcelEvent()">📥 Scarica Excel (.xlsx)</button>
-                        <button class="action-btn" style="background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%); color: white;" onclick="downloadCSVEvent()">📄 Scarica CSV</button>
-                    </div>
-                </div>
             </div>
 
             <!-- TAB: Per Giocatore -->
@@ -467,14 +435,6 @@
                         <button class="action-btn whatsapp" onclick="sendWhatsAppReport('all')">💬 Invia via WhatsApp</button>
                     </div>
                 </div>
-                <div class="send-buttons" style="background: #ebf8ff; border-left-color: #4299e1;">
-                    <h4>📊 Scarica Report Excel</h4>
-                    <p style="color: #4a5568; font-size: 0.9rem; margin-bottom: 1rem;">Esporta le statistiche complete di tutti i giocatori in formato Excel</p>
-                    <div class="action-buttons">
-                        <button class="action-btn" style="background: linear-gradient(135deg, #38a169 0%, #276749 100%); color: white;" onclick="downloadExcel()">📥 Scarica Excel (.xlsx)</button>
-                        <button class="action-btn" style="background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%); color: white;" onclick="downloadCSV()">📄 Scarica CSV</button>
-                    </div>
-                </div>
             </div>
 
             <div style="text-align: center;">
@@ -488,10 +448,7 @@
         <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
 
-    <script src="script.js?v=17"></script>
-    <script src="firebase-config.js"></script>
-    <!-- SheetJS per export Excel -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
     <script>
         const STAFF_EMAIL = 'loriscarpulla@gmail.com';
         const WHATSAPP_NUMBER = '393331549353';
@@ -519,7 +476,7 @@
             { number: 90, name: 'Alessandro', surname: 'Rrethatori', role: 'C' }
         ];
 
-        const adminEvents = [
+        const allEvents = [
             { date: '2026-01-15', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
             { date: '2026-01-20', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
             { date: '2026-01-22', type: 'training', title: 'Allenamento', time: '19:30 - 21:30', tag: 'Allenamento' },
@@ -557,40 +514,22 @@
         // Cache per le presenze
         let cachedPresences = {};
 
-        async function getAllPresences() {
-            try {
-                // Carica da Firebase
-                cachedPresences = await LancersDB.loadAll();
-                
-                // Converti le chiavi delle date da underscore a trattini
-                const converted = {};
-                Object.entries(cachedPresences).forEach(([playerNum, events]) => {
-                    converted[playerNum] = {};
-                    Object.entries(events).forEach(([dateKey, value]) => {
-                        const normalizedDate = dateKey.replace(/_/g, '-');
-                        converted[playerNum][normalizedDate] = value;
-                    });
-                });
-                cachedPresences = converted;
-                return cachedPresences;
-            } catch (error) {
-                console.error('Errore Firebase:', error);
-                // Fallback a localStorage
-                const presences = {};
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith('presence_')) {
-                        const playerNumber = key.replace('presence_', '');
-                        presences[playerNumber] = JSON.parse(localStorage.getItem(key) || '{}');
-                    }
+        function getAllPresences() {
+            const presences = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('presence_')) {
+                    const playerNumber = key.replace('presence_', '');
+                    presences[playerNumber] = JSON.parse(localStorage.getItem(key) || '{}');
                 }
-                cachedPresences = presences;
-                return presences;
             }
+            cachedPresences = presences;
+            return presences;
         }
 
         function exportData() {
-            const dataString = JSON.stringify(cachedPresences);
+            const presences = getAllPresences();
+            const dataString = JSON.stringify(presences);
             const encoded = btoa(encodeURIComponent(dataString));
             document.getElementById('exportCode').style.display = 'block';
             document.getElementById('importSection').style.display = 'none';
@@ -602,21 +541,22 @@
             document.getElementById('exportCode').style.display = 'none';
         }
 
-        async function importData() {
+        function importData() {
             const encoded = document.getElementById('importInput').value.trim();
             if (!encoded) { alert('Inserisci un codice valido'); return; }
             try {
                 const dataString = decodeURIComponent(atob(encoded));
                 const presences = JSON.parse(dataString);
                 
-                // Salva su Firebase
-                for (const [playerNumber, playerPresences] of Object.entries(presences)) {
-                    for (const [eventDate, data] of Object.entries(playerPresences)) {
-                        await LancersDB.save(playerNumber, eventDate, data.response);
-                    }
-                }
+                // Salva in localStorage
+                Object.entries(presences).forEach(([playerNumber, playerPresences]) => {
+                    const key = `presence_${playerNumber}`;
+                    const existing = JSON.parse(localStorage.getItem(key) || '{}');
+                    const merged = { ...existing, ...playerPresences };
+                    localStorage.setItem(key, JSON.stringify(merged));
+                });
                 
-                alert('✅ Dati importati su Firebase!');
+                alert('✅ Dati importati con successo!');
                 document.getElementById('importInput').value = '';
                 document.getElementById('importSection').style.display = 'none';
                 loadAllData();
@@ -656,7 +596,7 @@
         function getNextEvent() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            for (const event of adminEvents) {
+            for (const event of allEvents) {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) return { ...event, dateObj: eventDate };
             }
@@ -712,7 +652,7 @@
             } else if (type === 'selected') {
                 const eventIndex = document.getElementById('eventSelect').value;
                 if (!eventIndex) { alert('Seleziona prima un evento'); return; }
-                const event = adminEvents[eventIndex];
+                const event = allEvents[eventIndex];
                 const report = generateEventReport(event);
                 subject = `⚾ Presenze Lancers - ${report.event.title} (${formatDate(report.event.date)})`;
                 body = `RIEPILOGO PRESENZE LANCERS BASEBALL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
@@ -747,7 +687,7 @@
             } else if (type === 'selected') {
                 const eventIndex = document.getElementById('eventSelect').value;
                 if (!eventIndex) { alert('Seleziona prima un evento'); return; }
-                const event = adminEvents[eventIndex];
+                const event = allEvents[eventIndex];
                 const report = generateEventReport(event);
                 message = `⚾ *PRESENZE LANCERS*\n\n📅 *${report.event.title}*\n📆 ${formatDateLong(report.event.date)}\n🕐 ${report.event.time}\n\n`;
                 message += `✅ *PRESENTI (${report.presentList.length}):*\n${report.presentList.length > 0 ? report.presentList.join('\n') : '(nessuno)'}\n\n`;
@@ -773,11 +713,8 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
-        async function loadAllData() {
-            // Mostra loading
-            document.getElementById('statsGrid').innerHTML = '<div class="stat-card blue"><div class="stat-value">⏳</div><div class="stat-label">Caricamento da Firebase...</div></div>';
-            
-            const presences = await getAllPresences();
+        function loadAllData() {
+            const presences = getAllPresences();
             let totalPresent = 0, totalAbsent = 0, totalMaybe = 0, totalResponses = 0;
 
             Object.values(presences).forEach(playerPresences => {
@@ -840,18 +777,11 @@
             }
 
             const eventSelect = document.getElementById('eventSelect');
-            // MODIFICA: Rimosso il filtro della data (today)
+            const today = new Date(); today.setHours(0, 0, 0, 0);
             eventSelect.innerHTML = '<option value="">-- Seleziona un evento --</option>';
-            
-            adminEvents.forEach((event, index) => {
+            allEvents.forEach((event, index) => {
                 const eventDate = new Date(event.date);
-                const today = new Date(); today.setHours(0, 0, 0, 0);
-                
-                // Aggiungiamo un'icona visiva per capire se è passato o futuro
-                const prefix = eventDate < today ? '⏪ ' : '📅 ';
-                
-                // Aggiungiamo TUTTI gli eventi alla lista
-                eventSelect.innerHTML += `<option value="${index}">${prefix}${formatDate(event.date)} - ${event.title}</option>`;
+                if (eventDate >= today) eventSelect.innerHTML += `<option value="${index}">${formatDate(event.date)} - ${event.title}</option>`;
             });
 
             document.getElementById('playerSummary').innerHTML = allPlayers.map(player => {
@@ -887,41 +817,17 @@
             if (!eventIndex) {
                 document.getElementById('eventDetails').innerHTML = '';
                 document.getElementById('eventSendButtons').style.display = 'none';
-                document.getElementById('eventExcelButtons').style.display = 'none';
                 return;
             }
             document.getElementById('eventSendButtons').style.display = 'block';
-            document.getElementById('eventExcelButtons').style.display = 'block';
-            
-            const event = adminEvents[eventIndex];
+            const event = allEvents[eventIndex];
             const presences = cachedPresences;
-            
-            // --- LOGICA ASSENZA AUTOMATICA ---
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Oggi mezzanotte
-            const eventDate = new Date(event.date);
-            const isEventPast = eventDate < today; // L'evento è passato?
-
             const playerStatuses = allPlayers.map(player => {
                 const playerPresences = presences[player.number] || {};
                 const eventResponse = playerPresences[event.date];
-                
-                let status = 'pending'; // Default: In attesa
-                let isAuto = false;     // Flag per assenza automatica
-
-                if (eventResponse) {
-                    // Se c'è una risposta, usala
-                    status = eventResponse.response;
-                } else if (isEventPast) {
-                    // Se NON c'è risposta e l'evento è PASSATO -> Assente
-                    status = 'no';
-                    isAuto = true;
-                }
-
-                return { ...player, status: status, isAuto: isAuto };
+                return { ...player, status: eventResponse ? eventResponse.response : 'pending' };
             });
 
-            // Calcolo contatori
             const presentCount = playerStatuses.filter(p => p.status === 'yes').length;
             const absentCount = playerStatuses.filter(p => p.status === 'no').length;
             const maybeCount = playerStatuses.filter(p => p.status === 'maybe').length;
@@ -936,455 +842,16 @@
                 </div>
                 <table class="players-table">
                     <thead><tr><th>#</th><th>Giocatore</th><th>Ruolo</th><th>Stato</th></tr></thead>
-                    <tbody>${playerStatuses.map(p => {
-                        let statusHtml = '';
-                        if(p.status === 'yes') 
-                            statusHtml = '<span class="status-badge present">✅ Presente</span>';
-                        else if(p.status === 'maybe') 
-                            statusHtml = '<span class="status-badge maybe">⚠️ Forse</span>';
-                        else if(p.status === 'pending') 
-                            statusHtml = '<span class="status-badge pending">⏳ In attesa</span>';
-                        else if(p.status === 'no') {
-                            // Se è assenza automatica scriviamo "Non Risp."
-                            if (p.isAuto) {
-                                statusHtml = '<span class="status-badge absent" style="opacity: 0.8">❌ Non Risp.</span>';
-                            } else {
-                                statusHtml = '<span class="status-badge absent">❌ Assente</span>';
-                            }
-                        }
-                        
-                        return `
+                    <tbody>${playerStatuses.map(p => `
                         <tr>
                             <td><span class="player-number">${p.number}</span></td>
                             <td>${p.name} ${p.surname}</td>
                             <td>${p.role}</td>
-                            <td>${statusHtml}</td>
-                        </tr>`;
-                    }).join('')}</tbody>
+                            <td><span class="status-badge ${p.status === 'yes' ? 'present' : p.status === 'no' ? 'absent' : p.status === 'maybe' ? 'maybe' : 'pending'}">
+                                ${p.status === 'yes' ? '✅ Presente' : p.status === 'no' ? '❌ Assente' : p.status === 'maybe' ? '⚠️ Forse' : '⏳ In attesa'}
+                            </span></td>
+                        </tr>`).join('')}</tbody>
                 </table>`;
-        }
-
-        // Funzione per scaricare Excel
-        function downloadExcelEvent() {
-            const eventIndex = document.getElementById('eventSelect').value;
-            if (!eventIndex) {
-                alert('Seleziona prima un evento!');
-                return;
-            }
-            
-            const event = adminEvents[eventIndex];
-            const presences = cachedPresences;
-            const today = new Date(); today.setHours(0,0,0,0);
-            const eventDate = new Date(event.date);
-            const isEventPast = eventDate < today;
-            
-            const data = [
-                ['REPORT PRESENZE EVENTO'],
-                ['Evento:', event.title],
-                ['Data:', eventDate.toLocaleDateString('it-IT')],
-                ['Orario:', event.time],
-                ['Tipo:', event.tag],
-                [],
-                ['RIEPILOGO']
-            ];
-            
-            // Calcolo statistiche con logica automatica
-            let presentCount = 0, absentCount = 0, maybeCount = 0, pendingCount = 0;
-            
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                
-                if (eventResponse) {
-                    if (eventResponse.response === 'yes') presentCount++;
-                    else if (eventResponse.response === 'no') absentCount++;
-                    else if (eventResponse.response === 'maybe') maybeCount++;
-                } else {
-                    if (isEventPast) absentCount++; // Assente automatico
-                    else pendingCount++;
-                }
-            });
-            
-            data.push(['Presenti:', presentCount]);
-            data.push(['Forse:', maybeCount]);
-            data.push(['Assenti:', absentCount]);
-            data.push(['In Attesa:', pendingCount]);
-            data.push([]);
-            data.push(['DETTAGLIO GIOCATORI']);
-            data.push(['#', 'Nome', 'Cognome', 'Ruolo', 'Stato', 'Data Risposta']);
-            
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                
-                let status = 'In attesa';
-                let timestamp = '-';
-                
-                if (eventResponse) {
-                    status = eventResponse.response === 'yes' ? 'Presente' : 
-                             eventResponse.response === 'no' ? 'Assente' : 'Forse';
-                    if (eventResponse.timestamp) {
-                        timestamp = new Date(eventResponse.timestamp).toLocaleString('it-IT');
-                    }
-                } else if (isEventPast) {
-                    // LOGICA EXCEL: Se passato e nessuna risposta -> Assente
-                    status = 'Assente (Non Risp.)';
-                    timestamp = 'Automatico';
-                }
-                
-                data.push([player.number, player.name, player.surname, player.role, status, timestamp]);
-            });
-            
-            // Crea il file Excel
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            ws['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 15 }, { wch: 10 }, { wch: 20 }, { wch: 20 }];
-            
-            const wb = XLSX.utils.book_new();
-            const sheetName = `${eventDate.getDate()}-${eventDate.getMonth()+1} Report`.substring(0, 31);
-            XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            
-            const fileName = `Evento_${event.title.replace(/[^a-zA-Z0-9]/g, '_')}_${event.date}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-        }
-        
-        // Funzione per scaricare CSV
-        function downloadCSV() {
-            const presences = cachedPresences;
-            const today = new Date();
-            
-            // Prepara i dati per CSV
-            let csv = '';
-            
-            // Intestazione
-            const headers = ['Numero', 'Nome', 'Cognome', 'Ruolo', 'Presenti', 'Forse', 'Assenti', 'Totale Risposte', 'Tasso Presenza %'];
-            
-            // Aggiungi le date degli eventi come colonne
-            const futureEvents = adminEvents.filter(e => new Date(e.date) >= today).slice(0, 20);
-            futureEvents.forEach(event => {
-                const d = new Date(event.date);
-                headers.push(`${d.getDate()}/${d.getMonth() + 1} - ${event.title}`);
-            });
-            
-            csv += headers.join(';') + '\n';
-            
-            // Dati dei giocatori
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                let presentCount = 0, absentCount = 0, maybeCount = 0;
-                
-                Object.values(playerPresences).forEach(response => {
-                    if (response.response === 'yes') presentCount++;
-                    else if (response.response === 'no') absentCount++;
-                    else if (response.response === 'maybe') maybeCount++;
-                });
-                
-                const total = presentCount + absentCount + maybeCount;
-                const rate = total > 0 ? Math.round((presentCount / total) * 100) : 0;
-                
-                const row = [
-                    player.number,
-                    player.name,
-                    player.surname,
-                    player.role,
-                    presentCount,
-                    maybeCount,
-                    absentCount,
-                    total,
-                    rate + '%'
-                ];
-                
-                // Aggiungi lo stato per ogni evento
-                futureEvents.forEach(event => {
-                    const response = playerPresences[event.date];
-                    if (response) {
-                        row.push(response.response === 'yes' ? 'Presente' : response.response === 'no' ? 'Assente' : 'Forse');
-                    } else {
-                        row.push('In attesa');
-                    }
-                });
-                
-                csv += row.join(';') + '\n';
-            });
-            
-            // Scarica il file
-            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `Presenze_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.csv`;
-            link.click();
-        }
-
-        // ========== EXCEL TAB RIEPILOGO (OVERVIEW) ==========
-        function downloadExcelOverview() {
-            const presences = cachedPresences;
-            const today = new Date();
-            
-            // Trova il prossimo evento
-            const nextEvent = adminEvents.find(e => new Date(e.date) >= today);
-            
-            // Sheet 1: Statistiche Generali
-            const statsData = [
-                ['RIEPILOGO GENERALE PRESENZE LANCERS'],
-                ['Data Report:', today.toLocaleDateString('it-IT')],
-                [],
-                ['STATISTICHE GLOBALI'],
-                ['Totale Giocatori:', allPlayers.length],
-            ];
-            
-            // Calcola statistiche globali
-            let totalPresent = 0, totalAbsent = 0, totalMaybe = 0;
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                Object.values(playerPresences).forEach(response => {
-                    if (response.response === 'yes') totalPresent++;
-                    else if (response.response === 'no') totalAbsent++;
-                    else if (response.response === 'maybe') totalMaybe++;
-                });
-            });
-            
-            statsData.push(['Totale Risposte "Presente":', totalPresent]);
-            statsData.push(['Totale Risposte "Forse":', totalMaybe]);
-            statsData.push(['Totale Risposte "Assente":', totalAbsent]);
-            statsData.push([]);
-            
-            // Prossimo evento
-            if (nextEvent) {
-                const eventDate = new Date(nextEvent.date);
-                statsData.push(['PROSSIMO EVENTO']);
-                statsData.push(['Evento:', nextEvent.title]);
-                statsData.push(['Data:', eventDate.toLocaleDateString('it-IT')]);
-                statsData.push(['Orario:', nextEvent.time]);
-                statsData.push([]);
-                statsData.push(['STATO GIOCATORI PER PROSSIMO EVENTO']);
-                statsData.push(['#', 'Nome', 'Cognome', 'Ruolo', 'Stato']);
-                
-                allPlayers.forEach(player => {
-                    const playerPresences = presences[String(player.number)] || {};
-                    const eventResponse = playerPresences[nextEvent.date];
-                    const status = eventResponse ? 
-                        (eventResponse.response === 'yes' ? 'Presente' : 
-                         eventResponse.response === 'no' ? 'Assente' : 'Forse') 
-                        : 'In attesa';
-                    statsData.push([player.number, player.name, player.surname, player.role, status]);
-                });
-            }
-            
-            const ws = XLSX.utils.aoa_to_sheet(statsData);
-            ws['!cols'] = [{ wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 10 }, { wch: 12 }];
-            
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Riepilogo Generale');
-            
-            const fileName = `Riepilogo_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-        }
-        
-        function downloadCSVOverview() {
-            const presences = cachedPresences;
-            const today = new Date();
-            const nextEvent = adminEvents.find(e => new Date(e.date) >= today);
-            
-            let csv = 'RIEPILOGO GENERALE PRESENZE LANCERS\n';
-            csv += `Data Report;${today.toLocaleDateString('it-IT')}\n\n`;
-            
-            // Statistiche globali
-            let totalPresent = 0, totalAbsent = 0, totalMaybe = 0;
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                Object.values(playerPresences).forEach(response => {
-                    if (response.response === 'yes') totalPresent++;
-                    else if (response.response === 'no') totalAbsent++;
-                    else if (response.response === 'maybe') totalMaybe++;
-                });
-            });
-            
-            csv += 'STATISTICHE GLOBALI\n';
-            csv += `Totale Giocatori;${allPlayers.length}\n`;
-            csv += `Totale Presenti;${totalPresent}\n`;
-            csv += `Totale Forse;${totalMaybe}\n`;
-            csv += `Totale Assenti;${totalAbsent}\n\n`;
-            
-            if (nextEvent) {
-                const eventDate = new Date(nextEvent.date);
-                csv += 'PROSSIMO EVENTO\n';
-                csv += `Evento;${nextEvent.title}\n`;
-                csv += `Data;${eventDate.toLocaleDateString('it-IT')}\n`;
-                csv += `Orario;${nextEvent.time}\n\n`;
-                csv += 'Numero;Nome;Cognome;Ruolo;Stato\n';
-                
-                allPlayers.forEach(player => {
-                    const playerPresences = presences[String(player.number)] || {};
-                    const eventResponse = playerPresences[nextEvent.date];
-                    const status = eventResponse ? 
-                        (eventResponse.response === 'yes' ? 'Presente' : 
-                         eventResponse.response === 'no' ? 'Assente' : 'Forse') 
-                        : 'In attesa';
-                    csv += `${player.number};${player.name};${player.surname};${player.role};${status}\n`;
-                });
-            }
-            
-            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `Riepilogo_Lancers_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}.csv`;
-            link.click();
-        }
-
-        // ========== EXCEL TAB PER EVENTO ==========
-        function downloadExcelEvent() {
-            const eventIndex = document.getElementById('eventSelect').value;
-            if (!eventIndex) {
-                alert('Seleziona prima un evento!');
-                return;
-            }
-            
-            const event = adminEvents[eventIndex];
-            const presences = cachedPresences;
-            const today = new Date();
-            const eventDate = new Date(event.date);
-            
-            const data = [
-                ['REPORT PRESENZE EVENTO'],
-                ['Evento:', event.title],
-                ['Data:', eventDate.toLocaleDateString('it-IT')],
-                ['Orario:', event.time],
-                ['Tipo:', event.tag],
-                [],
-                ['RIEPILOGO']
-            ];
-            
-            // Calcola statistiche evento
-            let presentCount = 0, absentCount = 0, maybeCount = 0, pendingCount = 0;
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                if (eventResponse) {
-                    if (eventResponse.response === 'yes') presentCount++;
-                    else if (eventResponse.response === 'no') absentCount++;
-                    else if (eventResponse.response === 'maybe') maybeCount++;
-                } else {
-                    pendingCount++;
-                }
-            });
-            
-            data.push(['Presenti:', presentCount]);
-            data.push(['Forse:', maybeCount]);
-            data.push(['Assenti:', absentCount]);
-            data.push(['In Attesa:', pendingCount]);
-            data.push([]);
-            data.push(['DETTAGLIO GIOCATORI']);
-            data.push(['#', 'Nome', 'Cognome', 'Ruolo', 'Stato', 'Data Risposta']);
-            
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                let status = 'In attesa';
-                let timestamp = '-';
-                
-                if (eventResponse) {
-                    status = eventResponse.response === 'yes' ? 'Presente' : 
-                             eventResponse.response === 'no' ? 'Assente' : 'Forse';
-                    if (eventResponse.timestamp) {
-                        timestamp = new Date(eventResponse.timestamp).toLocaleString('it-IT');
-                    }
-                }
-                
-                data.push([player.number, player.name, player.surname, player.role, status, timestamp]);
-            });
-            
-            // Aggiungi liste separate
-            data.push([]);
-            data.push(['LISTA PRESENTI']);
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                if (eventResponse && eventResponse.response === 'yes') {
-                    data.push([`${player.number} - ${player.name} ${player.surname}`]);
-                }
-            });
-            
-            data.push([]);
-            data.push(['LISTA ASSENTI']);
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                if (eventResponse && eventResponse.response === 'no') {
-                    data.push([`${player.number} - ${player.name} ${player.surname}`]);
-                }
-            });
-            
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            ws['!cols'] = [{ wch: 30 }, { wch: 15 }, { wch: 15 }, { wch: 10 }, { wch: 12 }, { wch: 20 }];
-            
-            const wb = XLSX.utils.book_new();
-            const sheetName = `${eventDate.getDate()}-${eventDate.getMonth()+1} ${event.title}`.substring(0, 31);
-            XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            
-            const fileName = `Evento_${event.title.replace(/[^a-zA-Z0-9]/g, '_')}_${event.date}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-        }
-        
-        function downloadCSVEvent() {
-            const eventIndex = document.getElementById('eventSelect').value;
-            if (!eventIndex) {
-                alert('Seleziona prima un evento!');
-                return;
-            }
-            
-            const event = adminEvents[eventIndex];
-            const presences = cachedPresences;
-            const eventDate = new Date(event.date);
-            
-            let csv = 'REPORT PRESENZE EVENTO\n';
-            csv += `Evento;${event.title}\n`;
-            csv += `Data;${eventDate.toLocaleDateString('it-IT')}\n`;
-            csv += `Orario;${event.time}\n`;
-            csv += `Tipo;${event.tag}\n\n`;
-            
-            // Statistiche
-            let presentCount = 0, absentCount = 0, maybeCount = 0, pendingCount = 0;
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                if (eventResponse) {
-                    if (eventResponse.response === 'yes') presentCount++;
-                    else if (eventResponse.response === 'no') absentCount++;
-                    else if (eventResponse.response === 'maybe') maybeCount++;
-                } else {
-                    pendingCount++;
-                }
-            });
-            
-            csv += 'RIEPILOGO\n';
-            csv += `Presenti;${presentCount}\n`;
-            csv += `Forse;${maybeCount}\n`;
-            csv += `Assenti;${absentCount}\n`;
-            csv += `In Attesa;${pendingCount}\n\n`;
-            
-            csv += 'Numero;Nome;Cognome;Ruolo;Stato;Data Risposta\n';
-            
-            allPlayers.forEach(player => {
-                const playerPresences = presences[String(player.number)] || {};
-                const eventResponse = playerPresences[event.date];
-                let status = 'In attesa';
-                let timestamp = '-';
-                
-                if (eventResponse) {
-                    status = eventResponse.response === 'yes' ? 'Presente' : 
-                             eventResponse.response === 'no' ? 'Assente' : 'Forse';
-                    if (eventResponse.timestamp) {
-                        timestamp = new Date(eventResponse.timestamp).toLocaleString('it-IT');
-                    }
-                }
-                
-                csv += `${player.number};${player.name};${player.surname};${player.role};${status};${timestamp}\n`;
-            });
-            
-            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `Evento_${event.title.replace(/[^a-zA-Z0-9]/g, '_')}_${event.date}.csv`;
-            link.click();
         }
 
         loadAllData();

@@ -689,6 +689,21 @@ a {
 .match-card.event { border-left: 4px solid var(--warning); }
 .match-card.recovery { border-left: 4px solid var(--info); }
 .match-card.training-tbd, .match-card.tbd { border-left: 4px solid var(--text-muted); }
+.match-card.locked { 
+    border-left: 4px solid #9ca3af; 
+    opacity: 0.6;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(156, 163, 175, 0.1) 10px,
+        rgba(156, 163, 175, 0.1) 20px
+    );
+}
+.match-card.locked .match-info h3 { color: #6b7280; }
+.match-card.playoff { border-left: 4px solid #8b5cf6; }
+.match-card.tournament { border-left: 4px solid #ec4899; }
+.match-card.saturday-training { border-left: 4px solid #14b8a6; }
 
 .match-header {
     display: flex;

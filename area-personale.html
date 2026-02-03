@@ -1069,6 +1069,53 @@
             }
         };
 
+        // Database allenamenti mercoledì personalizzati
+        const allenamentMercoledi = {
+            // MARZO
+            '2026-03-04': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7] }, // Grassi, Albano (Vergara non in sistema)
+            '2026-03-11': { tipo: 'BATTUTA POTENZA 2', giocatori: [4, 3, 25] }, // Beudean, Della Nave, Scarpulla Lo.
+            '2026-03-18': { tipo: 'BATTUTA CONTROLLO/RISP', giocatori: [19, 38, 59] }, // Baratella, Parrini, Biondi
+            '2026-03-25': { tipo: 'BATTUTA CAMPO OPPOSTO', giocatori: [6, 32, 77, 8] }, // Geri, Anichini, Rinaldi, Panichi
+            // APRILE
+            '2026-04-01': { tipo: 'BATTUTA RAPIDITÀ', giocatori: [98, 14, 90] }, // Paperini, Scarpulla Le., Rrethatori
+            '2026-04-08': { tipo: 'DIFESA INTERNI 1', giocatori: [32, 59, 12] }, // Anichini, Biondi, Grassi
+            '2026-04-15': { tipo: 'DIFESA INTERNI 2', giocatori: [19, 7, 38] }, // Baratella, Albano, Parrini
+            '2026-04-22': { tipo: 'DIFESA ESTERNI 1', giocatori: [3, 8, 98] }, // Della Nave, Panichi, Paperini
+            '2026-04-29': { tipo: 'DIFESA ESTERNI 2', giocatori: [6, 14, 4] }, // Geri, Scarpulla Le., Beudean
+            // MAGGIO
+            '2026-05-06': { tipo: 'DIFESA RICEVITORI', giocatori: [90, 25] }, // Rrethatori, Scarpulla Lo. (+ Vergara e Rinaldi)
+            '2026-05-13': { tipo: 'BATTUTA POTENZA', giocatori: [12, 7] }, // Grassi, Albano
+            '2026-05-20': { tipo: 'BATTUTA POTENZA 2', giocatori: [4, 3, 25] }, // Beudean, Della Nave, Scarpulla Lo.
+            '2026-05-27': { tipo: 'BATTUTA CONTROLLO/RISP', giocatori: [19, 38, 59] }, // Baratella, Parrini, Biondi
+            // GIUGNO
+            '2026-06-03': { tipo: 'BATTUTA CAMPO OPPOSTO', giocatori: [6, 32, 77] }, // Geri, Anichini, Rinaldi
+            '2026-06-10': { tipo: 'BATTUTA RAPIDITÀ', giocatori: [8, 98, 14, 90] }, // Panichi, Paperini, Scarpulla Le., Rrethatori
+            '2026-06-17': { tipo: 'DIFESA INTERNI 1', giocatori: [32, 59, 12] }, // Anichini, Biondi, Grassi
+            '2026-06-24': { tipo: 'DIFESA INTERNI 2', giocatori: [19, 7, 38] }, // Baratella, Albano, Parrini
+            // LUGLIO
+            '2026-07-01': { tipo: 'DIFESA ESTERNI 1', giocatori: [3, 8, 98] }, // Della Nave, Panichi, Paperini
+            '2026-07-08': { tipo: 'DIFESA ESTERNI 2', giocatori: [6, 14, 4] }, // Geri, Scarpulla Le., Beudean
+            '2026-07-15': { tipo: 'DIFESA RICEVITORI', giocatori: [90, 25, 77] } // Rrethatori, Scarpulla Lo., Rinaldi
+        };
+
+        // Funzione per ottenere allenamenti di un giocatore
+        function getPlayerTrainings(playerNumber) {
+            const trainings = [];
+            for (const [date, info] of Object.entries(allenamentMercoledi)) {
+                if (info.giocatori.includes(playerNumber)) {
+                    trainings.push({ date, tipo: info.tipo });
+                }
+            }
+            return trainings.sort((a, b) => a.date.localeCompare(b.date));
+        }
+
+        // Formatta data
+        function formatTrainingDate(dateStr) {
+            const [year, month, day] = dateStr.split('-');
+            const months = ['', 'Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+            return `${parseInt(day)} ${months[parseInt(month)]} ${year}`;
+        }
+
         // Mappa icone per categorie
         // Genera contenuto
         const playerData = sessionStorage.getItem('playerData');
@@ -1146,6 +1193,16 @@
                         }
                         return rows;
                     }
+                    // Calcola OBP se non presente
+                    const calcOBP = (s) => {
+                        if (s.obp) return s.obp;
+                        if (s.ab && s.h && s.bb) {
+                            const obp = (parseInt(s.h) + parseInt(s.bb)) / (parseInt(s.ab) + parseInt(s.bb));
+                            return '.' + Math.round(obp * 1000).toString().padStart(3, '0');
+                        }
+                        return '-';
+                    };
+                    
                     rows = stats.map(s => `
                         <tr>
                             <td>${s.anno || ''}</td>
@@ -1155,7 +1212,7 @@
                             <td>${s.r || '-'}</td>
                             <td>${s.h || '-'}</td>
                             <td>${s.avg || '-'}</td>
-                            <td>${s.slg || '-'}</td>
+                            <td>${calcOBP(s)}</td>
                             <td>${s.bb || '-'}</td>
                             <td>${s.so || '-'}</td>
                             <td>${s.sb || '-'}</td>
@@ -1171,7 +1228,7 @@
                                 <td>${totali.r ?? '-'}</td>
                                 <td>${totali.h ?? '-'}</td>
                                 <td>${totali.avg ?? '-'}</td>
-                                <td>${totali.slg ?? '-'}</td>
+                                <td>${calcOBP(totali)}</td>
                                 <td>${totali.bb ?? '-'}</td>
                                 <td>${totali.so ?? '-'}</td>
                                 <td>${totali.sb ?? '-'}</td>
@@ -1186,7 +1243,7 @@
                     if (isPitcher) {
                         return `<th>ANNO</th> <th>W</th> <th>L</th> <th>ERA</th> <th>IP</th> <th>K</th> <th>BB</th> <th>WHIP</th>`;
                     }
-                    return `<th>ANNO</th> <th>TEAM</th> <th>GG</th> <th>AB</th> <th>R</th> <th>H</th> <th>AVG</th> <th>SLG</th> <th>BB</th> <th>SO</th> <th>SB</th>`;
+                    return `<th>ANNO</th> <th>TEAM</th> <th>GG</th> <th>AB</th> <th>R</th> <th>H</th> <th>AVG</th> <th>OBP</th> <th>BB</th> <th>SO</th> <th>SB</th>`;
                 }
 
                 container.innerHTML = `
@@ -1261,6 +1318,25 @@
                                 ${(player.lavoroAutonomo || []).map(o => `<li>${o}</li>`).join('')}
                             </ul>
                         </div>
+
+                        ${(() => {
+                            const trainings = getPlayerTrainings(player.number);
+                            if (trainings.length === 0) return '';
+                            return `
+                                <div class="card col-span-12" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 5px solid #f59e0b;">
+                                    <h3 class="eval-title" style="color: #92400e;">📅 I TUOI MERCOLEDÌ EXTRA</h3>
+                                    <p style="color: #78350f; margin-bottom: 1rem; font-size: 0.9rem;">Allenamenti specifici personalizzati - Marzo/Luglio 2026</p>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                                        ${trainings.map(t => `
+                                            <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                                <div style="font-weight: 700; color: #1a365d; font-size: 1.1rem;">${formatTrainingDate(t.date)}</div>
+                                                <div style="color: #f59e0b; font-weight: 600; margin-top: 0.25rem;">🎯 ${t.tipo}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        })()}
 
                         <div class="card col-span-12">
                             <h3 class="eval-title">📈 STATISTICHE CARRIERA</h3>
