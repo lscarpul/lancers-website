@@ -1222,18 +1222,20 @@ async function checkAppVersion() {
 async function forceUpdate(serverVersion) {
     const localVersion = localStorage.getItem('appVersion');
     
-    // Mostra notifica di aggiornamento
-    showUpdateBanner(localVersion, serverVersion.version);
-    
     try {
-        // 1. Cancella tutte le cache
+        // 1. PRIMA salva la nuova versione per evitare loop
+        localStorage.setItem('appVersion', serverVersion.version);
+        localStorage.setItem('appVersionDate', serverVersion.date);
+        console.log('💾 Versione salvata: ' + serverVersion.version);
+        
+        // 2. Cancella tutte le cache
         if ('caches' in window) {
             const cacheNames = await caches.keys();
             console.log('🗑️ Cancello cache:', cacheNames);
             await Promise.all(cacheNames.map(name => caches.delete(name)));
         }
         
-        // 2. Aggiorna il Service Worker
+        // 3. Aggiorna il Service Worker
         if ('serviceWorker' in navigator) {
             const registrations = await navigator.serviceWorker.getRegistrations();
             for (const registration of registrations) {
@@ -1242,14 +1244,15 @@ async function forceUpdate(serverVersion) {
             }
         }
         
-        // 3. Salva nuova versione
-        localStorage.setItem('appVersion', serverVersion.version);
-        localStorage.setItem('appVersionDate', serverVersion.date);
-        
         console.log('✅ Aggiornamento completato alla versione ' + serverVersion.version);
+        
+        // 4. Mostra banner DOPO aver salvato tutto
+        showUpdateBanner(localVersion, serverVersion.version);
         
     } catch (error) {
         console.error('❌ Errore durante aggiornamento:', error);
+        // Salva comunque la versione per evitare loop
+        localStorage.setItem('appVersion', serverVersion.version);
     }
 }
 
@@ -1362,13 +1365,9 @@ function showUpdateBanner(oldVersion, newVersion) {
     
     document.body.insertBefore(banner, document.body.firstChild);
     
-    // Se non è prima installazione, auto-reload dopo 5 secondi
-    if (!isFirstInstall) {
-        setTimeout(() => {
-            if (document.getElementById('update-banner')) {
-                console.log('🔄 Auto-reload per aggiornamento...');
-                location.reload(true);
-            }
-        }, 5000);
-    }
+    // Banner si chiude automaticamente dopo 5 secondi (senza reload)
+    setTimeout(() => {
+        const b = document.getElementById('update-banner');
+        if (b) b.remove();
+    }, 5000);
 }
