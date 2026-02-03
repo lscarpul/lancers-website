@@ -96,21 +96,6 @@
             margin-top: 0.5rem;
         }
         .map-btn:hover { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); }
-
-        .test-notif-btn {
-            display: block;
-            width: 100%;
-            max-width: 300px;
-            margin: 1rem auto;
-            padding: 1rem;
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -149,12 +134,6 @@
         <div class="page-header">
             <h1>📅 Calendario Partite 2026</h1>
             <p>Clicca su ogni partita per vedere i dettagli</p>
-            <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem;">
-                <button class="test-notif-btn" onclick="testNotifica()" style="margin: 0;">🔔 Testa Notifiche</button>
-                <button class="test-notif-btn" onclick="resetNotifiche()" style="margin: 0; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">🔄 Reset Notifiche</button>
-                <button class="test-notif-btn" onclick="mostraStatoNotifiche()" style="margin: 0; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">📊 Stato</button>
-            </div>
-            <div id="notif-status" style="margin-top: 1rem; padding: 1rem; background: rgba(10, 22, 40, 0.8); border-radius: 10px; font-size: 0.85rem; display: none;"></div>
         </div>
 
         <div class="calendar-container">
@@ -539,7 +518,7 @@
         <p>&copy; 2026 Lancers Baseball Club - Area Riservata</p>
     </footer>
 
-    <script src="script.js?v=36"></script>
+    <script src="script.js?v=37"></script>
     <script>
         // Toggle per le card - SOLO event delegation (rimosso onclick inline)
         document.addEventListener('DOMContentLoaded', function() {
@@ -562,231 +541,6 @@
         function toggleCard(card) {
             // Non fare nulla - il toggle è gestito dall'event delegation
             // Questo evita il doppio toggle quando onclick e delegation scattano insieme
-        }
-
-        // Test notifiche
-        async function testNotifica() {
-            const btn = document.querySelector('.test-notif-btn');
-            
-            if (!('Notification' in window)) {
-                alert('❌ Browser non supporta le notifiche');
-                return;
-            }
-            
-            if (Notification.permission === 'default') {
-                const perm = await Notification.requestPermission();
-                if (perm !== 'granted') {
-                    alert('❌ Devi autorizzare le notifiche');
-                    return;
-                }
-            }
-            
-            if (Notification.permission === 'denied') {
-                alert('❌ Notifiche bloccate. Vai nelle impostazioni del browser.');
-                return;
-            }
-            
-            // Usa Service Worker per la notifica (richiesto su mobile)
-            try {
-                const registration = await navigator.serviceWorker.ready;
-                await registration.showNotification('⚾ Test Lancers!', {
-                    body: '✅ Le notifiche funzionano! Riceverai promemoria per le partite.',
-                    icon: './icons/icon-192x192.png',
-                    badge: './icons/icon-192x192.png',
-                    tag: 'test-' + Date.now(),
-                    vibrate: [200, 100, 200],
-                    requireInteraction: false
-                });
-                btn.textContent = '✅ Notifica Inviata!';
-                btn.style.background = '#22c55e';
-                setTimeout(() => {
-                    btn.textContent = '🔔 Testa Notifiche';
-                    btn.style.background = '';
-                }, 3000);
-            } catch (e) {
-                console.error('Errore notifica:', e);
-                alert('Errore: ' + e.message);
-            }
-        }
-        
-        // Reset notifiche schedulate
-        async function resetNotifiche() {
-            console.log('🔄 resetNotifiche() chiamata');
-            try {
-                // Resetta flag locale
-                localStorage.removeItem('lastNotificationSchedule');
-                sessionStorage.removeItem('notificationsScheduledThisSession');
-                
-                // Chiedi al SW di cancellare tutte le notifiche
-                const swReg = await navigator.serviceWorker.getRegistration();
-                if (swReg && swReg.active) {
-                    swReg.active.postMessage({ type: 'CLEAR_ALL_NOTIFICATIONS' });
-                }
-                
-                if (swReg && Notification.permission === 'granted') {
-                    // Notifica immediata
-                    await swReg.showNotification('🔄 Reset Completato!', {
-                        body: '✅ Notifiche resettate. Test programmato tra 10 secondi.',
-                        icon: './icons/icon-192x192.png',
-                        badge: './icons/icon-192x192.png',
-                        tag: 'reset-confirm',
-                        vibrate: [200, 100, 200]
-                    });
-                    
-                    // NUOVO SISTEMA: Salva in localStorage quando deve arrivare la notifica test
-                    const testTime = Date.now() + (10 * 1000); // 10 secondi da ora
-                    localStorage.setItem('pendingTestNotification', testTime.toString());
-                    console.log('📝 Test notifica salvata per:', new Date(testTime).toLocaleTimeString());
-                    
-                    // Avvia controllo periodico sulla pagina
-                    startNotificationChecker();
-                    
-                    alert('✅ Reset completato!\n\n1️⃣ Notifica immediata inviata ORA\n2️⃣ Notifica test tra 10 SECONDI\n\n💡 Puoi anche chiudere e riaprire la pagina!');
-                } else {
-                    alert('⚠️ Permessi notifiche mancanti o SW non pronto');
-                }
-            } catch (e) {
-                console.error('❌ Errore reset:', e);
-                alert('Errore: ' + e.message);
-            }
-        }
-        
-        // NUOVO SISTEMA: Controlla notifiche pendenti
-        let notificationCheckerInterval = null;
-        
-        function startNotificationChecker() {
-            // Ferma checker esistente
-            if (notificationCheckerInterval) {
-                clearInterval(notificationCheckerInterval);
-            }
-            
-            // Controlla subito
-            checkPendingTestNotification();
-            
-            // Poi controlla ogni 2 secondi (funziona solo se pagina aperta)
-            notificationCheckerInterval = setInterval(checkPendingTestNotification, 2000);
-        }
-        
-        async function checkPendingTestNotification() {
-            const pendingTime = localStorage.getItem('pendingTestNotification');
-            if (!pendingTime) return;
-            
-            const targetTime = parseInt(pendingTime);
-            const now = Date.now();
-            
-            // Se il tempo è passato, invia la notifica
-            if (now >= targetTime) {
-                console.log('⏰ Tempo scaduto! Invio notifica test...');
-                localStorage.removeItem('pendingTestNotification');
-                
-                // Ferma il checker
-                if (notificationCheckerInterval) {
-                    clearInterval(notificationCheckerInterval);
-                    notificationCheckerInterval = null;
-                }
-                
-                try {
-                    const reg = await navigator.serviceWorker.getRegistration();
-                    if (reg && Notification.permission === 'granted') {
-                        await reg.showNotification('⏰ Notifica Programmata!', {
-                            body: '🎉 Funziona! Questa notifica era programmata 10 secondi fa.',
-                            icon: './icons/icon-192x192.png',
-                            badge: './icons/icon-192x192.png',
-                            tag: 'test-scheduled',
-                            vibrate: [200, 100, 200, 100, 200],
-                            requireInteraction: true
-                        });
-                        console.log('✅ Notifica test inviata!');
-                    }
-                } catch (e) {
-                    console.error('Errore invio notifica:', e);
-                }
-            } else {
-                const remaining = Math.ceil((targetTime - now) / 1000);
-                console.log(`⏳ Notifica test tra ${remaining} secondi...`);
-            }
-        }
-        
-        // Controlla notifiche pendenti all'apertura della pagina
-        document.addEventListener('DOMContentLoaded', () => {
-            const pendingTime = localStorage.getItem('pendingTestNotification');
-            if (pendingTime) {
-                console.log('📬 Trovata notifica test pendente, avvio checker...');
-                startNotificationChecker();
-            }
-        });
-        
-        // Mostra stato notifiche
-        async function mostraStatoNotifiche() {
-            const statusDiv = document.getElementById('notif-status');
-            statusDiv.style.display = 'block';
-            statusDiv.innerHTML = '<p>⏳ Caricamento stato...</p>';
-            
-            let html = '<h4 style="margin: 0 0 1rem 0; color: #60a5fa;">📊 Stato Sistema Notifiche</h4>';
-            
-            // Permesso
-            const perm = Notification.permission;
-            const permIcon = perm === 'granted' ? '✅' : perm === 'denied' ? '❌' : '⚠️';
-            const permText = perm === 'granted' ? 'Autorizzato' : perm === 'denied' ? 'BLOCCATO (abilita nelle impostazioni!)' : 'Non richiesto';
-            html += `<p><strong>1. Permesso notifiche:</strong> ${permIcon} ${permText}</p>`;
-            
-            // Service Worker
-            const swReg = await navigator.serviceWorker.getRegistration();
-            const swActive = swReg && swReg.active;
-            const swController = navigator.serviceWorker.controller;
-            const swIcon = swActive ? '✅' : '❌';
-            html += `<p><strong>2. Service Worker:</strong> ${swIcon} ${swActive ? 'Attivo' : 'NON ATTIVO'}</p>`;
-            html += `<p style="font-size: 0.75rem; opacity: 0.7; margin-left: 1rem;">Controller: ${swController ? '✅' : '❌'} | Active: ${swActive ? '✅' : '❌'}</p>`;
-            
-            // Player data
-            const playerData = sessionStorage.getItem('playerData');
-            const playerIcon = playerData ? '✅' : '❌';
-            html += `<p><strong>3. Login:</strong> ${playerIcon} ${playerData ? 'Loggato' : 'NON LOGGATO'}</p>`;
-            
-            // Ultimo scheduling
-            const lastSchedule = localStorage.getItem('lastNotificationSchedule') || 'Mai';
-            const oggi = new Date().toDateString();
-            const schedIcon = lastSchedule === oggi ? '✅' : '⚠️';
-            html += `<p><strong>4. Scheduling oggi:</strong> ${schedIcon} ${lastSchedule}</p>`;
-            
-            // Notifiche pendenti in IndexedDB
-            html += `<p><strong>5. Notifiche salvate:</strong> <span id="pending-count">⏳</span></p>`;
-            
-            // Chiedi al SW quante notifiche ci sono
-            if (swActive) {
-                try {
-                    // Messaggio al SW per ottenere count
-                    const messageChannel = new MessageChannel();
-                    messageChannel.port1.onmessage = (event) => {
-                        const countEl = document.getElementById('pending-count');
-                        if (countEl && event.data.count !== undefined) {
-                            countEl.textContent = `${event.data.count} notifiche pendenti`;
-                        }
-                    };
-                    swActive.postMessage({ type: 'GET_PENDING_COUNT' }, [messageChannel.port2]);
-                } catch(e) {
-                    console.log('Errore comunicazione SW:', e);
-                }
-            }
-            
-            // Riepilogo
-            const tuttoOk = perm === 'granted' && swActive && playerData;
-            if (tuttoOk) {
-                html += `<p style="color: #22c55e; margin-top: 1rem;"><strong>✅ SISTEMA OK!</strong></p>`;
-                html += `<p style="font-size: 0.85rem;">Prova: clicca "🔔 Testa" per una notifica immediata, oppure "🔄 Reset" per una tra 30 secondi.</p>`;
-            } else {
-                html += `<p style="color: #f59e0b; margin-top: 1rem;"><strong>⚠️ PROBLEMI:</strong></p><ul style="color: #f59e0b; margin-left: 1rem; font-size: 0.85rem;">`;
-                if (perm === 'denied') html += `<li>⛔ Notifiche BLOCCATE - vai in Impostazioni del telefono → App → Browser → Notifiche → Abilita</li>`;
-                else if (perm !== 'granted') html += `<li>Clicca "🔔 Testa" per abilitare le notifiche</li>`;
-                if (!swActive) html += `<li>Ricarica la pagina (pull down) per attivare il SW</li>`;
-                if (!playerData) html += `<li>Effettua il login dalla pagina principale</li>`;
-                html += `</ul>`;
-            }
-            
-            // Ora corrente
-            html += `<p style="margin-top: 1rem; opacity: 0.7; font-size: 0.8rem;"><strong>Ora:</strong> ${new Date().toLocaleString('it-IT')}</p>`;
-            
-            statusDiv.innerHTML = html;
         }
     </script>
 </body>

@@ -596,6 +596,17 @@
                 </div>
             </div>
 
+            <!-- Test Notifiche (solo admin) -->
+            <div class="glass-card">
+                <h3>🔔 Test Notifiche</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.9rem;">Invia una notifica di test per verificare che il sistema funzioni.</p>
+                <div class="action-buttons">
+                    <button class="action-btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white;" onclick="testNotificaAdmin()">🧪 Invia Notifica Test</button>
+                    <button class="action-btn" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%); color: white;" onclick="mostraStatoNotificheAdmin()">📊 Stato Sistema</button>
+                </div>
+                <div id="notif-status-admin" style="margin-top: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.3); border-radius: 10px; font-size: 0.85rem; display: none;"></div>
+            </div>
+
             <div style="text-align: center;">
                 <a href="index.html" class="back-btn">← Torna alla Home</a>
             </div>
@@ -606,7 +617,7 @@
         <p>⚾ © 2026 Lancers Baseball Club - Serie B</p>
     </footer>
 
-    <script src="script.js?v=36"></script>
+    <script src="script.js?v=37"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
@@ -1003,6 +1014,91 @@
             body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTotale disponibili: ${presentList.length + maybeList.length}/${allPlayers.length}`;
 
             window.open(`mailto:${STAFF_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+        }
+
+        // ==========================================
+        // 🔔 TEST NOTIFICHE (solo admin)
+        // ==========================================
+        
+        async function testNotificaAdmin() {
+            const statusDiv = document.getElementById('notif-status-admin');
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '<p>⏳ Invio notifica test...</p>';
+            
+            if (!('Notification' in window)) {
+                statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Browser non supporta le notifiche</p>';
+                return;
+            }
+            
+            if (Notification.permission === 'default') {
+                const perm = await Notification.requestPermission();
+                if (perm !== 'granted') {
+                    statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Devi autorizzare le notifiche</p>';
+                    return;
+                }
+            }
+            
+            if (Notification.permission === 'denied') {
+                statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Notifiche bloccate. Vai nelle impostazioni del browser.</p>';
+                return;
+            }
+            
+            try {
+                const registration = await navigator.serviceWorker.ready;
+                await registration.showNotification('⚾ Test Lancers!', {
+                    body: '✅ Le notifiche funzionano! Questo è un test dalla pagina admin.',
+                    icon: './icons/icon-192x192.png',
+                    badge: './icons/icon-192x192.png',
+                    tag: 'admin-test-' + Date.now(),
+                    vibrate: [200, 100, 200],
+                    requireInteraction: false
+                });
+                statusDiv.innerHTML = '<p style="color: #22c55e;">✅ Notifica inviata con successo!</p>';
+            } catch (e) {
+                console.error('Errore notifica:', e);
+                statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Errore: ' + e.message + '</p>';
+            }
+        }
+        
+        async function mostraStatoNotificheAdmin() {
+            const statusDiv = document.getElementById('notif-status-admin');
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '<p>⏳ Caricamento stato...</p>';
+            
+            let html = '<h4 style="margin: 0 0 1rem 0; color: #ed8936;">📊 Stato Sistema Notifiche</h4>';
+            
+            // Permesso
+            const perm = Notification.permission;
+            const permIcon = perm === 'granted' ? '✅' : perm === 'denied' ? '❌' : '⚠️';
+            const permText = perm === 'granted' ? 'Autorizzato' : perm === 'denied' ? 'BLOCCATO' : 'Non richiesto';
+            html += `<p><strong>1. Permesso:</strong> ${permIcon} ${permText}</p>`;
+            
+            // Service Worker
+            const swReg = await navigator.serviceWorker.getRegistration();
+            const swActive = swReg && swReg.active;
+            const swIcon = swActive ? '✅' : '❌';
+            html += `<p><strong>2. Service Worker:</strong> ${swIcon} ${swActive ? 'Attivo' : 'NON ATTIVO'}</p>`;
+            
+            // Player data
+            const playerData = sessionStorage.getItem('playerData');
+            const playerIcon = playerData ? '✅' : '❌';
+            html += `<p><strong>3. Login:</strong> ${playerIcon} ${playerData ? 'Loggato' : 'NON LOGGATO'}</p>`;
+            
+            // Ultimo scheduling
+            const lastSchedule = localStorage.getItem('lastNotificationSchedule') || 'Mai';
+            html += `<p><strong>4. Ultimo scheduling:</strong> ${lastSchedule}</p>`;
+            
+            // Riepilogo
+            const tuttoOk = perm === 'granted' && swActive && playerData;
+            if (tuttoOk) {
+                html += `<p style="color: #22c55e; margin-top: 1rem;"><strong>✅ SISTEMA OK!</strong></p>`;
+            } else {
+                html += `<p style="color: #f59e0b; margin-top: 1rem;"><strong>⚠️ Alcuni componenti non attivi</strong></p>`;
+            }
+            
+            html += `<p style="margin-top: 1rem; opacity: 0.7; font-size: 0.8rem;"><strong>Ora:</strong> ${new Date().toLocaleString('it-IT')}</p>`;
+            
+            statusDiv.innerHTML = html;
         }
 
         // Init

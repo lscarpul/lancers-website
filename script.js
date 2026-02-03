@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v36 =====
-const APP_VERSION = '36';
+// ===== SCRIPT.JS v37 =====
+const APP_VERSION = '37';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -145,9 +145,6 @@ document.head.appendChild(style);
 
 // ===== DATABASE EVENTI =====
 const allEvents = [
-    // 🧪 TEST NOTIFICA - Evento speciale per test (notifica tra 5 minuti)
-    { date: '2026-02-03', type: 'event', title: '🧪 TEST Notifica', time: '⏰ Test tra 5 min', tag: '🧪 TEST' },
-    
     // FEBBRAIO 2026 (dal 3 febbraio in poi)
     { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-04', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
@@ -530,9 +527,6 @@ async function initNotificationSystem(registration) {
         // Controlla notifiche pendenti in localStorage (sistema catch-up fallback)
         await checkLocalPendingNotifications();
         
-        // 🧪 TEST: Programma notifica di test tra 5 minuti
-        scheduleTestNotification();
-        
         // Schedula nuove notifiche solo se non già fatto in questa sessione
         if (!notificationsScheduledThisSession) {
             await schedulePresenceReminders();
@@ -607,67 +601,6 @@ async function initFCM() {
         console.error('❌ Errore inizializzazione FCM (non bloccante):', e);
         return false;
     }
-}
-
-// ==========================================
-// 🧪 TEST NOTIFICA - Programma tra 1 minuto
-// ==========================================
-
-function scheduleTestNotification() {
-    // Evita di programmare se già fatto in questa sessione
-    const testKey = 'testNotificationScheduled';
-    const lastTest = localStorage.getItem(testKey);
-    const now = Date.now();
-    
-    // Permetti un nuovo test solo ogni 2 minuti
-    if (lastTest && (now - parseInt(lastTest)) < 2 * 60 * 1000) {
-        console.log('🧪 Test notifica già programmato di recente, skippo');
-        return;
-    }
-    
-    const oneMinuteFromNow = now + (60 * 1000); // 1 minuto
-    const notifTag = 'test-notification-' + now;
-    
-    console.log('🧪 ========================================');
-    console.log('🧪 TEST NOTIFICA PROGRAMMATA!');
-    console.log('🧪 Ora attuale:', new Date().toLocaleTimeString());
-    console.log('🧪 Notifica prevista:', new Date(oneMinuteFromNow).toLocaleTimeString());
-    console.log('🧪 ========================================');
-    
-    // Salva in IndexedDB tramite Service Worker (più affidabile)
-    if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-            type: 'SCHEDULE_NOTIFICATION',
-            payload: {
-                title: '🧪 TEST - Lancers Baseball',
-                body: '✅ Le notifiche funzionano! Questa è una notifica di test programmata.',
-                scheduledTime: oneMinuteFromNow,
-                eventDate: new Date().toLocaleDateString('it-IT'),
-                eventType: 'test',
-                tag: notifTag
-            }
-        });
-        console.log('🧪 Notifica inviata al Service Worker per scheduling');
-    }
-    
-    // Salva anche in localStorage come backup
-    scheduleLocalNotification(
-        '🧪 TEST - Lancers Baseball',
-        '✅ Le notifiche funzionano! Questa è una notifica di test.',
-        oneMinuteFromNow,
-        notifTag
-    );
-    
-    // Marca come programmato
-    localStorage.setItem(testKey, now.toString());
-    
-    // Avvia il check periodico persistente
-    startPersistentNotificationCheck();
-    
-    // Mostra anche un alert per conferma
-    const timeStr = new Date().toLocaleTimeString();
-    const targetStr = new Date(oneMinuteFromNow).toLocaleTimeString();
-    alert('🧪 TEST NOTIFICA PROGRAMMATA!\n\nRiceverai una notifica tra 1 MINUTO.\n\nOra: ' + timeStr + '\nNotifica: ' + targetStr + '\n\n✅ Puoi anche chiudere questa pagina, la notifica arriverà comunque!');
 }
 
 // ==========================================
