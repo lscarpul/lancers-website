@@ -31,6 +31,60 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'login.html';
         });
     }
+    
+    // Pulsante per cancellare cache e aggiornare app
+    const clearDataBtn = document.getElementById('clearDataBtn');
+    if (clearDataBtn) {
+        clearDataBtn.addEventListener('click', async function() {
+            const conferma = confirm(
+                '🔄 Aggiornamento App\n\n' +
+                'Questo cancellerà:\n' +
+                '• Cache del browser\n' +
+                '• Service Worker\n' +
+                '• Dati temporanei\n\n' +
+                'NON cancellerà le tue presenze salvate.\n\n' +
+                'Vuoi procedere?'
+            );
+            
+            if (conferma) {
+                try {
+                    // 1. Cancella le cache del service worker
+                    if ('caches' in window) {
+                        const cacheNames = await caches.keys();
+                        await Promise.all(cacheNames.map(name => caches.delete(name)));
+                        console.log('✅ Cache cancellate');
+                    }
+                    
+                    // 2. Disregistra i service worker
+                    if ('serviceWorker' in navigator) {
+                        const registrations = await navigator.serviceWorker.getRegistrations();
+                        for (const registration of registrations) {
+                            await registration.unregister();
+                        }
+                        console.log('✅ Service Worker rimossi');
+                    }
+                    
+                    // 3. Cancella sessionStorage (ma mantieni autenticazione)
+                    const authStatus = localStorage.getItem('authenticated');
+                    const playerData = localStorage.getItem('playerData');
+                    sessionStorage.clear();
+                    
+                    // Ripristina autenticazione
+                    if (authStatus) localStorage.setItem('authenticated', authStatus);
+                    if (playerData) localStorage.setItem('playerData', playerData);
+                    
+                    alert('✅ Cache cancellata!\n\nLa pagina si ricaricherà per applicare gli aggiornamenti.');
+                    
+                    // 4. Ricarica forzata della pagina (bypass cache)
+                    window.location.reload(true);
+                    
+                } catch (error) {
+                    console.error('Errore durante la pulizia:', error);
+                    alert('❌ Errore durante la pulizia.\n\nProva a ricaricare la pagina manualmente.');
+                }
+            }
+        });
+    }
 });
 
 // ===== HAMBURGER MENU =====
