@@ -121,6 +121,9 @@ document.head.appendChild(style);
 
 // ===== DATABASE EVENTI =====
 const allEvents = [
+    // 🧪 TEST NOTIFICA - Evento speciale per test (notifica tra 5 minuti)
+    { date: '2026-02-03', type: 'event', title: '🧪 TEST Notifica', time: '⏰ Test tra 5 min', tag: '🧪 TEST' },
+    
     // FEBBRAIO 2026 (dal 3 febbraio in poi)
     { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-04', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
@@ -502,6 +505,9 @@ async function initNotificationSystem(registration) {
         // Controlla notifiche pendenti in localStorage (sistema catch-up fallback)
         await checkLocalPendingNotifications();
         
+        // 🧪 TEST: Programma notifica di test tra 5 minuti
+        scheduleTestNotification();
+        
         // Schedula nuove notifiche solo se non già fatto in questa sessione
         if (!notificationsScheduledThisSession) {
             await schedulePresenceReminders();
@@ -576,6 +582,55 @@ async function initFCM() {
         console.error('❌ Errore inizializzazione FCM (non bloccante):', e);
         return false;
     }
+}
+
+// ==========================================
+// 🧪 TEST NOTIFICA - Programma tra 5 minuti
+// ==========================================
+
+function scheduleTestNotification() {
+    // Evita di programmare se già fatto in questa sessione
+    const testKey = 'testNotificationScheduled';
+    const lastTest = localStorage.getItem(testKey);
+    const now = Date.now();
+    
+    // Permetti un nuovo test solo ogni 10 minuti
+    if (lastTest && (now - parseInt(lastTest)) < 10 * 60 * 1000) {
+        console.log('🧪 Test notifica già programmato di recente, skippo');
+        return;
+    }
+    
+    const fiveMinutesFromNow = now + (5 * 60 * 1000); // 5 minuti
+    
+    console.log('🧪 ========================================');
+    console.log('🧪 TEST NOTIFICA PROGRAMMATA!');
+    console.log('🧪 Ora attuale:', new Date().toLocaleTimeString());
+    console.log('🧪 Notifica prevista:', new Date(fiveMinutesFromNow).toLocaleTimeString());
+    console.log('🧪 ========================================');
+    
+    // Salva in localStorage per il check periodico
+    scheduleLocalNotification(
+        '🧪 TEST - Lancers Baseball',
+        '✅ Le notifiche funzionano! Questa è una notifica di test.',
+        fiveMinutesFromNow,
+        'test-notification-' + now
+    );
+    
+    // Marca come programmato
+    localStorage.setItem(testKey, now.toString());
+    
+    // Imposta anche un timeout JavaScript come backup
+    setTimeout(async () => {
+        console.log('🧪 ⏰ TIMEOUT SCADUTO - Invio notifica test!');
+        await sendLocalNotification(
+            '🧪 TEST - Lancers Baseball',
+            '✅ Le notifiche funzionano! (via timeout)',
+            'test-timeout-' + now
+        );
+    }, 5 * 60 * 1000);
+    
+    // Mostra anche un alert per conferma
+    alert('🧪 TEST NOTIFICA PROGRAMMATA!\n\nRiceverai una notifica tra 5 minuti.\n\nOra: ' + new Date().toLocaleTimeString() + '\nNotifica: ' + new Date(fiveMinutesFromNow).toLocaleTimeString() + '\n\n⚠️ Tieni il browser aperto (può essere in background)');
 }
 
 // ==========================================
