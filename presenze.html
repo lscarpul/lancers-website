@@ -315,6 +315,9 @@
     <script>
         // Numero WhatsApp dello staff (formato internazionale senza +)
         const WHATSAPP_NUMBER = '393331549353';
+        
+        // Firebase URL
+        const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
 
         // Database eventi (stesso di script.js)
         const allEvents = [
@@ -440,25 +443,61 @@
             showConfirmation(response);
         }
 
-        // Salva la risposta in localStorage
-        function saveResponse(eventDate, response) {
+        // Salva la risposta in Firebase + localStorage
+        async function saveResponse(eventDate, response) {
             const playerData = JSON.parse(sessionStorage.getItem('playerData'));
             if (!playerData) return;
             
-            const storageKey = `presence_${playerData.number}`;
-            let responses = JSON.parse(localStorage.getItem(storageKey) || '{}');
-            responses[eventDate] = {
+            const presenceData = {
                 response: response,
                 timestamp: new Date().toISOString()
             };
+            
+            // Salva su Firebase
+            try {
+                const dateKey = eventDate.replace(/-/g, '');
+                const url = `${FIREBASE_URL}/presences/player_${playerData.number}/${dateKey}.json`;
+                await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(presenceData)
+                });
+                console.log('✅ Presenza salvata su Firebase');
+            } catch (error) {
+                console.error('❌ Errore salvataggio Firebase:', error);
+            }
+            
+            // Salva anche in localStorage come backup
+            const storageKey = `presence_${playerData.number}`;
+            let responses = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            responses[eventDate] = presenceData;
             localStorage.setItem(storageKey, JSON.stringify(responses));
         }
 
-        // Ottieni le risposte salvate da localStorage
-        function getSavedResponses() {
+        // Ottieni le risposte salvate da Firebase (con fallback localStorage)
+        async function getSavedResponses() {
             const playerData = JSON.parse(sessionStorage.getItem('playerData'));
             if (!playerData) return {};
             
+            try {
+                const url = `${FIREBASE_URL}/presences/player_${playerData.number}.json`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data) {
+                    // Converti chiavi da 20260203 a 2026-02-03
+                    const converted = {};
+                    Object.entries(data).forEach(([key, value]) => {
+                        const dateKey = key.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+                        converted[dateKey] = value;
+                    });
+                    return converted;
+                }
+            } catch (error) {
+                console.error('Errore caricamento Firebase, uso localStorage:', error);
+            }
+            
+            // Fallback a localStorage
             const storageKey = `presence_${playerData.number}`;
             return JSON.parse(localStorage.getItem(storageKey) || '{}');
         }
@@ -499,7 +538,7 @@
         }
 
         // Genera il contenuto della pagina
-        function generateContent() {
+        async function generateContent() {
             const container = document.getElementById('presenceSection');
             const playerData = sessionStorage.getItem('playerData');
             const nextEvent = getNextEvent();
@@ -516,8 +555,17 @@
                 return;
             }
             
+            // Mostra loading mentre carica da Firebase
+            container.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 2rem; animation: spin 1s linear infinite;">⚾</div>
+                    <p style="color: #718096; margin-top: 1rem;">Caricamento...</p>
+                </div>
+                <style>@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
+            `;
+            
             const player = JSON.parse(playerData);
-            const savedResponses = getSavedResponses();
+            const savedResponses = await getSavedResponses();
             
             if (!nextEvent) {
                 container.innerHTML = `

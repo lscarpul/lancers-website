@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v32 =====
-const APP_VERSION = '32';
+// ===== SCRIPT.JS v33 =====
+const APP_VERSION = '33';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -278,7 +278,7 @@ async function saveEventPresence(date, status, btn) {
         } else {
             const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
             const payload = { response: status, timestamp: new Date().toISOString() };
-            await fetch(`${baseUrl}/presenze/${player.number}/${date.replace(/\-/g, '_')}.json`, {
+            await fetch(`${baseUrl}/presences/player_${player.number}/${date.replace(/\-/g, '')}.json`, {
                 method: 'PUT',
                 body: JSON.stringify(payload)
             });
@@ -317,11 +317,13 @@ async function loadEventPresenceStatus() {
             responses = await LancersDB.getPlayer(player.number);
         } else {
             const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
-            const res = await fetch(`${baseUrl}/presenze/${player.number}.json`);
+            const res = await fetch(`${baseUrl}/presences/player_${player.number}.json`);
             const data = await res.json();
             if (data) {
                 Object.entries(data).forEach(([dateKey, value]) => {
-                    responses[dateKey.replace(/_/g, '-')] = value;
+                    // dateKey is like '20260203', convert to '2026-02-03'
+                    const formattedKey = dateKey.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+                    responses[formattedKey] = value;
                 });
             }
         }
@@ -704,9 +706,19 @@ async function checkLocalPendingNotifications() {
         
         for (const notif of notifications) {
             if (notif.time <= now) {
-                // Notifica scaduta - inviali subito!
-                console.log(`⏰ Notifica scaduta trovata: ${notif.title}`);
-                await sendLocalNotification(notif.title, notif.body, notif.tag);
+                // Notifica scaduta - INVIALE SUBITO anche se in ritardo!
+                const delayMinutes = Math.round((now - notif.time) / 60000);
+                console.log(`⏰ Notifica in ritardo di ${delayMinutes} min - invio ora: ${notif.title}`);
+                
+                // Modifica il titolo per indicare che è in ritardo se > 5 min
+                let title = notif.title;
+                let body = notif.body;
+                if (delayMinutes > 5) {
+                    title = '⏰ ' + title.replace(/^[^\s]+\s/, ''); // Rimuovi emoji iniziale
+                    body = '(Notifica in ritardo) ' + body;
+                }
+                
+                await sendLocalNotification(title, body, notif.tag);
                 sentCount++;
             } else if (notif.time > now + (7 * 24 * 60 * 60 * 1000)) {
                 // Notifica troppo vecchia (> 7 giorni nel futuro), scarta
@@ -1003,7 +1015,7 @@ async function schedulePresenceReminders() {
     // Carica le presenze già inserite
     let existingPresences = {};
     try {
-        const response = await fetch(`https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app/presenze/${player.number}.json`);
+        const response = await fetch(`https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app/presences/player_${player.number}.json`);
         existingPresences = await response.json() || {};
     } catch (e) {
         console.log('Utilizzo presenze locali');
