@@ -121,31 +121,7 @@ document.head.appendChild(style);
 
 // ===== DATABASE EVENTI =====
 const allEvents = [
-    // ===== TEST NOTIFICHE - Per verificare che funzionino =====
-    // Allenamento OGGI per test immediato
-    { date: '2026-02-01', type: 'training', title: '🧪 TEST Allenamento OGGI', time: '🕐 21:00', tag: '🧪 TEST' },
-    // Allenamento domani (2 Feb) - notifica alle 15:30 di domani
-    { date: '2026-02-02', type: 'training', title: '🧪 TEST Allenamento Domani', time: '🕐 19:30', tag: '🧪 TEST' },
-    // Partita domani (2 Feb) - notifiche 1 Feb ore 10:00
-    { date: '2026-02-02', type: 'friendly', title: '🧪 TEST Partita Domani', time: '🕐 15:00', tag: '🧪 TEST' },
-    // Partita tra 3 giorni (4 Feb) - notifiche il 1, 2, 3 Feb alle 10:00
-    { date: '2026-02-04', type: 'match-home', title: '🧪 TEST Partita 3gg', time: '🕐 11:00', tag: '🧪 TEST' },
-    
-    // DICEMBRE 2025
-    { date: '2025-12-23', type: 'event', title: 'Partita dei Babbi Natale', time: '🎅 Evento Speciale', tag: '🎄 Evento' },
-    { date: '2025-12-30', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    
-    // GENNAIO 2026
-    { date: '2026-01-03', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
-    { date: '2026-01-08', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-01-13', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-01-15', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-01-20', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-01-22', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-01-27', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-01-29', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    
-    // FEBBRAIO 2026
+    // FEBBRAIO 2026 (dal 3 febbraio in poi)
     { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-04', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-02-05', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
