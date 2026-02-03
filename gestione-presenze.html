@@ -426,6 +426,46 @@
             color: white;
         }
 
+        /* Admin Action Buttons */
+        .admin-actions {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .admin-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0.5;
+        }
+
+        .admin-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .admin-btn.active {
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-btn.yes { background: rgba(34, 197, 94, 0.3); }
+        .admin-btn.yes:hover, .admin-btn.yes.active { background: rgba(34, 197, 94, 0.6); }
+        .admin-btn.maybe { background: rgba(234, 179, 8, 0.3); }
+        .admin-btn.maybe:hover, .admin-btn.maybe.active { background: rgba(234, 179, 8, 0.6); }
+        .admin-btn.no { background: rgba(239, 68, 68, 0.3); }
+        .admin-btn.no:hover, .admin-btn.no.active { background: rgba(239, 68, 68, 0.6); }
+
+        .admin-btn.saving {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
         /* Back Button */
         .back-btn {
             display: inline-flex;
@@ -775,20 +815,51 @@
             // Prossimo evento
             loadNextEvent();
 
-            // Popola select eventi (include mercoledì specifici)
+            // Popola select eventi (include mercoledì specifici E eventi passati)
             const eventSelect = document.getElementById('eventSelect');
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const allEventsWithWed = getAllEventsWithWednesdays();
-            eventSelect.innerHTML = '<option value="">-- Seleziona un evento --</option>';
-            allEventsWithWed.forEach((event, index) => {
+            
+            // Separa eventi futuri e passati
+            const futureEvents = [];
+            const pastEvents = [];
+            
+            allEventsWithWed.forEach((event) => {
                 const eventDate = new Date(event.date);
                 if (eventDate >= today) {
+                    futureEvents.push(event);
+                } else {
+                    pastEvents.push(event);
+                }
+            });
+            
+            // Ordina eventi passati dal più recente
+            pastEvents.sort((a, b) => b.date.localeCompare(a.date));
+            
+            eventSelect.innerHTML = '<option value="">-- Seleziona un evento --</option>';
+            
+            // Prima gli eventi futuri
+            if (futureEvents.length > 0) {
+                eventSelect.innerHTML += '<optgroup label="📅 Eventi Futuri">';
+                futureEvents.forEach((event) => {
                     const isWed = event.type === 'wednesday-specific';
                     const label = isWed ? `🎯 ${formatDate(event.date)} - ${event.title}` : `${formatDate(event.date)} - ${event.title}`;
                     eventSelect.innerHTML += `<option value="${event.date}" data-type="${event.type}">${label}</option>`;
-                }
-            });
+                });
+                eventSelect.innerHTML += '</optgroup>';
+            }
+            
+            // Poi gli eventi passati
+            if (pastEvents.length > 0) {
+                eventSelect.innerHTML += '<optgroup label="📜 Eventi Passati">';
+                pastEvents.forEach((event) => {
+                    const isWed = event.type === 'wednesday-specific';
+                    const label = isWed ? `🎯 ${formatDate(event.date)} - ${event.title}` : `${formatDate(event.date)} - ${event.title}`;
+                    eventSelect.innerHTML += `<option value="${event.date}" data-type="${event.type}">${label}</option>`;
+                });
+                eventSelect.innerHTML += '</optgroup>';
+            }
 
             // Statistiche giocatori
             loadPlayerStats();
@@ -933,17 +1004,22 @@
 
                 <table class="players-table">
                     <thead>
-                        <tr><th>#</th><th>Giocatore</th><th>Ruolo</th><th>Stato</th></tr>
+                        <tr><th>#</th><th>Giocatore</th><th>Ruolo</th><th>Stato</th><th>Azioni Admin</th></tr>
                     </thead>
                     <tbody>
                         ${[...presentList, ...maybeList, ...absentList, ...pendingList].map(p => `
-                            <tr>
+                            <tr id="row-${p.number}-${event.date.replace(/-/g, '_')}">
                                 <td><span class="player-number">${p.number}</span></td>
                                 <td>${p.name} ${p.surname}</td>
                                 <td>${p.role}</td>
-                                <td><span class="status-badge ${p.status === 'yes' ? 'present' : p.status === 'maybe' ? 'maybe' : p.status === 'no' ? 'absent' : 'pending'}">
+                                <td><span class="status-badge ${p.status === 'yes' ? 'present' : p.status === 'maybe' ? 'maybe' : p.status === 'no' ? 'absent' : 'pending'}" id="status-${p.number}-${event.date.replace(/-/g, '_')}">
                                     ${p.status === 'yes' ? '✅ Presente' : p.status === 'maybe' ? '⚠️ Forse' : p.status === 'no' ? '❌ Assente' : '⏳ In attesa'}
                                 </span></td>
+                                <td class="admin-actions">
+                                    <button class="admin-btn yes ${p.status === 'yes' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'yes')" title="Presente">✅</button>
+                                    <button class="admin-btn maybe ${p.status === 'maybe' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'maybe')" title="Forse">⚠️</button>
+                                    <button class="admin-btn no ${p.status === 'no' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'no')" title="Assente">❌</button>
+                                </td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -956,9 +1032,9 @@
             const playerStatsHtml = allPlayers.map(player => {
                 let present = 0, maybe = 0, absent = 0;
                 
-                const playerKey = `player_${player.number}`;
-                if (presencesCache[playerKey]) {
-                    Object.values(presencesCache[playerKey]).forEach(response => {
+                // Cerca con il numero diretto
+                if (presencesCache[player.number]) {
+                    Object.values(presencesCache[player.number]).forEach(response => {
                         if (response.response === 'yes') present++;
                         else if (response.response === 'maybe') maybe++;
                         else if (response.response === 'no') absent++;
@@ -987,6 +1063,106 @@
             }).join('');
 
             document.getElementById('playerStats').innerHTML = `<div class="players-grid">${playerStatsHtml}</div>`;
+        }
+        
+        // ==========================================
+        // 🔐 ADMIN: Imposta presenza per un giocatore
+        // ==========================================
+        async function setPresenceAdmin(playerNumber, eventDate, response) {
+            const dateKey = eventDate.replace(/-/g, '_');
+            const rowId = `row-${playerNumber}-${dateKey}`;
+            const statusId = `status-${playerNumber}-${dateKey}`;
+            
+            // Trova i pulsanti e li mette in stato "saving"
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.querySelectorAll('.admin-btn').forEach(btn => btn.classList.add('saving'));
+            }
+            
+            const presenceData = {
+                response: response,
+                timestamp: new Date().toISOString(),
+                setByAdmin: true
+            };
+            
+            try {
+                // Salva su Firebase
+                const url = `${FIREBASE_URL}/presenze/${playerNumber}/${dateKey}.json`;
+                const res = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(presenceData)
+                });
+                
+                if (!res.ok) throw new Error('Errore salvataggio');
+                
+                // Aggiorna cache locale
+                if (!presencesCache[playerNumber]) {
+                    presencesCache[playerNumber] = {};
+                }
+                presencesCache[playerNumber][dateKey] = presenceData;
+                
+                // Aggiorna UI - stato badge
+                const statusBadge = document.getElementById(statusId);
+                if (statusBadge) {
+                    statusBadge.className = `status-badge ${response === 'yes' ? 'present' : response === 'maybe' ? 'maybe' : 'absent'}`;
+                    statusBadge.innerHTML = response === 'yes' ? '✅ Presente' : response === 'maybe' ? '⚠️ Forse' : '❌ Assente';
+                }
+                
+                // Aggiorna pulsanti attivi
+                if (row) {
+                    row.querySelectorAll('.admin-btn').forEach(btn => {
+                        btn.classList.remove('saving', 'active');
+                        if (btn.classList.contains(response)) {
+                            btn.classList.add('active');
+                        }
+                    });
+                }
+                
+                // Aggiorna contatori nell'event card
+                updateEventCounters(eventDate);
+                
+            } catch (error) {
+                console.error('Errore salvataggio presenza admin:', error);
+                alert('Errore nel salvataggio. Riprova.');
+                
+                // Rimuovi stato saving
+                if (row) {
+                    row.querySelectorAll('.admin-btn').forEach(btn => btn.classList.remove('saving'));
+                }
+            }
+        }
+        
+        // Aggiorna i contatori nell'event card dopo modifica
+        function updateEventCounters(eventDate) {
+            const allEventsWithWed = getAllEventsWithWednesdays();
+            const event = allEventsWithWed.find(e => e.date === eventDate);
+            if (!event) return;
+            
+            const relevantPlayers = getPlayersForEvent(event);
+            let present = 0, maybe = 0, absent = 0, pending = 0;
+            
+            relevantPlayers.forEach(player => {
+                const status = getPlayerPresence(player.number, eventDate);
+                if (status === 'yes') present++;
+                else if (status === 'maybe') maybe++;
+                else if (status === 'no') absent++;
+                else pending++;
+            });
+            
+            // Aggiorna i badge nell'event card
+            const eventCard = document.querySelector('#eventDetails .event-card');
+            if (eventCard) {
+                const stats = eventCard.querySelector('.event-stats');
+                if (stats) {
+                    stats.innerHTML = `
+                        <span class="status-badge present">✅ ${present}</span>
+                        <span class="status-badge maybe">⚠️ ${maybe}</span>
+                        <span class="status-badge absent">❌ ${absent}</span>
+                        <span class="status-badge pending">⏳ ${pending}</span>
+                    `;
+                }
+            }
         }
 
         // Invia WhatsApp
