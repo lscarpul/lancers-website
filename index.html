@@ -95,16 +95,7 @@
         
         async function checkPresenceReminder(player) {
             // Verifica se c'è un evento nelle prossime 72 ore senza risposta
-            // NOTA: Assicurati che queste date siano allineate col calendario
-            const allEvents = [
-                { date: '2026-02-03', title: 'Allenamento', time: '19:30 - 21:30' },
-                { date: '2026-02-04', title: 'Allenamento Specifico', time: 'Sessione tecnica' },
-                { date: '2026-02-05', title: 'Allenamento', time: '19:30 - 21:30' },
-                { date: '2026-02-10', title: 'Allenamento', time: '19:30 - 21:30' },
-                { date: '2026-02-12', title: 'Allenamento', time: '19:30 - 21:30' },
-                { date: '2026-03-01', title: 'Amichevole Interna', time: 'Domenica' },
-                { date: '2026-04-12', title: 'vs Health & Performance S.S.D', time: '11:00' }
-            ];
+            // Usa allEvents dal file script.js (già caricato)
             
             const now = new Date();
             const hoursAhead = 72; // Controlla eventi nelle prossime 72 ore
@@ -285,6 +276,6 @@
         <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
     </footer>
     <script src="firebase-config.js"></script>
-    <script src="script.js?v=38"></script>
+    <script src="script.js?v=39"></script>
 </body>
 </html>

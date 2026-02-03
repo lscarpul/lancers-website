@@ -617,7 +617,7 @@
         <p>⚾ © 2026 Lancers Baseball Club - Serie B</p>
     </footer>
 
-    <script src="script.js?v=38"></script>
+    <script src="script.js?v=39"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
@@ -650,35 +650,7 @@
             { number: 99, name: 'Victor', surname: 'Vergara', role: 'UTL' }
         ];
 
-        // Eventi (dal calendario aggiornato)
-        const allEvents = [
-            { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-04', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica' },
-            { date: '2026-02-05', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-07', type: 'tbd', title: 'Allenamento', time: 'Da definire' },
-            { date: '2026-02-10', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-11', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica' },
-            { date: '2026-02-12', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-14', type: 'tbd', title: 'Allenamento', time: 'Da definire' },
-            { date: '2026-02-17', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-18', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica' },
-            { date: '2026-02-19', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-21', type: 'tbd', title: 'Allenamento', time: 'Da definire' },
-            { date: '2026-02-24', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-25', type: 'specific', title: 'Allenamento Specifico', time: 'Sessione tecnica' },
-            { date: '2026-02-26', type: 'training', title: 'Allenamento', time: '19:30 - 21:30' },
-            { date: '2026-02-28', type: 'tbd', title: 'Allenamento', time: 'Da definire' },
-            { date: '2026-03-01', type: 'friendly', title: 'Amichevole Interna', time: 'Domenica' },
-            { date: '2026-03-08', type: 'friendly', title: 'vs Lucca/Phoenix/Castenaso', time: 'Domenica' },
-            { date: '2026-03-14', type: 'friendly', title: '@ Fortitudo', time: 'Sabato' },
-            { date: '2026-03-22', type: 'friendly', title: '@ Fiorentina', time: 'Domenica' },
-            { date: '2026-03-29', type: 'friendly', title: 'vs Arezzo', time: 'Domenica' },
-            { date: '2026-04-12', type: 'match-home', title: 'vs Health & Performance', time: '11:00' },
-            { date: '2026-04-19', type: 'match-away', title: '@ Livorno', time: '11:00' },
-            { date: '2026-04-26', type: 'match-home', title: 'vs Longbridge', time: '11:00' },
-            { date: '2026-05-03', type: 'match-away', title: '@ Colorno', time: '11:00' },
-            { date: '2026-05-10', type: 'match-home', title: 'vs Arezzo', time: '11:00' }
-        ];
+        // Usa allEvents dal file script.js (già caricato)
 
         // Cache presenze
         let presencesCache = {};
