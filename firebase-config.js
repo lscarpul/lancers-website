@@ -120,3 +120,209 @@ const LancersDB = {
         console.log('✅ Sincronizzazione completata');
     }
 };
+
+// ===== FIREBASE CLOUD MESSAGING (FCM) =====
+// Sistema per push notification quando l'app è chiusa
+
+const LancersFCM = {
+    messaging: null,
+    token: null,
+    swRegistration: null,
+    
+    // Inizializza FCM
+    async init() {
+        try {
+            console.log('🔔 Inizializzazione FCM...');
+            
+            // Verifica supporto
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                console.warn('⚠️ Push notifications non supportate');
+                return false;
+            }
+            
+            // Registra il service worker FCM
+            this.swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+                scope: './'
+            });
+            console.log('✅ Service Worker FCM registrato');
+            
+            // Attendi che sia attivo
+            await navigator.serviceWorker.ready;
+            console.log('✅ Service Worker FCM attivo');
+            
+            return true;
+        } catch (error) {
+            console.error('❌ Errore init FCM:', error);
+            return false;
+        }
+    },
+    
+    // Ottiene il token FCM per ricevere notifiche
+    async getToken() {
+        try {
+            // Chiedi permesso notifiche
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') {
+                console.warn('⚠️ Permesso notifiche negato');
+                return null;
+            }
+            
+            // Per un sistema semplificato senza Firebase SDK completo,
+            // usiamo il PushManager nativo
+            if (this.swRegistration) {
+                const subscription = await this.swRegistration.pushManager.getSubscription();
+                if (subscription) {
+                    this.token = JSON.stringify(subscription);
+                    console.log('✅ Token push esistente recuperato');
+                    return this.token;
+                }
+                
+                // Crea nuova sottoscrizione (richiede VAPID key per produzione)
+                // Per ora usiamo un token simulato basato sul browser
+                this.token = 'browser-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                console.log('✅ Token generato:', this.token);
+                return this.token;
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('❌ Errore getToken:', error);
+            return null;
+        }
+    },
+    
+    // Salva il token FCM su Firebase per il giocatore
+    async saveToken(playerNumber) {
+        if (!this.token) return false;
+        
+        try {
+            const url = `${FIREBASE_DB_URL}/fcm_tokens/${playerNumber}.json`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    token: this.token,
+                    updated: new Date().toISOString(),
+                    userAgent: navigator.userAgent
+                })
+            });
+            
+            if (response.ok) {
+                console.log('✅ Token FCM salvato per giocatore', playerNumber);
+                localStorage.setItem('fcm_token', this.token);
+                localStorage.setItem('fcm_player', playerNumber);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('❌ Errore salvataggio token:', error);
+            return false;
+        }
+    },
+    
+    // Gestisce notifiche in foreground
+    onForegroundMessage(callback) {
+        if (this.swRegistration) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
+                    callback(event.data.payload);
+                }
+            });
+        }
+    },
+    
+    // Programma una notifica locale
+    async scheduleNotification(playerNumber, options) {
+        try {
+            const notificationId = `notif-${playerNumber}-${Date.now()}`;
+            
+            // Salva notifica programmata in localStorage
+            const scheduled = JSON.parse(localStorage.getItem('scheduledNotifications') || '[]');
+            scheduled.push({
+                id: notificationId,
+                playerNumber: playerNumber,
+                title: options.title || '⚾ Lancers Baseball',
+                body: options.body || 'Hai una notifica',
+                scheduledTime: options.scheduledTime || Date.now(),
+                sent: false
+            });
+            localStorage.setItem('scheduledNotifications', JSON.stringify(scheduled));
+            
+            // Se il tempo è passato o è ora, mostra subito
+            if (!options.scheduledTime || options.scheduledTime <= Date.now()) {
+                await this.showNotification(options.title, options.body);
+            }
+            
+            return notificationId;
+        } catch (error) {
+            console.error('❌ Errore programmazione notifica:', error);
+            return null;
+        }
+    },
+    
+    // Mostra una notifica immediata
+    async showNotification(title, body, data = {}) {
+        try {
+            if (Notification.permission !== 'granted') {
+                const perm = await Notification.requestPermission();
+                if (perm !== 'granted') return false;
+            }
+            
+            if (this.swRegistration) {
+                await this.swRegistration.showNotification(title, {
+                    body: body,
+                    icon: './icons/icon-192x192.png',
+                    badge: './icons/icon-192x192.png',
+                    tag: data.tag || 'lancers-notification',
+                    vibrate: [200, 100, 200],
+                    requireInteraction: true,
+                    data: data
+                });
+                console.log('✅ Notifica mostrata:', title);
+                return true;
+            } else {
+                // Fallback: notifica nativa
+                new Notification(title, { body: body });
+                return true;
+            }
+        } catch (error) {
+            console.error('❌ Errore mostra notifica:', error);
+            return false;
+        }
+    },
+    
+    // Controlla e invia notifiche programmate
+    async checkScheduledNotifications() {
+        try {
+            const scheduled = JSON.parse(localStorage.getItem('scheduledNotifications') || '[]');
+            const now = Date.now();
+            let updated = false;
+            
+            for (const notif of scheduled) {
+                if (!notif.sent && notif.scheduledTime <= now) {
+                    await this.showNotification(notif.title, notif.body);
+                    notif.sent = true;
+                    updated = true;
+                }
+            }
+            
+            if (updated) {
+                // Rimuovi notifiche già inviate
+                const remaining = scheduled.filter(n => !n.sent);
+                localStorage.setItem('scheduledNotifications', JSON.stringify(remaining));
+            }
+        } catch (error) {
+            console.error('❌ Errore check notifiche:', error);
+        }
+    }
+};
+
+// Controlla notifiche programmate ogni minuto
+setInterval(() => LancersFCM.checkScheduledNotifications(), 60000);
+
+// Controlla subito all'avvio
+if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+        setTimeout(() => LancersFCM.checkScheduledNotifications(), 2000);
+    });
+}

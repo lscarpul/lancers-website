@@ -4,13 +4,23 @@ console.log('🚀 Script.js v17 caricato!');
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
     
+    // Ripristina sessione da localStorage se necessario
+    if (localStorage.getItem('authenticated') === 'true' && !sessionStorage.getItem('authenticated')) {
+        sessionStorage.setItem('authenticated', 'true');
+        const savedPlayer = localStorage.getItem('playerData');
+        if (savedPlayer) {
+            sessionStorage.setItem('playerData', savedPlayer);
+        }
+    }
+    
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function() {
-            // Rimuovi autenticazione (sessionStorage, localStorage, Firebase se usato)
+            // Rimuovi autenticazione da entrambi storage
             sessionStorage.removeItem('authenticated');
-            // Se usi Firebase Auth, aggiungi qui il signOut
-            // firebase.auth().signOut();
+            sessionStorage.removeItem('playerData');
+            localStorage.removeItem('authenticated');
+            localStorage.removeItem('playerData');
             window.location.href = 'login.html';
         });
     }

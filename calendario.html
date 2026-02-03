@@ -115,6 +115,12 @@
 </head>
 <body>
     <script>
+        // Ripristina sessione da localStorage se disponibile
+        if (localStorage.getItem('authenticated') === 'true') {
+            sessionStorage.setItem('authenticated', 'true');
+            const savedPlayer = localStorage.getItem('playerData');
+            if (savedPlayer) sessionStorage.setItem('playerData', savedPlayer);
+        }
         if (sessionStorage.getItem('authenticated') !== 'true') {
             window.location.href = 'login.html';
         }

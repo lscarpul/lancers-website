@@ -195,12 +195,20 @@
             { number: 90, name: 'Alessandro', surname: 'Rrethatori', role: 'C', username: 'rrethatori-90', password: 'rrethatoria90' },
             { number: 24, name: 'Guido', surname: 'Nannucci', role: 'UTL', username: 'nannucci-24', password: 'nannuccig24' },
             { number: 77, name: 'Cosimo', surname: 'Rinaldi', role: '1B/RF', username: 'rinaldi-77', password: 'rinaldic77' },
+            { number: 98, name: 'Federico', surname: 'Paperini', role: 'OF', username: 'paperini-98', password: 'paperinif98' },
+            { number: 99, name: 'Vergara', surname: 'Vergara', role: 'C', username: 'vergara-99', password: 'vergarav99' },
             // Admin account
             { number: 'ADMIN', name: 'Admin', surname: 'Staff', role: 'Admin', username: 'admin', password: 'admin26', isStaff: true, isAdmin: true }
         ];
 
-        // Controlla se già autenticato
-        if (sessionStorage.getItem('authenticated') === 'true') {
+        // Controlla se già autenticato (usa localStorage per persistenza)
+        if (localStorage.getItem('authenticated') === 'true') {
+            // Ripristina anche in sessionStorage per compatibilità
+            sessionStorage.setItem('authenticated', 'true');
+            const savedPlayer = localStorage.getItem('playerData');
+            if (savedPlayer) {
+                sessionStorage.setItem('playerData', savedPlayer);
+            }
             window.location.href = 'index.html';
         }
 
@@ -215,6 +223,9 @@
             const player = players.find(p => p.username === username && p.password === password);
             
             if (player) {
+                // Salva in localStorage per persistenza e sessionStorage per compatibilità
+                localStorage.setItem('authenticated', 'true');
+                localStorage.setItem('playerData', JSON.stringify(player));
                 sessionStorage.setItem('authenticated', 'true');
                 sessionStorage.setItem('playerData', JSON.stringify(player));
                 window.location.href = 'index.html';
