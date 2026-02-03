@@ -247,7 +247,7 @@ function loadWeeklyEvents() {
             const dayNum = eventDate.getDate();
             
             return `
-                <div class="event-item ${event.type}">
+                <div class="event-item ${event.type}" data-date="${event.date}">
                     <div class="event-date-box">
                         <span class="event-day">${dayName}</span>
                         <span class="event-num">${dayNum}</span>
@@ -256,12 +256,103 @@ function loadWeeklyEvents() {
                         <h3>${event.title}</h3>
                         <p>${event.time}</p>
                     </div>
-                    <span class="event-type ${event.type}-tag">${event.tag}</span>
+                    <div class="event-presence-btns">
+                        <button class="presence-btn yes" onclick="saveEventPresence('${event.date}', 'yes', this)" title="Ci sarò">✅</button>
+                        <button class="presence-btn maybe" onclick="saveEventPresence('${event.date}', 'maybe', this)" title="Forse">⚠️</button>
+                        <button class="presence-btn no" onclick="saveEventPresence('${event.date}', 'no', this)" title="Assente">❌</button>
+                    </div>
                 </div>
             `;
         }).join('');
+        
+        // Carica lo stato delle presenze salvate
+        loadEventPresenceStatus();
     }
 }
+
+// Salva presenza direttamente dall'evento nella home
+async function saveEventPresence(date, status, btn) {
+    const playerData = sessionStorage.getItem('playerData');
+    if (!playerData) {
+        alert('Devi essere loggato per confermare la presenza');
+        return;
+    }
+    
+    const player = JSON.parse(playerData);
+    const eventItem = btn.closest('.event-item');
+    const allBtns = eventItem.querySelectorAll('.presence-btn');
+    
+    // Disabilita tutti i pulsanti durante il salvataggio
+    allBtns.forEach(b => b.disabled = true);
+    btn.innerHTML = '⏳';
+    
+    try {
+        if (typeof LancersDB !== 'undefined') {
+            await LancersDB.save(player.number, date, status);
+        } else {
+            const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+            const payload = { response: status, timestamp: new Date().toISOString() };
+            await fetch(`${baseUrl}/presenze/${player.number}/${date.replace(/\-/g, '_')}.json`, {
+                method: 'PUT',
+                body: JSON.stringify(payload)
+            });
+        }
+        
+        // Aggiorna UI
+        allBtns.forEach(b => {
+            b.classList.remove('selected');
+            b.disabled = false;
+        });
+        btn.classList.add('selected');
+        
+        // Ripristina emoji
+        const emojis = { yes: '✅', maybe: '⚠️', no: '❌' };
+        btn.innerHTML = emojis[status];
+        
+        console.log(`✅ Presenza salvata: ${date} = ${status}`);
+    } catch (error) {
+        console.error('Errore salvataggio presenza:', error);
+        allBtns.forEach(b => b.disabled = false);
+        btn.innerHTML = status === 'yes' ? '✅' : status === 'maybe' ? '⚠️' : '❌';
+        alert('Errore nel salvataggio. Riprova.');
+    }
+}
+
+// Carica stato presenze salvate per gli eventi della settimana
+async function loadEventPresenceStatus() {
+    const playerData = sessionStorage.getItem('playerData');
+    if (!playerData) return;
+    
+    const player = JSON.parse(playerData);
+    let responses = {};
+    
+    try {
+        if (typeof LancersDB !== 'undefined') {
+            responses = await LancersDB.getPlayer(player.number);
+        } else {
+            const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+            const res = await fetch(`${baseUrl}/presenze/${player.number}.json`);
+            const data = await res.json();
+            if (data) {
+                Object.entries(data).forEach(([dateKey, value]) => {
+                    responses[dateKey.replace(/_/g, '-')] = value;
+                });
+            }
+        }
+        
+        // Aggiorna UI per ogni evento
+        document.querySelectorAll('.event-item[data-date]').forEach(item => {
+            const date = item.dataset.date;
+            const response = responses[date];
+            if (response) {
+                const status = response.response || response;
+                const btn = item.querySelector(`.presence-btn.${status}`);
+                if (btn) btn.classList.add('selected');
+            }
+        });
+    } catch (error) {
+        console.error('Errore caricamento presenze:', error);
+    }
 
 // Ottieni range della settimana (Lunedì - Domenica)
 function getWeekRange(date) {
