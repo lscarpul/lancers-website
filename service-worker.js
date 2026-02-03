@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v24';
+const CACHE_NAME = 'lancers-app-v30';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -152,7 +152,7 @@ async function checkAndSendNotifications() {
 
 // ===== INSTALLAZIONE =====
 self.addEventListener('install', (event) => {
-  console.log('🔧 Service Worker v24 installazione...');
+  console.log('🔧 Service Worker v30 installazione...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS_TO_CACHE))
@@ -162,7 +162,7 @@ self.addEventListener('install', (event) => {
 
 // ===== ATTIVAZIONE =====
 self.addEventListener('activate', (event) => {
-  console.log('✅ Service Worker v24 attivato!');
+  console.log('✅ Service Worker v30 attivato!');
   event.waitUntil(
     Promise.all([
       caches.keys().then((keyList) => {
