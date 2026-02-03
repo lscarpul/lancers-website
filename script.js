@@ -1,8 +1,11 @@
-// ===== SCRIPT.JS v17 - FCM FIX NON-BLOCKING =====
-console.log('🚀 Script.js v17 caricato!');
+// ===== SCRIPT.JS v31 - NOTIFICHE PERSISTENTI =====
+console.log('🚀 Script.js v31 caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
+    
+    // Avvia controllo periodico notifiche appena la pagina carica
+    startPersistentNotificationCheck();
     
     // Ripristina sessione da localStorage se necessario
     if (localStorage.getItem('authenticated') === 'true' && !sessionStorage.getItem('authenticated')) {
@@ -585,7 +588,7 @@ async function initFCM() {
 }
 
 // ==========================================
-// 🧪 TEST NOTIFICA - Programma tra 5 minuti
+// 🧪 TEST NOTIFICA - Programma tra 1 minuto
 // ==========================================
 
 function scheduleTestNotification() {
@@ -594,43 +597,86 @@ function scheduleTestNotification() {
     const lastTest = localStorage.getItem(testKey);
     const now = Date.now();
     
-    // Permetti un nuovo test solo ogni 10 minuti
-    if (lastTest && (now - parseInt(lastTest)) < 10 * 60 * 1000) {
+    // Permetti un nuovo test solo ogni 2 minuti
+    if (lastTest && (now - parseInt(lastTest)) < 2 * 60 * 1000) {
         console.log('🧪 Test notifica già programmato di recente, skippo');
         return;
     }
     
-    const fiveMinutesFromNow = now + (5 * 60 * 1000); // 5 minuti
+    const oneMinuteFromNow = now + (60 * 1000); // 1 minuto
+    const notifTag = 'test-notification-' + now;
     
     console.log('🧪 ========================================');
     console.log('🧪 TEST NOTIFICA PROGRAMMATA!');
     console.log('🧪 Ora attuale:', new Date().toLocaleTimeString());
-    console.log('🧪 Notifica prevista:', new Date(fiveMinutesFromNow).toLocaleTimeString());
+    console.log('🧪 Notifica prevista:', new Date(oneMinuteFromNow).toLocaleTimeString());
     console.log('🧪 ========================================');
     
-    // Salva in localStorage per il check periodico
+    // Salva in IndexedDB tramite Service Worker (più affidabile)
+    if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'SCHEDULE_NOTIFICATION',
+            payload: {
+                title: '🧪 TEST - Lancers Baseball',
+                body: '✅ Le notifiche funzionano! Questa è una notifica di test programmata.',
+                scheduledTime: oneMinuteFromNow,
+                eventDate: new Date().toLocaleDateString('it-IT'),
+                eventType: 'test',
+                tag: notifTag
+            }
+        });
+        console.log('🧪 Notifica inviata al Service Worker per scheduling');
+    }
+    
+    // Salva anche in localStorage come backup
     scheduleLocalNotification(
         '🧪 TEST - Lancers Baseball',
         '✅ Le notifiche funzionano! Questa è una notifica di test.',
-        fiveMinutesFromNow,
-        'test-notification-' + now
+        oneMinuteFromNow,
+        notifTag
     );
     
     // Marca come programmato
     localStorage.setItem(testKey, now.toString());
     
-    // Imposta anche un timeout JavaScript come backup
-    setTimeout(async () => {
-        console.log('🧪 ⏰ TIMEOUT SCADUTO - Invio notifica test!');
-        await sendLocalNotification(
-            '🧪 TEST - Lancers Baseball',
-            '✅ Le notifiche funzionano! (via timeout)',
-            'test-timeout-' + now
-        );
-    }, 5 * 60 * 1000);
+    // Avvia il check periodico persistente
+    startPersistentNotificationCheck();
     
     // Mostra anche un alert per conferma
-    alert('🧪 TEST NOTIFICA PROGRAMMATA!\n\nRiceverai una notifica tra 5 minuti.\n\nOra: ' + new Date().toLocaleTimeString() + '\nNotifica: ' + new Date(fiveMinutesFromNow).toLocaleTimeString() + '\n\n⚠️ Tieni il browser aperto (può essere in background)');
+    const timeStr = new Date().toLocaleTimeString();
+    const targetStr = new Date(oneMinuteFromNow).toLocaleTimeString();
+    alert('🧪 TEST NOTIFICA PROGRAMMATA!\n\nRiceverai una notifica tra 1 MINUTO.\n\nOra: ' + timeStr + '\nNotifica: ' + targetStr + '\n\n✅ Puoi anche chiudere questa pagina, la notifica arriverà comunque!');
+}
+
+// ==========================================
+// 🔄 CHECK PERIODICO PERSISTENTE
+// ==========================================
+let persistentCheckInterval = null;
+
+function startPersistentNotificationCheck() {
+    // Evita duplicati
+    if (persistentCheckInterval) {
+        clearInterval(persistentCheckInterval);
+    }
+    
+    console.log('🔄 Avvio check periodico notifiche (ogni 10 secondi)...');
+    
+    // Check immediato
+    triggerServiceWorkerCheck();
+    checkLocalPendingNotifications();
+    
+    // Check ogni 10 secondi
+    persistentCheckInterval = setInterval(() => {
+        console.log('⏰ Check periodico notifiche...');
+        triggerServiceWorkerCheck();
+        checkLocalPendingNotifications();
+    }, 10 * 1000);
+}
+
+function triggerServiceWorkerCheck() {
+    if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'CHECK_NOTIFICATIONS' });
+    }
 }
 
 // ==========================================
