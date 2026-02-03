@@ -455,8 +455,8 @@
             
             // Salva su Firebase
             try {
-                const dateKey = eventDate.replace(/-/g, '');
-                const url = `${FIREBASE_URL}/presences/player_${playerData.number}/${dateKey}.json`;
+                const dateKey = eventDate.replace(/-/g, '_');
+                const url = `${FIREBASE_URL}/presenze/${playerData.number}/${dateKey}.json`;
                 await fetch(url, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -480,15 +480,15 @@
             if (!playerData) return {};
             
             try {
-                const url = `${FIREBASE_URL}/presences/player_${playerData.number}.json`;
+                const url = `${FIREBASE_URL}/presenze/${playerData.number}.json`;
                 const response = await fetch(url);
                 const data = await response.json();
                 
                 if (data) {
-                    // Converti chiavi da 20260203 a 2026-02-03
+                    // Converti chiavi da 2026_01_15 a 2026-01-15
                     const converted = {};
                     Object.entries(data).forEach(([key, value]) => {
-                        const dateKey = key.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+                        const dateKey = key.replace(/_/g, '-');
                         converted[dateKey] = value;
                     });
                     return converted;

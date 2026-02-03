@@ -68,15 +68,16 @@
 
         /* Main Layout */
         .game-layout {
-            display: grid;
-            grid-template-columns: 1fr 300px;
+            display: flex;
+            justify-content: center;
             gap: 1.5rem;
             margin-top: 1rem;
         }
 
         @media (max-width: 900px) {
             .game-layout {
-                grid-template-columns: 1fr;
+                flex-direction: column;
+                align-items: center;
             }
         }
 
@@ -473,126 +474,6 @@
             color: #94a3b8;
         }
 
-        /* Leaderboard Panel */
-        .leaderboard-panel {
-            background: linear-gradient(135deg, rgba(15, 40, 71, 0.9) 0%, rgba(26, 54, 93, 0.8) 100%);
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            height: fit-content;
-        }
-
-        .leaderboard-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #ffd700;
-            text-align: center;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .leaderboard-item:hover {
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .leaderboard-item.gold {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .leaderboard-item.silver {
-            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2) 0%, rgba(192, 192, 192, 0.1) 100%);
-            border: 1px solid rgba(192, 192, 192, 0.3);
-        }
-
-        .leaderboard-item.bronze {
-            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2) 0%, rgba(205, 127, 50, 0.1) 100%);
-            border: 1px solid rgba(205, 127, 50, 0.3);
-        }
-
-        .leaderboard-item.current-player {
-            border: 2px solid #3b82f6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-        }
-
-        .rank {
-            font-size: 1.2rem;
-            font-weight: 900;
-            width: 30px;
-            text-align: center;
-        }
-
-        .rank.gold { color: #ffd700; }
-        .rank.silver { color: #c0c0c0; }
-        .rank.bronze { color: #cd7f32; }
-
-        .player-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .player-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-date {
-            font-size: 0.7rem;
-            color: #64748b;
-        }
-
-        .player-score {
-            font-size: 1.1rem;
-            font-weight: 900;
-            color: #ffd700;
-        }
-
-        .leaderboard-empty {
-            text-align: center;
-            color: #64748b;
-            padding: 2rem;
-            font-size: 0.9rem;
-        }
-
-        .leaderboard-loading {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .leaderboard-loading::after {
-            content: '⚾';
-            display: inline-block;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
         /* Instructions */
         .game-instructions {
             margin-top: 1rem;
@@ -823,14 +704,6 @@
                     <p>Tocca o clicca sullo schermo per colpire. Più sei preciso, meglio colpisci!</p>
                 </div>
             </div>
-
-            <!-- Leaderboard -->
-            <div class="leaderboard-panel">
-                <div class="leaderboard-title">🏆 CLASSIFICA GLOBALE</div>
-                <div class="leaderboard-list" id="leaderboardList">
-                    <div class="leaderboard-loading">Caricamento</div>
-                </div>
-            </div>
         </div>
 
         <a href="index.html" class="back-btn">← Torna al sito</a>
@@ -841,8 +714,6 @@
     </div>
 
     <script>
-        // Firebase URL
-        const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
 
         // Get player info
         function getPlayerInfo() {
@@ -1162,27 +1033,23 @@
         }
 
         // Game Over
-        async function gameOver() {
+        function gameOver() {
             game.isPlaying = false;
             ball.style.display = 'none';
 
             document.getElementById('finalScore').textContent = game.homeRuns;
 
-            // Save score to Firebase
-            const player = getPlayerInfo();
-            await saveScore(player.name, game.homeRuns);
-
-            // Get rank
-            const rank = await getPlayerRank(game.homeRuns);
+            // Show simple message
             const rankMsg = document.getElementById('rankMessage');
-            if (rank <= 10) {
-                rankMsg.textContent = `🎉 Sei al ${rank}° posto in classifica!`;
+            if (game.homeRuns >= 10) {
+                rankMsg.textContent = `🏆 Incredibile! ${game.homeRuns} Home Run!`;
+            } else if (game.homeRuns >= 5) {
+                rankMsg.textContent = `🎉 Ottimo lavoro! ${game.homeRuns} Home Run!`;
+            } else if (game.homeRuns >= 1) {
+                rankMsg.textContent = `👍 Bene! Prova a battere il tuo record!`;
             } else {
-                rankMsg.textContent = `Posizione: #${rank}`;
+                rankMsg.textContent = `😅 Nessun Home Run... Riprova!`;
             }
-
-            // Refresh leaderboard
-            loadLeaderboard();
 
             gameOverOverlay.classList.remove('hidden');
         }
@@ -1210,105 +1077,6 @@
             setTimeout(pitch, 500);
         }
 
-        // Firebase: Save Score
-        async function saveScore(playerName, score) {
-            try {
-                const data = {
-                    name: playerName,
-                    score: score,
-                    timestamp: Date.now(),
-                    date: new Date().toLocaleDateString('it-IT')
-                };
-
-                await fetch(`${FIREBASE_URL}/leaderboard.json`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                console.log('✅ Punteggio salvato:', data);
-            } catch (error) {
-                console.error('❌ Errore salvataggio punteggio:', error);
-            }
-        }
-
-        // Firebase: Load Leaderboard
-        async function loadLeaderboard() {
-            const list = document.getElementById('leaderboardList');
-            list.innerHTML = '<div class="leaderboard-loading">Caricamento</div>';
-
-            try {
-                const response = await fetch(`${FIREBASE_URL}/leaderboard.json`);
-                const data = await response.json();
-
-                if (!data) {
-                    list.innerHTML = '<div class="leaderboard-empty">Nessun punteggio ancora.<br>Sii il primo! 🏆</div>';
-                    return;
-                }
-
-                // Convert to array and sort
-                const scores = Object.entries(data)
-                    .map(([id, entry]) => ({ id, ...entry }))
-                    .sort((a, b) => b.score - a.score)
-                    .slice(0, 15); // Top 15
-
-                const player = getPlayerInfo();
-
-                list.innerHTML = scores.map((entry, index) => {
-                    const rank = index + 1;
-                    let rankClass = '';
-                    let itemClass = '';
-
-                    if (rank === 1) { rankClass = 'gold'; itemClass = 'gold'; }
-                    else if (rank === 2) { rankClass = 'silver'; itemClass = 'silver'; }
-                    else if (rank === 3) { rankClass = 'bronze'; itemClass = 'bronze'; }
-
-                    const isCurrentPlayer = entry.name === player.name;
-                    if (isCurrentPlayer) itemClass += ' current-player';
-
-                    const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
-
-                    return `
-                        <div class="leaderboard-item ${itemClass}">
-                            <div class="rank ${rankClass}">${medal}</div>
-                            <div class="player-info">
-                                <div class="player-name">${entry.name}${isCurrentPlayer ? ' (tu)' : ''}</div>
-                                <div class="player-date">${entry.date || ''}</div>
-                            </div>
-                            <div class="player-score">${entry.score}</div>
-                        </div>
-                    `;
-                }).join('');
-
-            } catch (error) {
-                console.error('❌ Errore caricamento classifica:', error);
-                list.innerHTML = '<div class="leaderboard-empty">Errore caricamento classifica</div>';
-            }
-        }
-
-        // Get Player Rank
-        async function getPlayerRank(score) {
-            try {
-                const response = await fetch(`${FIREBASE_URL}/leaderboard.json`);
-                const data = await response.json();
-
-                if (!data) return 1;
-
-                const scores = Object.values(data)
-                    .map(entry => entry.score)
-                    .sort((a, b) => b - a);
-
-                let rank = 1;
-                for (const s of scores) {
-                    if (s > score) rank++;
-                    else break;
-                }
-                return rank;
-            } catch (error) {
-                return 1;
-            }
-        }
-
         // Event Listeners
         gameArea.addEventListener('click', swing);
         gameArea.addEventListener('touchstart', (e) => {
@@ -1326,12 +1094,6 @@
             e.stopPropagation();
             startGame();
         });
-
-        // Load leaderboard on page load
-        loadLeaderboard();
-
-        // Refresh leaderboard every 30 seconds
-        setInterval(loadLeaderboard, 30000);
     </script>
 </body>
 </html>

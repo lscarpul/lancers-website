@@ -606,7 +606,7 @@
         <p>⚾ © 2026 Lancers Baseball Club - Serie B</p>
     </footer>
 
-    <script src="script.js?v=32"></script>
+    <script src="script.js?v=34"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
@@ -701,7 +701,7 @@
         // Carica presenze da Firebase
         async function loadPresences() {
             try {
-                const response = await fetch(`${FIREBASE_URL}/presences.json`);
+                const response = await fetch(`${FIREBASE_URL}/presenze.json`);
                 const data = await response.json();
                 presencesCache = data || {};
                 return presencesCache;
@@ -713,11 +713,12 @@
 
         // Ottieni stato presenza per un giocatore e data
         function getPlayerPresence(playerNumber, eventDate) {
-            const dateKey = eventDate.replace(/-/g, '');
-            const playerKey = `player_${playerNumber}`;
+            // dateKey format: 2026_02_03
+            const dateKey = eventDate.replace(/-/g, '_');
             
-            if (presencesCache[playerKey] && presencesCache[playerKey][dateKey]) {
-                return presencesCache[playerKey][dateKey].response;
+            // playerNumber is stored directly (e.g., "25", not "player_25")
+            if (presencesCache[playerNumber] && presencesCache[playerNumber][dateKey]) {
+                return presencesCache[playerNumber][dateKey].response;
             }
             return null;
         }

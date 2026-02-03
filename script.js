@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v33 =====
-const APP_VERSION = '33';
+// ===== SCRIPT.JS v34 =====
+const APP_VERSION = '34';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -278,7 +278,7 @@ async function saveEventPresence(date, status, btn) {
         } else {
             const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
             const payload = { response: status, timestamp: new Date().toISOString() };
-            await fetch(`${baseUrl}/presences/player_${player.number}/${date.replace(/\-/g, '')}.json`, {
+            await fetch(`${baseUrl}/presenze/${player.number}/${date.replace(/-/g, '_')}.json`, {
                 method: 'PUT',
                 body: JSON.stringify(payload)
             });
@@ -317,13 +317,12 @@ async function loadEventPresenceStatus() {
             responses = await LancersDB.getPlayer(player.number);
         } else {
             const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
-            const res = await fetch(`${baseUrl}/presences/player_${player.number}.json`);
+            const res = await fetch(`${baseUrl}/presenze/${player.number}.json`);
             const data = await res.json();
             if (data) {
                 Object.entries(data).forEach(([dateKey, value]) => {
-                    // dateKey is like '20260203', convert to '2026-02-03'
-                    const formattedKey = dateKey.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
-                    responses[formattedKey] = value;
+                    // dateKey is like '2026_01_15', convert to '2026-01-15'
+                    responses[dateKey.replace(/_/g, '-')] = value;
                 });
             }
         }
@@ -1015,7 +1014,7 @@ async function schedulePresenceReminders() {
     // Carica le presenze già inserite
     let existingPresences = {};
     try {
-        const response = await fetch(`https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app/presences/player_${player.number}.json`);
+        const response = await fetch(`https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app/presenze/${player.number}.json`);
         existingPresences = await response.json() || {};
     } catch (e) {
         console.log('Utilizzo presenze locali');
@@ -1240,11 +1239,11 @@ function showVersionMismatchBanner(localVersion, serverVersion) {
                 <strong style="display: block;">Nuova versione disponibile!</strong>
                 <span style="font-size: 0.8rem; opacity: 0.9;">v${localVersion} → v${serverVersion}</span>
             </div>
-            <button onclick="alert('🔄 Per aggiornare:\n\n1. Premi Ctrl+Shift+Canc (o Cmd+Shift+Canc su Mac)\n2. Seleziona solo Cache/File temporanei\n3. Clicca Cancella\n4. Ricarica la pagina (F5)\n\nOppure prova: Ctrl+Shift+R');" 
+            <button id="howToUpdateBtn" 
                     style="background: white; color: #d97706; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 700; cursor: pointer; font-family: inherit;">
                 📖 Come aggiornare
             </button>
-            <button onclick="this.parentElement.parentElement.remove()" 
+            <button id="closeBannerBtn" 
                     style="background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 4px 8px; opacity: 0.7;">✕</button>
         </div>
     `;
@@ -1258,6 +1257,21 @@ function showVersionMismatchBanner(localVersion, serverVersion) {
         color: white;
         padding: 12px 16px;
         z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        font-family: 'Montserrat', sans-serif;
+    `;
+    
+    document.body.insertBefore(banner, document.body.firstChild);
+    
+    // Aggiungi event listeners
+    document.getElementById('howToUpdateBtn').addEventListener('click', function() {
+        alert('🔄 Per aggiornare:\n\n1. Premi Ctrl+Shift+Canc (o Cmd+Shift+Canc su Mac)\n2. Seleziona solo "Immagini e file memorizzati nella cache"\n3. Clicca Cancella dati\n4. Ricarica la pagina (F5)\n\nOppure prova: Ctrl+Shift+R (ricarica forzata)');
+    });
+    
+    document.getElementById('closeBannerBtn').addEventListener('click', function() {
+        banner.remove();
+    });
+}
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         font-family: 'Montserrat', sans-serif;
     `;

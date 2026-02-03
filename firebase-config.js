@@ -11,7 +11,7 @@ const LancersDB = {
     // Carica tutte le presenze dal database
     async loadAll() {
         try {
-            const response = await fetch(`${FIREBASE_DB_URL}/presences.json`);
+            const response = await fetch(`${FIREBASE_DB_URL}/presenze.json`);
             if (!response.ok) throw new Error('Errore caricamento');
             const data = await response.json();
             return data || {};
@@ -31,9 +31,9 @@ const LancersDB = {
                 timestamp: new Date().toISOString()
             };
             
-            // Format: /presences/player_25/20260203.json
-            const dateKey = eventDate.replace(/\-/g, '');
-            const url = `${FIREBASE_DB_URL}/presences/player_${playerNumber}/${dateKey}.json`;
+            // Format: /presenze/25/2026_01_15.json
+            const dateKey = eventDate.replace(/-/g, '_');
+            const url = `${FIREBASE_DB_URL}/presenze/${playerNumber}/${dateKey}.json`;
             console.log('📡 Firebase URL:', url);
             
             // Salva su Firebase
@@ -65,16 +65,16 @@ const LancersDB = {
     // Ottieni le presenze di un giocatore specifico
     async getPlayer(playerNumber) {
         try {
-            const response = await fetch(`${FIREBASE_DB_URL}/presences/player_${playerNumber}.json`);
+            const response = await fetch(`${FIREBASE_DB_URL}/presenze/${playerNumber}.json`);
             if (!response.ok) throw new Error('Errore caricamento');
             const data = await response.json();
             
             if (!data) return {};
             
-            // Converti le chiavi da 20260203 a 2026-02-03
+            // Converti le chiavi da 2026_01_15 a 2026-01-15
             const converted = {};
             Object.entries(data).forEach(([key, value]) => {
-                const dateKey = key.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+                const dateKey = key.replace(/_/g, '-');
                 converted[dateKey] = value;
             });
             return converted;
