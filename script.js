@@ -144,41 +144,35 @@ style.textContent = `
 document.head.appendChild(style);
 
 // ===== DATABASE EVENTI =====
+// Nota: Gli allenamenti del mercoledì (specifici) sono autonomi e gestiti separatamente nell'area personale
+// Non contano come assenze se il giocatore non è assegnato a quella sessione
 const allEvents = [
     // FEBBRAIO 2026 (dal 3 febbraio in poi)
     { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-04', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-02-05', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-07', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
     { date: '2026-02-10', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-11', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-02-12', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-14', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
     { date: '2026-02-17', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-18', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-02-19', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-21', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
     { date: '2026-02-24', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-25', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-02-26', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-28', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
     
     // MARZO 2026
     { date: '2026-03-01', type: 'friendly', title: 'Amichevole Interna', time: '🏠 Domenica', tag: '✅ Confermata' },
     { date: '2026-03-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-03-04', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-03-05', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-03-08', type: 'friendly', title: 'vs Lucca/Phoenix/Castenaso', time: '🏠 Domenica', tag: '✅ Confermata' },
     { date: '2026-03-10', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-03-11', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-03-12', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-03-14', type: 'friendly', title: '@ Fortitudo', time: '✈️ Sabato', tag: '✅ Confermata' },
     { date: '2026-03-17', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-03-18', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-03-19', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-03-22', type: 'friendly', title: '@ Fiorentina', time: '✈️ Domenica', tag: '❔ Da confermare' },
     { date: '2026-03-24', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-03-25', type: 'specific', title: 'Allenamento Specifico', time: '🎯 Sessione tecnica', tag: '🎯 Specifico' },
     { date: '2026-03-26', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-03-29', type: 'friendly', title: 'vs Arezzo', time: '🏠 Domenica', tag: '✅ Confermata' },
     

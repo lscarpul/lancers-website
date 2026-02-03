@@ -142,6 +142,68 @@ a {
     cursor: pointer;
 }
 
+/* Baseball ball styling */
+.baseball-ball {
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(ellipse at 30% 30%, #ffffff 0%, #f5f5f5 40%, #e8e8e8 80%, #d4d4d4 100%);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 
+        inset -3px -3px 8px rgba(0, 0, 0, 0.15),
+        inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(220, 38, 38, 0.3);
+    transition: var(--transition);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.baseball-ball::before,
+.baseball-ball::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.baseball-ball::before {
+    background: 
+        /* Left seam curve */
+        radial-gradient(ellipse 45% 55% at 15% 50%, transparent 42%, #cc0000 43%, #cc0000 46%, transparent 47%),
+        /* Right seam curve */
+        radial-gradient(ellipse 45% 55% at 85% 50%, transparent 42%, #cc0000 43%, #cc0000 46%, transparent 47%);
+}
+
+.baseball-ball::after {
+    /* Stitches on left side */
+    background:
+        radial-gradient(circle at 8% 25%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 6% 35%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 5% 45%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 5% 55%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 6% 65%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 8% 75%, #cc0000 1.5px, transparent 1.5px),
+        /* Stitches on right side */
+        radial-gradient(circle at 92% 25%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 94% 35%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 95% 45%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 95% 55%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 94% 65%, #cc0000 1.5px, transparent 1.5px),
+        radial-gradient(circle at 92% 75%, #cc0000 1.5px, transparent 1.5px);
+}
+
+.baseball-ball:hover {
+    transform: rotate(20deg) scale(1.1);
+    box-shadow: 
+        inset -3px -3px 8px rgba(0, 0, 0, 0.15),
+        inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(220, 38, 38, 0.5);
+}
+
 .logo:hover {
     transform: rotate(20deg) scale(1.1);
 }
@@ -747,6 +809,7 @@ a {
 .match-card.friendly { border-left: 4px solid var(--friendly); }
 .match-card.training { border-left: 4px solid var(--training); }
 .match-card.specific { border-left: 4px solid var(--specific); }
+.match-card.autonomous { border-left: 4px solid #a78bfa; }
 .match-card.event { border-left: 4px solid var(--warning); }
 .match-card.recovery { border-left: 4px solid var(--info); }
 .match-card.training-tbd, .match-card.tbd { border-left: 4px solid var(--text-muted); }
@@ -897,6 +960,7 @@ a {
 .recovery-badge { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
 .training-badge { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 .specific-badge { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+.autonomous-badge { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
 .event-badge { background: rgba(234, 179, 8, 0.2); color: #facc15; }
 .tbd-badge { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
 
@@ -960,6 +1024,7 @@ a {
 .friendly-color { background: var(--friendly); }
 .training-color { background: var(--training); }
 .specific-color { background: var(--specific); }
+.autonomous-color { background: #a78bfa; }
 .recovery-color { background: var(--info); }
 .tbd-color { background: var(--text-muted); }
 .event-color { background: var(--warning); }
