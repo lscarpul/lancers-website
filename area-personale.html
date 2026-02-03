@@ -1331,13 +1331,13 @@
                             if (trainings.length === 0) return '';
                             return `
                                 <div class="card col-span-12" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 5px solid #f59e0b;">
-                                    <h3 class="eval-title" style="color: #92400e;">📅 I TUOI MERCOLEDÌ EXTRA</h3>
+                                    <h3 class="eval-title" style="color: #92400e; -webkit-text-fill-color: #92400e; background: none;">📅 I TUOI MERCOLEDÌ EXTRA</h3>
                                     <p style="color: #78350f; margin-bottom: 1rem; font-size: 0.9rem;">Allenamenti specifici personalizzati - Marzo/Luglio 2026</p>
                                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
                                         ${trainings.map(t => `
                                             <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                                                 <div style="font-weight: 700; color: #1a365d; font-size: 1.1rem;">${formatTrainingDate(t.date)}</div>
-                                                <div style="color: #f59e0b; font-weight: 600; margin-top: 0.25rem;">🎯 ${t.tipo}</div>
+                                                <div style="color: #b45309; font-weight: 600; margin-top: 0.25rem;">🎯 ${t.tipo}</div>
                                             </div>
                                         `).join('')}
                                     </div>
