@@ -1,9 +1,12 @@
-// ===== SCRIPT.JS v31 - NOTIFICHE PERSISTENTI =====
-const APP_VERSION = '31';
+// ===== SCRIPT.JS v32 =====
+const APP_VERSION = '32';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOMContentLoaded fired');
+    
+    // Controlla se c'è una nuova versione
+    setTimeout(() => checkVersionMismatch(), 500);
     
     // Avvia controllo periodico notifiche appena la pagina carica
     setTimeout(() => startPersistentNotificationCheck(), 200);
@@ -1180,4 +1183,72 @@ function formatDateItalian(date) {
                     'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
     
     return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+}
+
+// ==========================================
+// 🔄 VERSION CHECK (senza auto-update)
+// ==========================================
+
+async function checkVersionMismatch() {
+    try {
+        const response = await fetch('./version.json?t=' + Date.now(), {
+            cache: 'no-store'
+        });
+        
+        if (!response.ok) return;
+        
+        const serverData = await response.json();
+        const serverVersion = serverData.version;
+        
+        console.log(`📦 Versione locale: ${APP_VERSION}`);
+        console.log(`📦 Versione server: ${serverVersion}`);
+        
+        if (APP_VERSION !== serverVersion) {
+            console.log('⚠️ Versione non aggiornata!');
+            showVersionMismatchBanner(APP_VERSION, serverVersion);
+        } else {
+            console.log('✅ Versione aggiornata');
+        }
+    } catch (error) {
+        console.log('Version check skipped:', error.message);
+    }
+}
+
+function showVersionMismatchBanner(localVersion, serverVersion) {
+    // Non mostrare se già mostrato in questa sessione
+    if (sessionStorage.getItem('versionBannerShown')) return;
+    sessionStorage.setItem('versionBannerShown', 'true');
+    
+    const banner = document.createElement('div');
+    banner.id = 'version-banner';
+    banner.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 12px; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
+            <div style="font-size: 1.5rem;">⚠️</div>
+            <div style="flex: 1; min-width: 200px;">
+                <strong style="display: block;">Nuova versione disponibile!</strong>
+                <span style="font-size: 0.8rem; opacity: 0.9;">v${localVersion} → v${serverVersion}</span>
+            </div>
+            <button onclick="alert('🔄 Per aggiornare:\n\n1. Premi Ctrl+Shift+Canc (o Cmd+Shift+Canc su Mac)\n2. Seleziona solo Cache/File temporanei\n3. Clicca Cancella\n4. Ricarica la pagina (F5)\n\nOppure prova: Ctrl+Shift+R');" 
+                    style="background: white; color: #d97706; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 700; cursor: pointer; font-family: inherit;">
+                📖 Come aggiornare
+            </button>
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    style="background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 4px 8px; opacity: 0.7;">✕</button>
+        </div>
+    `;
+    
+    banner.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+        color: white;
+        padding: 12px 16px;
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        font-family: 'Montserrat', sans-serif;
+    `;
+    
+    document.body.insertBefore(banner, document.body.firstChild);
 }
