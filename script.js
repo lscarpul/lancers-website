@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v35 =====
-const APP_VERSION = '35';
+// ===== SCRIPT.JS v36 =====
+const APP_VERSION = '36';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1288,10 +1288,4 @@ function showVersionMismatchBanner(localVersion, serverVersion) {
     document.getElementById('closeBannerBtn').addEventListener('click', function() {
         banner.remove();
     });
-}
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        font-family: 'Montserrat', sans-serif;
-    `;
-    
-    document.body.insertBefore(banner, document.body.firstChild);
 }
