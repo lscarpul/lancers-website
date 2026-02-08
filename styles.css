@@ -228,11 +228,6 @@ a {
     list-style: none;
 }
 
-/* Hide logout button on desktop - show only on mobile menu */
-.nav-links li:last-child {
-    display: none;
-}
-
 .nav-links a {
     display: block;
     padding: 0.6rem 1rem;
@@ -299,30 +294,8 @@ a {
     transform: translateY(-9px) rotate(-45deg);
 }
 
-/* Logout button nel menu */
-.nav-logout-btn {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 1.25rem;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    font-size: 0.95rem;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    color: var(--white);
-    text-align: center;
-    margin-top: 0.5rem;
-}
-
-.nav-logout-btn:hover {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    transform: scale(1.02);
-}
-
-/* Logout button legacy */
-#logoutBtn:not(.nav-logout-btn), .back-btn {
+/* Logout button - removed from nav, now in footer */
+.back-btn {
     padding: 0.6rem 1.2rem;
     border-radius: var(--radius-md);
     font-weight: 600;
@@ -330,20 +303,6 @@ a {
     border: none;
     cursor: pointer;
     transition: var(--transition);
-}
-
-#logoutBtn {
-    background: var(--danger);
-    color: var(--white);
-    position: absolute;
-    right: 5%;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-#logoutBtn:hover {
-    background: #dc2626;
-    transform: translateY(-50%) scale(1.05);
 }
 
 /* ===== HERO SECTION ===== */
@@ -1150,7 +1109,7 @@ footer, .footer {
     background: var(--primary);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
-    padding: 2.5rem;
+    padding: 2rem 1.5rem;
     margin-top: 4rem;
 }
 
@@ -1164,6 +1123,26 @@ footer p, .footer p {
     opacity: 0.7;
     font-size: 0.9rem;
     margin-top: 0.5rem;
+}
+
+/* Footer logout button */
+.footer-logout-btn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.footer-logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
 }
 
 /* ===== TEST NOTIFICATION BUTTON ===== */
@@ -1238,22 +1217,21 @@ input::placeholder {
     }
 
     .nav-links {
-        position: fixed;
-        top: 60px;
+        position: absolute;
+        top: 100%;
         left: 0;
         right: 0;
-        bottom: 0;
         background: rgba(10, 22, 40, 0.98);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
         align-items: stretch;
-        padding: 1.5rem;
-        gap: 0.5rem;
+        padding: 1rem;
+        gap: 0.25rem;
         display: none !important;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         z-index: 999;
-        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .nav-links.active {
@@ -1264,31 +1242,19 @@ input::placeholder {
         width: 100%;
         display: block !important;
     }
-    
-    /* Show logout button in mobile menu */
-    .nav-links li:last-child {
-        display: block !important;
-    }
 
     .nav-links a {
         display: block;
         text-align: left;
-        padding: 1rem 1.25rem;
-        font-size: 1.1rem;
+        padding: 0.85rem 1rem;
+        font-size: 1rem;
         border-radius: var(--radius-md);
         background: rgba(255, 255, 255, 0.03);
-        margin-bottom: 0.25rem;
     }
 
     .nav-links a:hover,
     .nav-links a.active {
         background: rgba(59, 130, 246, 0.2);
-    }
-
-    .nav-logout-btn {
-        margin-top: 1rem;
-        padding: 1rem;
-        font-size: 1.1rem;
     }
 
     .hero {
