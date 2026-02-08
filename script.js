@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v39 =====
-const APP_VERSION = '39';
+// ===== SCRIPT.JS v42 =====
+const APP_VERSION = '42';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {

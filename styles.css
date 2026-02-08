@@ -220,19 +220,30 @@ a {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 0.5rem;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.nav-links li {
+    list-style: none;
+}
+
+/* Hide logout button on desktop - show only on mobile menu */
+.nav-links li:last-child {
+    display: none;
 }
 
 .nav-links a {
     display: block;
-    padding: 0.75rem 1.25rem;
+    padding: 0.6rem 1rem;
     border-radius: var(--radius-md);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    white-space: nowrap;
 }
 
 .nav-links a::before {
@@ -288,8 +299,30 @@ a {
     transform: translateY(-9px) rotate(-45deg);
 }
 
-/* Logout button */
-#logoutBtn, .back-btn {
+/* Logout button nel menu */
+.nav-logout-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: var(--white);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.nav-logout-btn:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    transform: scale(1.02);
+}
+
+/* Logout button legacy */
+#logoutBtn:not(.nav-logout-btn), .back-btn {
     padding: 0.6rem 1.2rem;
     border-radius: var(--radius-md);
     font-weight: 600;
@@ -1180,6 +1213,24 @@ input::placeholder {
 }
 
 /* ===== RESPONSIVE ===== */
+
+/* Tablet landscape - reduce nav spacing */
+@media (max-width: 1100px) {
+    .nav-links {
+        gap: 0.15rem;
+    }
+    
+    .nav-links a {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .team-name {
+        font-size: 1.2rem;
+    }
+}
+
+/* Tablet portrait and mobile */
 @media (max-width: 768px) {
     .hamburger {
         display: flex;
@@ -1187,44 +1238,75 @@ input::placeholder {
     }
 
     .nav-links {
-        position: absolute;
-        top: 100%;
+        position: fixed;
+        top: 70px;
         left: 0;
         right: 0;
-        background: rgba(15, 23, 42, 0.98);
+        bottom: 0;
+        background: rgba(10, 22, 40, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
         align-items: stretch;
-        padding: 1rem;
+        padding: 1.5rem;
         gap: 0.5rem;
         display: none;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         z-index: 999;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        overflow-y: auto;
     }
 
     .nav-links.active {
         display: flex !important;
     }
 
-    .nav-links a {
-        text-align: center;
-        padding: 1rem;
+    .nav-links li {
+        width: 100%;
+    }
+    
+    /* Show logout button in mobile menu */
+    .nav-links li:last-child {
+        display: block;
     }
 
-    #logoutBtn {
-        position: static;
-        transform: none;
-        margin-bottom: 0.5rem;
+    .nav-links a {
+        display: block;
+        text-align: left;
+        padding: 1rem 1.25rem;
+        font-size: 1.1rem;
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.03);
+        margin-bottom: 0.25rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .nav-logout-btn {
+        margin-top: 1rem;
+        padding: 1rem;
+        font-size: 1.1rem;
     }
 
     .hero {
-        min-height: 50vh;
-        padding: 3rem 5%;
+        min-height: 45vh;
+        padding: 2.5rem 1rem;
     }
 
     .hero::before, .hero::after {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
+    }
+    
+    .hero-content h1 {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+        padding: 0 0.5rem;
     }
 
     .weekly-events {
@@ -1277,6 +1359,40 @@ input::placeholder {
     .chapter-content {
         padding: 1rem;
     }
+    
+    /* Hero buttons mobile */
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0 0.5rem;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    /* Features grid mobile */
+    .features {
+        padding: 2rem 1rem;
+        gap: 1rem;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+    }
+    
+    /* Footer mobile */
+    footer, .footer {
+        padding: 1.5rem 1rem;
+        margin-top: 2rem;
+    }
+    
+    footer p, .footer p {
+        font-size: 0.85rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1285,15 +1401,16 @@ input::placeholder {
     }
 
     .team-name {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
-    .logo {
-        font-size: 2rem;
+    .logo, .baseball-ball {
+        width: 40px;
+        height: 40px;
     }
 
     .section-title {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .detail-row {
@@ -1303,6 +1420,67 @@ input::placeholder {
 
     .detail-row strong {
         min-width: auto;
+    }
+    
+    /* Weekly events extra small */
+    .weekly-events {
+        margin: -1rem 0.5rem 1.5rem;
+        padding: 1rem;
+        border-radius: var(--radius-lg);
+    }
+    
+    .weekly-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .event-item {
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+    
+    .event-date-box {
+        min-width: 48px;
+        padding: 0.5rem;
+    }
+    
+    .event-num {
+        font-size: 1.1rem;
+    }
+    
+    .event-details h3 {
+        font-size: 0.9rem;
+    }
+    
+    .event-details p {
+        font-size: 0.8rem;
+    }
+    
+    /* Page header mobile */
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .page-header p {
+        font-size: 0.9rem;
+    }
+    
+    /* Match cards mobile */
+    .match-card {
+        border-radius: var(--radius-md);
+    }
+    
+    /* Presence buttons inline mobile */
+    .event-presence-btns {
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+        margin-left: 0;
+    }
+    
+    .event-presence-btns .presence-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
     }
 }
 
