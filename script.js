@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v42 =====
-const APP_VERSION = '42';
+// ===== SCRIPT.JS v43 =====
+const APP_VERSION = '43';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('   nav-links classes:', navLinks.className);
             });
 
-            // Close menu when clicking on a link
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
+            // Close menu when clicking on a link or button
+            document.querySelectorAll('.nav-links a, .nav-links button').forEach(item => {
+                item.addEventListener('click', () => {
                     navLinks.classList.remove('active');
                     newHamburger.classList.remove('active');
                 });
