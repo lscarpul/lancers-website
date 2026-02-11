@@ -487,16 +487,18 @@
             </div>
 
             <div class="match-card" onclick="toggleCard(this)">
-                <div class="match-header away">
-                    <div class="match-date"><span class="day">04-12</span><span class="month">APR</span></div>
-                    <div class="match-info"><h3>✈️ @ Health & Performance S.S.D</h3><span>Trasferta - 09:00/11:00</span></div>
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">12</span><span class="month">APR</span></div>
+                    <div class="match-info"><h3>✈️ @ Health & Performance S.S.D</h3><span>Sabato - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>04/04 ore 09:00 - 12/04 ore 11:00</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Health & Performance</span></div>
+                        <div class="detail-row"><strong>ℹ️ Note:</strong><span>Amichevole trasferta</span></div>
+                        <a href="https://maps.google.com/?q=Health+Performance+Baseball" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
@@ -695,7 +697,7 @@
 
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header home">
-                    <div class="match-date"><span class="day">02</span><span class="month">AGO</span></div>
+                    <div class="match-date"><span class="day">26</span><span class="month">LUG</span></div>
                     <div class="match-info"><h3>🏠 vs Padule Baseball A.S.D</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
@@ -704,6 +706,7 @@
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
                         <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                        <div class="detail-row"><strong>ℹ️ Note:</strong><span>Ritorno</span></div>
                     </div>
                 </div>
             </div>
@@ -837,13 +840,14 @@
         const matchDateMap = {
             '2026-03-14': '14MAR',
             '2026-03-22': '22MAR',
-            '2026-04-04': '04-12APR',
+            '2026-04-12': '12APR',
             '2026-04-19': '19APR',
             '2026-05-03': '03MAG',
             '2026-05-30': '30MAG',
             '2026-06-21': '21GIU',
             '2026-07-05': '05LUG',
-            '2026-07-12': '12LUG'
+            '2026-07-12': '12LUG',
+            '2026-07-26': '26LUG'
         };
         
         async function loadTrasportiForCalendar() {
@@ -994,13 +998,14 @@
             const names = {
                 '2026-03-14': 'Fortitudo Bologna',
                 '2026-03-22': 'Fiorentina',
-                '2026-04-04': 'Health & Performance',
+                '2026-04-12': 'Health & Performance',
                 '2026-04-19': 'Livorno 1940',
                 '2026-05-03': 'Colorno B.C.',
                 '2026-05-30': 'Padule Baseball',
                 '2026-06-21': 'Longbridge 2000',
                 '2026-07-05': 'BSC Arezzo',
-                '2026-07-12': 'Cali Roma XII'
+                '2026-07-12': 'Cali Roma XII',
+                '2026-07-26': 'Padule Baseball'
             };
             return names[matchId] || matchId;
         }
