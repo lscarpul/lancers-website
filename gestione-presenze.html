@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Presenze - Lancers Baseball</title>
+    <title>Area Admin - Lancers Baseball</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
@@ -548,6 +548,241 @@
             .player-number { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
             .admin-btn { width: 26px; height: 26px; font-size: 0.7rem; }
         }
+
+        /* Trasporti Styles */
+        .trasporti-match-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .trasporti-match-select:focus {
+            outline: none;
+            border-color: #ed8936;
+        }
+
+        .trasporti-match-select option {
+            background: #0a1929;
+            color: white;
+        }
+
+        .vehicle-card {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .vehicle-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .vehicle-seats-badge {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .remove-vehicle-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .remove-vehicle-btn:hover {
+            background: rgba(239, 68, 68, 0.4);
+            transform: scale(1.1);
+        }
+
+        .vehicle-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .vehicle-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .vehicle-form-group label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .vehicle-form-group select,
+        .vehicle-form-group input {
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .vehicle-form-group select:focus,
+        .vehicle-form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .vehicle-form-group select option {
+            background: #0a1929;
+        }
+
+        .passengers-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .passengers-section h5 {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .passengers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .passenger-slot {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .passenger-slot select {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .passenger-slot select option {
+            background: #0a1929;
+        }
+
+        .add-vehicle-btn {
+            width: 100%;
+            padding: 1rem;
+            border: 2px dashed rgba(59, 130, 246, 0.4);
+            border-radius: 16px;
+            background: transparent;
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .add-vehicle-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+        }
+
+        .save-trasporti-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 1.5rem;
+        }
+
+        .save-trasporti-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .trasporti-summary {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .summary-label {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .vehicle-form-row {
+                grid-template-columns: 1fr;
+            }
+            .passengers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -596,7 +831,7 @@
             <li><a href="calendario.html">⚾ Partite</a></li>
             <li><a href="presenze.html">📋 Presenze</a></li>
             <li><a href="documento.html">📄 Documento</a></li>
-            <li><a href="gestione-presenze.html" class="active">📊 Gestione</a></li>
+            <li><a href="gestione-presenze.html" class="active">� Area Admin</a></li>
         </ul>
         <div class="hamburger">
             <span></span>
@@ -606,8 +841,8 @@
     </nav>
 
     <div class="admin-hero">
-        <h1>📊 Gestione Presenze</h1>
-        <p>Riepilogo presenze di tutti i giocatori</p>
+        <h1>� Area Admin</h1>
+        <p>Gestione presenze, trasporti e comunicazioni</p>
     </div>
 
     <div id="mainContent">
@@ -625,6 +860,7 @@
                 <button class="tab-btn active" onclick="showTab('next')">🎯 Prossimo Evento</button>
                 <button class="tab-btn" onclick="showTab('byEvent')">📅 Per Evento</button>
                 <button class="tab-btn" onclick="showTab('byPlayer')">👥 Per Giocatore</button>
+                <button class="tab-btn" onclick="showTab('trasporti')">🚗 Trasporti</button>
             </div>
 
             <!-- TAB: Prossimo Evento -->
@@ -651,6 +887,45 @@
                 <div class="glass-card">
                     <h3>👥 Statistiche Giocatori</h3>
                     <div id="playerStats" class="loading">Caricamento</div>
+                </div>
+            </div>
+
+            <!-- TAB: Trasporti -->
+            <div id="tab-trasporti" class="tab-content">
+                <div class="glass-card">
+                    <h3>🚗 Gestione Trasporti Trasferte</h3>
+                    <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.9rem;">Seleziona una partita in trasferta e organizza i veicoli con guidatori e passeggeri.</p>
+                    
+                    <select class="trasporti-match-select" id="trasportiMatchSelect" onchange="loadTrasportiForMatch()">
+                        <option value="">-- Seleziona partita in trasferta --</option>
+                    </select>
+                    
+                    <div id="trasportiContent" style="display: none;">
+                        <div id="vehiclesList"></div>
+                        
+                        <button class="add-vehicle-btn" onclick="addVehicle()">
+                            ➕ Aggiungi Veicolo
+                        </button>
+                        
+                        <div class="trasporti-summary" id="trasportiSummary" style="display: none;">
+                            <div class="summary-item">
+                                <span class="summary-value" id="totalVehicles">0</span>
+                                <span class="summary-label">Veicoli</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-value" id="totalSeats">0</span>
+                                <span class="summary-label">Posti Totali</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-value" id="totalPassengers">0</span>
+                                <span class="summary-label">Passeggeri</span>
+                            </div>
+                        </div>
+                        
+                        <button class="save-trasporti-btn" onclick="saveTrasporti()">
+                            💾 Salva Trasporti
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1338,6 +1613,383 @@
             
             statusDiv.innerHTML = html;
         }
+
+        // ==========================================
+        // 🚗 GESTIONE TRASPORTI
+        // ==========================================
+        
+        // Partite in trasferta
+        const trasferte = [
+            { id: '2026-03-14', name: '14 Mar - @ Fortitudo Bologna', date: '2026-03-14' },
+            { id: '2026-03-22', name: '22 Mar - @ Fiorentina', date: '2026-03-22' },
+            { id: '2026-04-04', name: '04-12 Apr - @ Health & Performance', date: '2026-04-04' },
+            { id: '2026-04-19', name: '19 Apr - @ Livorno 1940', date: '2026-04-19' },
+            { id: '2026-05-03', name: '03 Mag - @ Colorno B.C.', date: '2026-05-03' },
+            { id: '2026-05-30', name: '30 Mag - @ Padule Baseball', date: '2026-05-30' },
+            { id: '2026-06-21', name: '21 Giu - @ Longbridge 2000', date: '2026-06-21' },
+            { id: '2026-07-05', name: '05 Lug - @ BSC Arezzo', date: '2026-07-05' },
+            { id: '2026-07-12', name: '12 Lug - @ Cali Roma XII', date: '2026-07-12' }
+        ];
+        
+        let currentTrasporti = { vehicles: [] };
+        let vehicleIdCounter = 0;
+        
+        // Popola select trasferte
+        function initTrasportiSelect() {
+            const select = document.getElementById('trasportiMatchSelect');
+            if (!select) return;
+            
+            trasferte.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = t.name;
+                select.appendChild(opt);
+            });
+        }
+        
+        // Carica trasporti per una partita
+        async function loadTrasportiForMatch() {
+            const matchId = document.getElementById('trasportiMatchSelect').value;
+            const content = document.getElementById('trasportiContent');
+            
+            if (!matchId) {
+                content.style.display = 'none';
+                return;
+            }
+            
+            content.style.display = 'block';
+            document.getElementById('vehiclesList').innerHTML = '<p class="loading">Caricamento</p>';
+            
+            try {
+                const response = await fetch(`${FIREBASE_URL}/trasporti/${matchId}.json`);
+                const data = await response.json();
+                
+                if (data && data.vehicles) {
+                    currentTrasporti = data;
+                    vehicleIdCounter = Math.max(...data.vehicles.map(v => v.id || 0), 0) + 1;
+                } else {
+                    currentTrasporti = { vehicles: [] };
+                    vehicleIdCounter = 1;
+                }
+                
+                renderVehicles();
+            } catch (e) {
+                console.error('Errore caricamento trasporti:', e);
+                currentTrasporti = { vehicles: [] };
+                vehicleIdCounter = 1;
+                renderVehicles();
+            }
+        }
+        
+        // Render veicoli
+        function renderVehicles() {
+            const container = document.getElementById('vehiclesList');
+            
+            if (currentTrasporti.vehicles.length === 0) {
+                container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 2rem;">Nessun veicolo configurato. Clicca "Aggiungi Veicolo" per iniziare.</p>';
+                updateSummary();
+                return;
+            }
+            
+            container.innerHTML = currentTrasporti.vehicles.map((vehicle, idx) => `
+                <div class="vehicle-card" data-vehicle-id="${vehicle.id}">
+                    <div class="vehicle-header">
+                        <div class="vehicle-title">
+                            🚗 Veicolo ${idx + 1}
+                            <span class="vehicle-seats-badge">${vehicle.seats} posti</span>
+                        </div>
+                        <button class="remove-vehicle-btn" onclick="removeVehicle(${vehicle.id})">✕</button>
+                    </div>
+                    
+                    <div class="vehicle-form-row">
+                        <div class="vehicle-form-group">
+                            <label>Numero Posti</label>
+                            <select onchange="updateVehicleSeats(${vehicle.id}, this.value)">
+                                ${[4,5,6,7,8,9,10,11].map(n => `<option value="${n}" ${vehicle.seats === n ? 'selected' : ''}>${n} posti</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="vehicle-form-group">
+                            <label>🚗 Guidatore</label>
+                            <input type="text" 
+                                   list="playersList" 
+                                   placeholder="Scrivi o seleziona..." 
+                                   value="${vehicle.driverName || getPlayerDisplayName(vehicle.driver) || ''}"
+                                   onchange="updateVehicleDriver(${vehicle.id}, this.value)"
+                                   onblur="updateVehicleDriver(${vehicle.id}, this.value)">
+                            <datalist id="playersList">
+                                ${allPlayers.map(p => `<option value="#${p.number} ${p.name} ${p.surname}">`).join('')}
+                            </datalist>
+                        </div>
+                    </div>
+                    
+                    <div class="passengers-section">
+                        <h5>👥 Passeggeri (${vehicle.passengers?.filter(p => p).length || 0}/${vehicle.seats - 1})</h5>
+                        <div class="passengers-grid">
+                            ${renderPassengerSlots(vehicle)}
+                        </div>
+                    </div>
+                    
+                    <div class="vehicle-form-group" style="margin-top: 1rem;">
+                        <label>📝 Note</label>
+                        <input type="text" 
+                               placeholder="Note veicolo (es. punto di ritrovo, orario partenza...)"
+                               value="${vehicle.notes || ''}"
+                               onchange="updateVehicleNotes(${vehicle.id}, this.value)"
+                               onblur="updateVehicleNotes(${vehicle.id}, this.value)">
+                    </div>
+                </div>
+            `).join('');
+            
+            // Mostra chi manca
+            renderMissingSummary();
+            updateSummary();
+        }
+        
+        // Mostra chi non ha ancora un posto
+        function renderMissingSummary() {
+            const assignedPeople = new Set();
+            currentTrasporti.vehicles.forEach(v => {
+                if (v.driver) assignedPeople.add(String(v.driver));
+                const match = v.driverName?.match(/^#(\d+)/);
+                if (match) assignedPeople.add(match[1]);
+                
+                (v.passengers || []).forEach((p, i) => {
+                    if (p) assignedPeople.add(String(p));
+                    const pMatch = v.passengerNames?.[i]?.match(/^#(\d+)/);
+                    if (pMatch) assignedPeople.add(pMatch[1]);
+                });
+            });
+            
+            const missingPlayers = allPlayers.filter(p => !assignedPeople.has(String(p.number)));
+            
+            let existingSummary = document.getElementById('missingSummary');
+            if (!existingSummary) {
+                const container = document.getElementById('vehiclesList');
+                container.insertAdjacentHTML('beforebegin', '<div id="missingSummary"></div>');
+                existingSummary = document.getElementById('missingSummary');
+            }
+            
+            if (missingPlayers.length > 0 && currentTrasporti.vehicles.length > 0) {
+                existingSummary.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="color: #ef4444; margin: 0 0 0.5rem 0; font-size: 0.95rem;">⚠️ Senza posto (${missingPlayers.length}):</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            ${missingPlayers.map(p => `<span style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.8rem;">#${p.number} ${p.name}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (currentTrasporti.vehicles.length > 0) {
+                existingSummary.innerHTML = `
+                    <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+                        <p style="color: #22c55e; margin: 0;">✅ Tutti i giocatori hanno un posto!</p>
+                    </div>
+                `;
+            } else {
+                existingSummary.innerHTML = '';
+            }
+        }
+        
+        // Controlla se una persona è già in qualche veicolo
+        function isPersonAlreadyAssigned(personId, excludeVehicleId = null, excludeSlot = null) {
+            for (const v of currentTrasporti.vehicles) {
+                if (excludeVehicleId !== null && v.id === excludeVehicleId) {
+                    // Controlla solo se è autista (non nel slot che stiamo modificando)
+                    if (excludeSlot === 'driver') continue;
+                    if (String(v.driver) === String(personId)) return true;
+                    const dMatch = v.driverName?.match(/^#(\d+)/);
+                    if (dMatch && dMatch[1] === String(personId)) return true;
+                } else {
+                    // Controlla autista
+                    if (String(v.driver) === String(personId)) return true;
+                    const dMatch = v.driverName?.match(/^#(\d+)/);
+                    if (dMatch && dMatch[1] === String(personId)) return true;
+                }
+                
+                // Controlla passeggeri
+                (v.passengers || []).forEach((p, i) => {
+                    if (excludeVehicleId !== null && v.id === excludeVehicleId && excludeSlot === i) return;
+                    if (String(p) === String(personId)) return true;
+                    const pMatch = v.passengerNames?.[i]?.match(/^#(\d+)/);
+                    if (pMatch && pMatch[1] === String(personId)) return true;
+                });
+            }
+            return false;
+        }
+        
+        // Render slot passeggeri
+        function renderPassengerSlots(vehicle) {
+            const maxPassengers = vehicle.seats - 1; // -1 per il guidatore
+            const passengers = vehicle.passengers || [];
+            const passengerNames = vehicle.passengerNames || [];
+            let html = '';
+            
+            for (let i = 0; i < maxPassengers; i++) {
+                const currentPassenger = passengers[i] || '';
+                const currentName = passengerNames[i] || getPlayerDisplayName(currentPassenger) || '';
+                html += `
+                    <div class="passenger-slot">
+                        <input type="text" 
+                               list="playersList" 
+                               placeholder="Posto ${i + 1}"
+                               value="${currentName}"
+                               onchange="updatePassenger(${vehicle.id}, ${i}, this.value)"
+                               onblur="updatePassenger(${vehicle.id}, ${i}, this.value)">
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+        
+        // Helper per ottenere nome display da numero
+        function getPlayerDisplayName(numOrName) {
+            if (!numOrName) return '';
+            // Se è già un nome/stringa, ritorna così
+            if (typeof numOrName === 'string' && numOrName.length > 3) return numOrName;
+            // Cerca per numero
+            const player = allPlayers.find(p => p.number == numOrName);
+            if (player) return `#${player.number} ${player.name} ${player.surname}`;
+            return numOrName;
+        }
+        
+        // Aggiungi veicolo
+        function addVehicle() {
+            currentTrasporti.vehicles.push({
+                id: vehicleIdCounter++,
+                seats: 5,
+                driver: '',
+                passengers: []
+            });
+            renderVehicles();
+        }
+        
+        // Rimuovi veicolo
+        function removeVehicle(vehicleId) {
+            currentTrasporti.vehicles = currentTrasporti.vehicles.filter(v => v.id !== vehicleId);
+            renderVehicles();
+        }
+        
+        // Aggiorna posti veicolo
+        function updateVehicleSeats(vehicleId, seats) {
+            const vehicle = currentTrasporti.vehicles.find(v => v.id === vehicleId);
+            if (vehicle) {
+                vehicle.seats = parseInt(seats);
+                // Tronca passeggeri se necessario
+                const maxPassengers = vehicle.seats - 1;
+                if (vehicle.passengers && vehicle.passengers.length > maxPassengers) {
+                    vehicle.passengers = vehicle.passengers.slice(0, maxPassengers);
+                }
+                if (vehicle.passengerNames && vehicle.passengerNames.length > maxPassengers) {
+                    vehicle.passengerNames = vehicle.passengerNames.slice(0, maxPassengers);
+                }
+                renderVehicles();
+            }
+        }
+        
+        // Aggiorna guidatore (ora accetta nome o selezione)
+        function updateVehicleDriver(vehicleId, driverValue) {
+            const vehicle = currentTrasporti.vehicles.find(v => v.id === vehicleId);
+            if (vehicle) {
+                // Salva il valore come stringa (nome completo o custom)
+                vehicle.driverName = driverValue;
+                // Estrai numero se presente (formato "#XX Nome")
+                const match = driverValue.match(/^#(\d+)/);
+                vehicle.driver = match ? match[1] : driverValue;
+            }
+            renderMissingSummary();
+            updateSummary();
+        }
+        
+        // Aggiorna passeggero (ora accetta nome o selezione)
+        function updatePassenger(vehicleId, slotIndex, passengerValue) {
+            const vehicle = currentTrasporti.vehicles.find(v => v.id === vehicleId);
+            if (vehicle) {
+                if (!vehicle.passengers) vehicle.passengers = [];
+                if (!vehicle.passengerNames) vehicle.passengerNames = [];
+                
+                // Salva il nome completo
+                vehicle.passengerNames[slotIndex] = passengerValue;
+                // Estrai numero se presente
+                const match = passengerValue.match(/^#(\d+)/);
+                vehicle.passengers[slotIndex] = match ? match[1] : passengerValue;
+            }
+            renderMissingSummary();
+            updateSummary();
+        }
+        
+        // Aggiorna note veicolo
+        function updateVehicleNotes(vehicleId, notes) {
+            const vehicle = currentTrasporti.vehicles.find(v => v.id === vehicleId);
+            if (vehicle) {
+                vehicle.notes = notes;
+            }
+        }
+        
+        // Aggiorna riepilogo
+        function updateSummary() {
+            const summary = document.getElementById('trasportiSummary');
+            if (currentTrasporti.vehicles.length === 0) {
+                summary.style.display = 'none';
+                return;
+            }
+            
+            summary.style.display = 'flex';
+            
+            const totalVehicles = currentTrasporti.vehicles.length;
+            const totalSeats = currentTrasporti.vehicles.reduce((sum, v) => sum + v.seats, 0);
+            const totalPassengers = currentTrasporti.vehicles.reduce((sum, v) => {
+                let count = (v.driver || v.driverName) ? 1 : 0;
+                // Conta passeggeri (sia da passengers che passengerNames)
+                const names = v.passengerNames || v.passengers || [];
+                count += names.filter(p => p && p.trim()).length;
+                return sum + count;
+            }, 0);
+            
+            document.getElementById('totalVehicles').textContent = totalVehicles;
+            document.getElementById('totalSeats').textContent = totalSeats;
+            document.getElementById('totalPassengers').textContent = totalPassengers;
+        }
+        
+        // Salva trasporti
+        async function saveTrasporti() {
+            const matchId = document.getElementById('trasportiMatchSelect').value;
+            if (!matchId) {
+                alert('Seleziona una partita!');
+                return;
+            }
+            
+            const btn = document.querySelector('.save-trasporti-btn');
+            btn.textContent = '⏳ Salvataggio...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch(`${FIREBASE_URL}/trasporti/${matchId}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentTrasporti)
+                });
+                
+                if (response.ok) {
+                    btn.textContent = '✅ Salvato!';
+                    setTimeout(() => {
+                        btn.textContent = '💾 Salva Trasporti';
+                        btn.disabled = false;
+                    }, 2000);
+                } else {
+                    throw new Error('Errore salvataggio');
+                }
+            } catch (e) {
+                console.error('Errore salvataggio trasporti:', e);
+                btn.textContent = '❌ Errore!';
+                setTimeout(() => {
+                    btn.textContent = '💾 Salva Trasporti';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+        
+        // Init trasporti al caricamento
+        document.addEventListener('DOMContentLoaded', initTrasportiSelect);
 
         // Init
         loadAllData();

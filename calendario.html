@@ -60,7 +60,7 @@
             transition: max-height 0.3s ease;
             background: rgba(10, 22, 40, 0.9);
         }
-        .match-card.open .match-details { max-height: 500px; }
+        .match-card.open .match-details { max-height: 2000px; }
         
         .match-details-inner {
             padding: 1.5rem;
@@ -96,6 +96,271 @@
             margin-top: 0.5rem;
         }
         .map-btn:hover { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); }
+
+        /* Trasporti Display */
+        .trasporti-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .trasporti-title {
+            color: #3b82f6;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+        .vehicle-display {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .vehicle-display-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .vehicle-icon { font-size: 1.2rem; }
+        .driver-name { font-weight: 700; color: white; }
+        .seats-info { color: #60a5fa; font-size: 0.85rem; margin-left: auto; }
+        .passengers-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .passenger-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+        }
+        .no-trasporti {
+            color: #94a3b8;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* Gestione Trasporti Modal */
+        .trasporti-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .trasporti-modal.open { display: block; }
+        .trasporti-modal-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            overflow: hidden;
+        }
+        .trasporti-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .trasporti-modal-header h2 {
+            margin: 0;
+            color: #60a5fa;
+            font-size: 1.2rem;
+        }
+        .trasporti-modal-close {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+        }
+        .trasporti-modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Veicoli Interattivi */
+        .vehicle-interactive {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .vehicle-interactive-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .vehicle-interactive-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .vehicle-icon-large { font-size: 1.5rem; }
+        .vehicle-driver-info h4 {
+            margin: 0;
+            color: white;
+            font-size: 1rem;
+        }
+        .vehicle-driver-info span {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.5rem;
+        }
+        .seat-slot {
+            background: rgba(0,0,0,0.3);
+            border: 2px dashed rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 0.6rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        .seat-slot:hover:not(.occupied):not(.driver-seat) {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.2);
+        }
+        .seat-slot.occupied {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid rgba(34, 197, 94, 0.5);
+            color: #22c55e;
+            cursor: default;
+        }
+        .seat-slot.my-seat {
+            background: rgba(234, 179, 8, 0.2);
+            border: 2px solid rgba(234, 179, 8, 0.5);
+            color: #eab308;
+            cursor: pointer;
+        }
+        .seat-slot.driver-seat {
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            color: #3b82f6;
+        }
+        .seat-slot.driver-free {
+            cursor: pointer;
+        }
+
+        /* Aggiungi Veicolo Utente */
+        .add-my-vehicle-section {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px dashed rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .add-my-vehicle-section h4 {
+            color: #22c55e;
+            margin: 0 0 1rem 0;
+        }
+        .add-vehicle-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .add-vehicle-form select, .add-vehicle-form button {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .add-vehicle-form select {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+        }
+        .add-vehicle-form button {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Note Veicolo */
+        .vehicle-notes {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .vehicle-notes-text {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* Summary Chi Manca */
+        .missing-summary {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .missing-summary h4 {
+            color: #ef4444;
+            margin: 0 0 0.5rem 0;
+            font-size: 0.95rem;
+        }
+        .missing-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .missing-tag {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .all-assigned {
+            color: #22c55e;
+            font-size: 0.9rem;
+        }
+
+        /* Tasto Gestisci Trasporti */
+        .manage-trasporti-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        .manage-trasporti-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -140,18 +405,18 @@
         <div class="calendar-container">
             
             <!-- AMICHEVOLI -->
-            <h2 class="section-title">🤝 AMICHEVOLI - Marzo/Aprile</h2>
+            <h2 class="section-title">🤝 AMICHEVOLI - Marzo</h2>
             
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header friendly">
                     <div class="match-date"><span class="day">01</span><span class="month">MAR</span></div>
-                    <div class="match-info"><h3>🏠 Amichevole Interna</h3><span>Domenica - Casa</span></div>
+                    <div class="match-info"><h3>🏠 Amichevole Interna</h3><span>Domenica - Casa - 10:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
                         <div class="detail-row"><strong>📝 Note:</strong><span>Amichevole interna preparazione stagione</span></div>
                     </div>
@@ -161,15 +426,15 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header friendly">
                     <div class="match-date"><span class="day">08</span><span class="month">MAR</span></div>
-                    <div class="match-info"><h3>🏠 vs Lucca/Phoenix/Castenaso</h3><span>Domenica - Casa</span></div>
+                    <div class="match-info"><h3>🏠 vs Castenaso/Phoenix</h3><span>Domenica - Casa - 10:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
-                        <div class="detail-row"><strong>📝 Note:</strong><span>Avversario da definire</span></div>
+                        <div class="detail-row"><strong>📝 Note:</strong><span>Amichevole pre-stagione</span></div>
                     </div>
                 </div>
             </div>
@@ -177,12 +442,13 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">14</span><span class="month">MAR</span></div>
-                    <div class="match-info"><h3>✈️ @ Fortitudo Bologna</h3><span>Sabato - Trasferta</span></div>
+                    <div class="match-info"><h3>✈️ @ Fortitudo Bologna</h3><span>Sabato - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
                         <div class="detail-row"><strong>📍 Campo:</strong><span>Stadio Gianni Falchi, Bologna</span></div>
                         <a href="https://maps.google.com/?q=Stadio+Gianni+Falchi+Bologna" target="_blank" class="map-btn">📍 Apri Maps</a>
@@ -193,14 +459,15 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">22</span><span class="month">MAR</span></div>
-                    <div class="match-info"><h3>✈️ @ Fiorentina</h3><span>Domenica - Trasferta</span></div>
+                    <div class="match-info"><h3>✈️ @ Fiorentina</h3><span>Domenica - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Fiorentina Baseball</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Fiorentina Baseball, Firenze</span></div>
                         <a href="https://maps.google.com/?q=Fiorentina+Baseball+Firenze" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
@@ -209,29 +476,30 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header friendly">
                     <div class="match-date"><span class="day">29</span><span class="month">MAR</span></div>
-                    <div class="match-info"><h3>🏠 vs Arezzo</h3><span>Domenica - Casa</span></div>
+                    <div class="match-info"><h3>🏠 vs A.S.D BSC Arezzo</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
                     </div>
                 </div>
             </div>
 
             <div class="match-card" onclick="toggleCard(this)">
-                <div class="match-header friendly">
-                    <div class="match-date"><span class="day">05</span><span class="month">APR</span></div>
-                    <div class="match-info"><h3>🏠 vs Avigliana</h3><span>Sabato - Casa</span></div>
+                <div class="match-header away">
+                    <div class="match-date"><span class="day">04-12</span><span class="month">APR</span></div>
+                    <div class="match-info"><h3>✈️ @ Health & Performance S.S.D</h3><span>Trasferta - 09:00/11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
-                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers - Casa</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>04/04 ore 09:00 - 12/04 ore 11:00</span></div>
+                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Health & Performance</span></div>
                     </div>
                 </div>
             </div>
@@ -242,28 +510,30 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">19</span><span class="month">APR</span></div>
-                    <div class="match-info"><h3>✈️ Giornata 1 - @ Trasferta</h3><span>Domenica</span></div>
+                    <div class="match-info"><h3>✈️ @ Livorno 1940 Baseball</h3><span>Domenica - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Livorno 1940</span></div>
+                        <a href="https://maps.google.com/?q=Livorno+Baseball" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
 
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header home">
-                    <div class="match-date"><span class="day">27</span><span class="month">APR</span></div>
-                    <div class="match-info"><h3>🏠 Giornata 2 - Casa</h3><span>Domenica</span></div>
+                    <div class="match-date"><span class="day">26</span><span class="month">APR</span></div>
+                    <div class="match-info"><h3>🏠 vs Longbridge 2000 B.C</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
                     </div>
                 </div>
@@ -272,28 +542,30 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">03</span><span class="month">MAG</span></div>
-                    <div class="match-info"><h3>✈️ Giornata 3 - @ Trasferta</h3><span>Domenica</span></div>
+                    <div class="match-info"><h3>✈️ @ Colorno B.C.</h3><span>Domenica - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Colorno B.C.</span></div>
+                        <a href="https://maps.google.com/?q=Colorno+Baseball+Parma" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
 
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header home">
-                    <div class="match-date"><span class="day">11</span><span class="month">MAG</span></div>
-                    <div class="match-info"><h3>🏠 Giornata 4 - Casa</h3><span>Domenica</span></div>
+                    <div class="match-date"><span class="day">10</span><span class="month">MAG</span></div>
+                    <div class="match-info"><h3>🏠 vs A.S.D BSC Arezzo</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
                     </div>
                 </div>
@@ -301,14 +573,14 @@
 
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header home">
-                    <div class="match-date"><span class="day">18</span><span class="month">MAG</span></div>
-                    <div class="match-info"><h3>🏠 Giornata 5 - Casa</h3><span>Domenica</span></div>
+                    <div class="match-date"><span class="day">17</span><span class="month">MAG</span></div>
+                    <div class="match-info"><h3>🏠 vs Cali Roma XII</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
                     </div>
                 </div>
@@ -317,29 +589,31 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">30</span><span class="month">MAG</span></div>
-                    <div class="match-info"><h3>✈️ Giornata 6 - @ Trasferta</h3><span>Sabato</span></div>
+                    <div class="match-info"><h3>✈️ @ Padule Baseball A.S.D</h3><span>Sabato - Trasferta - 15:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>15:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Padule Baseball</span></div>
+                        <a href="https://maps.google.com/?q=Padule+Baseball" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
 
             <div class="match-card" onclick="toggleCard(this)">
-                <div class="match-header away">
+                <div class="match-header home">
                     <div class="match-date"><span class="day">07</span><span class="month">GIU</span></div>
-                    <div class="match-info"><h3>✈️ Giornata 7 - @ Trasferta</h3><span>Sabato</span></div>
+                    <div class="match-info"><h3>🏠 vs Health & Performance S.S.D</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
-                        <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
+                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
                     </div>
                 </div>
             </div>
@@ -349,14 +623,14 @@
 
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header home">
-                    <div class="match-date"><span class="day">15</span><span class="month">GIU</span></div>
-                    <div class="match-info"><h3>🏠 Giornata 8 - Casa</h3><span>Domenica</span></div>
+                    <div class="match-date"><span class="day">14</span><span class="month">GIU</span></div>
+                    <div class="match-info"><h3>🏠 vs Livorno 1940 Baseball</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
                     </div>
                 </div>
@@ -365,28 +639,30 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">21</span><span class="month">GIU</span></div>
-                    <div class="match-info"><h3>✈️ Giornata 9 - @ Trasferta</h3><span>Sabato</span></div>
+                    <div class="match-info"><h3>✈️ @ Longbridge 2000 B.C</h3><span>Domenica - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Longbridge 2000</span></div>
+                        <a href="https://maps.google.com/?q=Longbridge+2000+Baseball" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
 
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header home">
-                    <div class="match-date"><span class="day">29</span><span class="month">GIU</span></div>
-                    <div class="match-info"><h3>🏠 Giornata 10 - Casa</h3><span>Domenica</span></div>
+                    <div class="match-date"><span class="day">28</span><span class="month">GIU</span></div>
+                    <div class="match-info"><h3>🏠 vs Colorno B.C.</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
                     </div>
                 </div>
@@ -395,14 +671,16 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">05</span><span class="month">LUG</span></div>
-                    <div class="match-info"><h3>✈️ Giornata 11 - @ Trasferta</h3><span>Sabato</span></div>
+                    <div class="match-info"><h3>✈️ @ A.S.D BSC Arezzo</h3><span>Domenica - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo BSC Arezzo</span></div>
+                        <a href="https://maps.google.com/?q=BSC+Arezzo+Baseball" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
@@ -410,44 +688,73 @@
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header away">
                     <div class="match-date"><span class="day">12</span><span class="month">LUG</span></div>
-                    <div class="match-info"><h3>✈️ Giornata 12 - @ Trasferta</h3><span>Sabato</span></div>
+                    <div class="match-info"><h3>✈️ @ Cali Roma XII</h3><span>Domenica - Trasferta - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
                         <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>🚗 Trasporti:</strong><span>Da organizzare</span></div>
-                        <div class="detail-row"><strong>📍 Campo:</strong><span>Da definire</span></div>
+                        <div class="detail-row"><strong>📍 Campo:</strong><span>Campo Cali Roma XII</span></div>
+                        <a href="https://maps.google.com/?q=Cali+Roma+Baseball" target="_blank" class="map-btn">📍 Apri Maps</a>
                     </div>
                 </div>
             </div>
 
             <div class="match-card" onclick="toggleCard(this)">
                 <div class="match-header home">
-                    <div class="match-date"><span class="day">20</span><span class="month">LUG</span></div>
-                    <div class="match-info"><h3>🏠 Giornata 13 - Casa</h3><span>Domenica</span></div>
+                    <div class="match-date"><span class="day">02</span><span class="month">AGO</span></div>
+                    <div class="match-info"><h3>🏠 vs Padule Baseball A.S.D</h3><span>Domenica - Casa - 11:00</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
+                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>10:00 al campo</span></div>
+                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>11:00</span></div>
                         <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
                     </div>
                 </div>
             </div>
 
+            <!-- POST SEASON -->
+            <h2 class="section-title">🏆 POST SEASON</h2>
+
             <div class="match-card" onclick="toggleCard(this)">
-                <div class="match-header home">
-                    <div class="match-date"><span class="day">27</span><span class="month">LUG</span></div>
-                    <div class="match-info"><h3>🏠 Giornata 14 - Casa</h3><span>Domenica</span></div>
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">22</span><span class="month">AGO</span></div>
+                    <div class="match-info"><h3>🏆 Playoff/Playout</h3><span>Da definire</span></div>
                     <span class="match-arrow">▼</span>
                 </div>
                 <div class="match-details">
                     <div class="match-details-inner">
-                        <div class="detail-row"><strong>🕐 Ritrovo:</strong><span>09:30 al campo</span></div>
-                        <div class="detail-row"><strong>⚾ Inizio:</strong><span>10:30</span></div>
-                        <div class="detail-row"><strong>📍 Luogo:</strong><span>Campo Lancers</span></div>
+                        <div class="detail-row"><strong>📝 Note:</strong><span>In base alla classifica finale</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">29</span><span class="month">AGO</span></div>
+                    <div class="match-info"><h3>🏆 Playoff/Playout</h3><span>Da definire</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>📝 Note:</strong><span>In base alla classifica finale</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="toggleCard(this)">
+                <div class="match-header friendly">
+                    <div class="match-date"><span class="day">06</span><span class="month">SET</span></div>
+                    <div class="match-info"><h3>🏆 Eventuale Recupero Playoff/Playout</h3><span>Da definire</span></div>
+                    <span class="match-arrow">▼</span>
+                </div>
+                <div class="match-details">
+                    <div class="match-details-inner">
+                        <div class="detail-row"><strong>📝 Note:</strong><span>In base alla classifica finale</span></div>
                     </div>
                 </div>
             </div>
@@ -459,6 +766,19 @@
         <p>&copy; 2026 Lancers Baseball Club - Area Riservata</p>
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
+
+    <!-- Modal Gestione Trasporti -->
+    <div id="trasportiModal" class="trasporti-modal">
+        <div class="trasporti-modal-content">
+            <div class="trasporti-modal-header">
+                <h2 id="modalMatchTitle">🚗 Gestione Trasporti</h2>
+                <button class="trasporti-modal-close" onclick="closeTrasportiModal()">✕</button>
+            </div>
+            <div class="trasporti-modal-body" id="modalBody">
+                <!-- Contenuto dinamico -->
+            </div>
+        </div>
+    </div>
 
     <script src="script.js?v=44"></script>
     <script>
@@ -477,12 +797,537 @@
                     }
                 });
             }
+            
+            // Carica trasporti per le partite in trasferta
+            loadTrasportiForCalendar();
         });
 
         // Funzione toggleCard disabilitata per evitare doppio toggle
         function toggleCard(card) {
             // Non fare nulla - il toggle è gestito dall'event delegation
             // Questo evita il doppio toggle quando onclick e delegation scattano insieme
+        }
+        
+        // Lista giocatori per mapping
+        const playersList = [
+            { number: 0, name: 'Niccolò Bucci' },
+            { number: 1, name: 'Alessandro Ferrini' },
+            { number: 3, name: 'Ettore Della Nave' },
+            { number: 4, name: 'Giovanni G. Beudean' },
+            { number: 6, name: 'Simone Geri' },
+            { number: 7, name: 'Silvano Albano' },
+            { number: 8, name: 'Tommaso Panichi' },
+            { number: 12, name: 'Francesco Grassi' },
+            { number: 14, name: 'Leonardo Scarpulla' },
+            { number: 19, name: 'Simone Baratella' },
+            { number: 22, name: 'Giuseppe G. Grado' },
+            { number: 24, name: 'Guido Nannucci' },
+            { number: 25, name: 'Lorenzo Scarpulla' },
+            { number: 32, name: 'Filippo Anichini' },
+            { number: 38, name: 'Antonio Parrini' },
+            { number: 59, name: 'Lapo Biondi' },
+            { number: 77, name: 'Cosimo Rinaldi' },
+            { number: 89, name: 'Daniele Silvestri' },
+            { number: 90, name: 'Alessandro Rrethatori' },
+            { number: 98, name: 'Francesco Paperini' },
+            { number: 99, name: 'Victor Vergara' }
+        ];
+        
+        function getPlayerName(num) {
+            const p = playersList.find(pl => pl.number == num);
+            return p ? p.name : `#${num}`;
+        }
+        
+        // Mappa date partite -> card
+        const matchDateMap = {
+            '2026-03-14': '14MAR',
+            '2026-03-22': '22MAR',
+            '2026-04-04': '04-12APR',
+            '2026-04-19': '19APR',
+            '2026-05-03': '03MAG',
+            '2026-05-30': '30MAG',
+            '2026-06-21': '21GIU',
+            '2026-07-05': '05LUG',
+            '2026-07-12': '12LUG'
+        };
+        
+        async function loadTrasportiForCalendar() {
+            const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+            
+            try {
+                const response = await fetch(`${FIREBASE_URL}/trasporti.json`);
+                const allTrasporti = await response.json() || {};
+                
+                // Trova tutte le card trasferta
+                const cards = document.querySelectorAll('.match-card');
+                cards.forEach(card => {
+                    const header = card.querySelector('.match-header');
+                    if (!header || !header.classList.contains('away')) return;
+                    
+                    const dateSpan = card.querySelector('.match-date');
+                    const day = dateSpan?.querySelector('.day')?.textContent;
+                    const month = dateSpan?.querySelector('.month')?.textContent;
+                    if (!day || !month) return;
+                    
+                    const cardKey = `${day}${month}`;
+                    
+                    // Trova matchId corrispondente
+                    let matchId = null;
+                    for (const [id, key] of Object.entries(matchDateMap)) {
+                        if (key === cardKey) {
+                            matchId = id;
+                            break;
+                        }
+                    }
+                    
+                    if (!matchId) return;
+                    
+                    const details = card.querySelector('.match-details-inner');
+                    if (!details || details.querySelector('.trasporti-section')) return;
+                    
+                    const data = allTrasporti[matchId];
+                    if (data && data.vehicles && data.vehicles.length > 0) {
+                        // Ha trasporti configurati
+                        details.insertAdjacentHTML('beforeend', renderTrasportiSection(data.vehicles, matchId));
+                    } else {
+                        // Non ha trasporti - mostra solo bottone
+                        details.insertAdjacentHTML('beforeend', `
+                            <div class="trasporti-section">
+                                <div class="trasporti-title">🚗 Trasporti</div>
+                                <p class="no-trasporti">Nessun veicolo ancora configurato.</p>
+                                <button class="manage-trasporti-btn" onclick="openTrasportiModal('${matchId}')">🚗 Gestisci Trasporti</button>
+                            </div>
+                        `);
+                    }
+                });
+            } catch (e) {
+                console.error('Errore caricamento trasporti:', e);
+            }
+        }
+        
+        function renderTrasportiSection(vehicles, matchId) {
+            let html = '<div class="trasporti-section"><div class="trasporti-title">🚗 Trasporti</div>';
+            
+            // Calcola chi ha posto e chi no
+            const assignedPeople = new Set();
+            vehicles.forEach(v => {
+                if (v.driver) assignedPeople.add(v.driver);
+                if (v.driverName && !v.driver) assignedPeople.add(v.driverName);
+                (v.passengers || []).forEach((p, i) => {
+                    if (p) assignedPeople.add(p);
+                    else if (v.passengerNames && v.passengerNames[i]) assignedPeople.add(v.passengerNames[i]);
+                });
+            });
+            
+            // Chi manca
+            const missingPlayers = playersList.filter(p => !assignedPeople.has(String(p.number)));
+            const totalSeats = vehicles.reduce((sum, v) => sum + v.seats, 0);
+            const usedSeats = assignedPeople.size;
+            
+            // Summary chi manca
+            if (missingPlayers.length > 0) {
+                html += `<div class="missing-summary">
+                    <h4>⚠️ Senza posto (${missingPlayers.length}):</h4>
+                    <div class="missing-list">
+                        ${missingPlayers.map(p => `<span class="missing-tag">#${p.number} ${p.name.split(' ')[0]}</span>`).join('')}
+                    </div>
+                </div>`;
+            } else {
+                html += `<p class="all-assigned">✅ Tutti i giocatori hanno un posto!</p>`;
+            }
+            
+            vehicles.forEach((v, idx) => {
+                // Usa driverName se disponibile, altrimenti cerca per numero
+                const driverName = v.driverName || (v.driver ? getPlayerName(v.driver) : 'Da assegnare');
+                
+                // Usa passengerNames se disponibili, altrimenti cerca per numero
+                const passengerNames = v.passengerNames || [];
+                const passengerIds = v.passengers || [];
+                const passengers = passengerIds
+                    .map((p, i) => passengerNames[i] || (p ? getPlayerName(p) : null))
+                    .filter(p => p);
+                
+                html += `
+                    <div class="vehicle-display">
+                        <div class="vehicle-display-header">
+                            <span class="vehicle-icon">🚗</span>
+                            <span class="driver-name">${driverName}</span>
+                            <span class="seats-info">${passengers.length + (v.driver || v.driverName ? 1 : 0)}/${v.seats} posti</span>
+                        </div>
+                        ${passengers.length > 0 ? `
+                            <div class="passengers-list">
+                                ${passengers.map(p => `<span class="passenger-tag">${p}</span>`).join('')}
+                            </div>
+                        ` : '<span class="no-trasporti">Nessun passeggero assegnato</span>'}
+                        ${v.notes ? `<div class="vehicle-notes"><span class="vehicle-notes-text">📝 ${v.notes}</span></div>` : ''}
+                    </div>
+                `;
+            });
+            
+            // Tasto gestisci trasporti
+            html += `<button class="manage-trasporti-btn" onclick="openTrasportiModal('${matchId}')">🚗 Gestisci Trasporti</button>`;
+            
+            html += '</div>';
+            return html;
+        }
+        
+        // ==========================================
+        // GESTIONE TRASPORTI MODAL
+        // ==========================================
+        
+        const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+        let currentModalMatchId = null;
+        let currentModalTrasporti = { vehicles: [] };
+        const currentPlayerData = JSON.parse(sessionStorage.getItem('playerData') || '{}');
+        const isAdmin = [25, 19, 38, 6, 'ADMIN'].includes(currentPlayerData.number);
+        
+        function openTrasportiModal(matchId) {
+            currentModalMatchId = matchId;
+            document.getElementById('trasportiModal').classList.add('open');
+            document.getElementById('modalMatchTitle').textContent = '🚗 Trasporti - ' + getMatchName(matchId);
+            loadModalTrasporti(matchId);
+        }
+        
+        function closeTrasportiModal() {
+            document.getElementById('trasportiModal').classList.remove('open');
+            currentModalMatchId = null;
+            // Ricarica trasporti per aggiornare visualizzazione
+            loadTrasportiForCalendar();
+        }
+        
+        function getMatchName(matchId) {
+            const names = {
+                '2026-03-14': 'Fortitudo Bologna',
+                '2026-03-22': 'Fiorentina',
+                '2026-04-04': 'Health & Performance',
+                '2026-04-19': 'Livorno 1940',
+                '2026-05-03': 'Colorno B.C.',
+                '2026-05-30': 'Padule Baseball',
+                '2026-06-21': 'Longbridge 2000',
+                '2026-07-05': 'BSC Arezzo',
+                '2026-07-12': 'Cali Roma XII'
+            };
+            return names[matchId] || matchId;
+        }
+        
+        async function loadModalTrasporti(matchId) {
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '<p style="text-align:center; color:#94a3b8;">⏳ Caricamento...</p>';
+            
+            try {
+                const response = await fetch(`${FIREBASE_URL}/trasporti/${matchId}.json`);
+                const data = await response.json();
+                currentModalTrasporti = data && data.vehicles ? data : { vehicles: [] };
+                renderModalContent();
+            } catch (e) {
+                console.error('Errore:', e);
+                currentModalTrasporti = { vehicles: [] };
+                renderModalContent();
+            }
+        }
+        
+        function getCurrentPlayerIdentifier() {
+            // Ritorna identificatore univoco del giocatore corrente
+            return String(currentPlayerData.number);
+        }
+        
+        function isPersonInAnyVehicle(personId) {
+            // Controlla se la persona è già in qualche veicolo
+            for (const v of currentModalTrasporti.vehicles) {
+                if (String(v.driver) === String(personId)) return true;
+                if (v.driverName && v.driverName.includes(`#${personId}`)) return true;
+                if (v.passengers) {
+                    for (let i = 0; i < v.passengers.length; i++) {
+                        if (String(v.passengers[i]) === String(personId)) return true;
+                        if (v.passengerNames && v.passengerNames[i] && v.passengerNames[i].includes(`#${personId}`)) return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
+        function renderModalContent() {
+            const body = document.getElementById('modalBody');
+            const myId = getCurrentPlayerIdentifier();
+            const amIAssigned = isPersonInAnyVehicle(myId);
+            
+            // Calcola persone già assegnate
+            const assignedPeople = new Set();
+            currentModalTrasporti.vehicles.forEach(v => {
+                if (v.driver) assignedPeople.add(String(v.driver));
+                (v.passengers || []).forEach(p => { if (p) assignedPeople.add(String(p)); });
+            });
+            
+            // Chi manca
+            const missingPlayers = playersList.filter(p => !assignedPeople.has(String(p.number)));
+            
+            let html = '';
+            
+            // Summary chi manca
+            if (missingPlayers.length > 0) {
+                html += `<div class="missing-summary">
+                    <h4>⚠️ Senza posto (${missingPlayers.length}):</h4>
+                    <div class="missing-list">
+                        ${missingPlayers.map(p => `<span class="missing-tag">#${p.number} ${p.name.split(' ')[0]}</span>`).join('')}
+                    </div>
+                </div>`;
+            } else if (currentModalTrasporti.vehicles.length > 0) {
+                html += `<p class="all-assigned" style="margin-bottom:1rem;">✅ Tutti i giocatori della lista hanno un posto!</p>`;
+            }
+            
+            // Veicoli
+            if (currentModalTrasporti.vehicles.length === 0) {
+                html += '<p style="text-align:center; color:#94a3b8; padding:2rem;">Nessun veicolo configurato.</p>';
+            } else {
+                currentModalTrasporti.vehicles.forEach((v, vIdx) => {
+                    const driverName = v.driverName || (v.driver ? getPlayerName(v.driver) : null);
+                    const hasDriver = v.driver || v.driverName;
+                    const isMyVehicle = String(v.driver) === myId || (v.driverName && v.driverName.includes(`#${myId}`));
+                    
+                    html += `<div class="vehicle-interactive">
+                        <div class="vehicle-interactive-header">
+                            <div class="vehicle-interactive-info">
+                                <span class="vehicle-icon-large">🚗</span>
+                                <div class="vehicle-driver-info">
+                                    <h4>${driverName || 'Autista da assegnare'}</h4>
+                                    <span>${v.seats} posti totali</span>
+                                </div>
+                            </div>
+                            ${isAdmin ? `<button onclick="removeVehicleModal(${vIdx})" style="background:rgba(239,68,68,0.2);color:#ef4444;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;">🗑️ Rimuovi</button>` : ''}
+                        </div>
+                        
+                        <div class="seats-grid">
+                            <!-- Posto guidatore -->
+                            ${renderDriverSeat(v, vIdx, hasDriver, driverName, myId, amIAssigned)}
+                            
+                            <!-- Posti passeggeri -->
+                            ${renderPassengerSeats(v, vIdx, myId, amIAssigned)}
+                        </div>
+                        
+                        ${v.notes ? `<div class="vehicle-notes"><span class="vehicle-notes-text">📝 ${v.notes}</span></div>` : ''}
+                        
+                        ${isAdmin ? `
+                            <div style="margin-top:1rem;">
+                                <input type="text" placeholder="Note veicolo..." value="${v.notes || ''}" 
+                                       onchange="updateVehicleNotes(${vIdx}, this.value)"
+                                       style="width:100%;padding:0.5rem;border-radius:8px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:white;">
+                            </div>
+                        ` : ''}
+                    </div>`;
+                });
+            }
+            
+            // Sezione aggiungi veicolo
+            html += `<div class="add-my-vehicle-section">
+                <h4>➕ Aggiungi il tuo veicolo</h4>
+                <div class="add-vehicle-form">
+                    <select id="newVehicleSeats">
+                        ${[4,5,6,7,8,9,10,11].map(n => `<option value="${n}">${n} posti</option>`).join('')}
+                    </select>
+                    <button onclick="addMyVehicle()">🚗 Aggiungo la mia auto</button>
+                </div>
+            </div>`;
+            
+            body.innerHTML = html;
+        }
+        
+        function renderDriverSeat(v, vIdx, hasDriver, driverName, myId, amIAssigned) {
+            const isMyDriver = String(v.driver) === myId || (v.driverName && v.driverName.includes(`#${myId}`));
+            
+            if (hasDriver) {
+                if (isMyDriver) {
+                    return `<div class="seat-slot my-seat" onclick="leaveDriverSeat(${vIdx})">
+                        🚗 ${driverName}<br><small>(clicca per lasciare)</small>
+                    </div>`;
+                } else {
+                    return `<div class="seat-slot driver-seat">🚗 ${driverName}</div>`;
+                }
+            } else {
+                // Posto guidatore libero
+                if (amIAssigned) {
+                    return `<div class="seat-slot driver-seat driver-free" style="opacity:0.5;cursor:not-allowed;">🚗 Libero<br><small>(sei già assegnato)</small></div>`;
+                } else {
+                    return `<div class="seat-slot driver-seat driver-free" onclick="takeDriverSeat(${vIdx})">🚗 Libero<br><small>(clicca per guidare)</small></div>`;
+                }
+            }
+        }
+        
+        function renderPassengerSeats(v, vIdx, myId, amIAssigned) {
+            let html = '';
+            const maxPassengers = v.seats - 1;
+            const passengers = v.passengers || [];
+            const passengerNames = v.passengerNames || [];
+            
+            for (let i = 0; i < maxPassengers; i++) {
+                const passengerId = passengers[i];
+                const passengerName = passengerNames[i] || (passengerId ? getPlayerName(passengerId) : null);
+                const isMySeat = String(passengerId) === myId || (passengerName && passengerName.includes(`#${myId}`));
+                
+                if (passengerName) {
+                    if (isMySeat) {
+                        html += `<div class="seat-slot my-seat" onclick="leavePassengerSeat(${vIdx}, ${i})">
+                            ${passengerName}<br><small>(clicca per lasciare)</small>
+                        </div>`;
+                    } else if (isAdmin) {
+                        html += `<div class="seat-slot occupied" onclick="removePassengerAdmin(${vIdx}, ${i})" style="cursor:pointer;">
+                            ${passengerName}<br><small>(rimuovi)</small>
+                        </div>`;
+                    } else {
+                        html += `<div class="seat-slot occupied">${passengerName}</div>`;
+                    }
+                } else {
+                    // Posto libero
+                    if (amIAssigned) {
+                        html += `<div class="seat-slot" style="opacity:0.5;cursor:not-allowed;">Libero</div>`;
+                    } else {
+                        html += `<div class="seat-slot" onclick="takePassengerSeat(${vIdx}, ${i})">Libero<br><small>(clicca per salire)</small></div>`;
+                    }
+                }
+            }
+            
+            return html;
+        }
+        
+        async function takeDriverSeat(vIdx) {
+            const myId = getCurrentPlayerIdentifier();
+            if (isPersonInAnyVehicle(myId)) {
+                alert('Sei già assegnato a un veicolo! Lascia prima il posto attuale.');
+                return;
+            }
+            
+            const player = playersList.find(p => p.number == myId);
+            const myName = player ? `#${player.number} ${player.name}` : `#${myId}`;
+            
+            currentModalTrasporti.vehicles[vIdx].driver = myId;
+            currentModalTrasporti.vehicles[vIdx].driverName = myName;
+            
+            await saveModalTrasporti();
+            renderModalContent();
+        }
+        
+        async function leaveDriverSeat(vIdx) {
+            currentModalTrasporti.vehicles[vIdx].driver = '';
+            currentModalTrasporti.vehicles[vIdx].driverName = '';
+            
+            await saveModalTrasporti();
+            renderModalContent();
+        }
+        
+        async function takePassengerSeat(vIdx, slotIdx) {
+            const myId = getCurrentPlayerIdentifier();
+            if (isPersonInAnyVehicle(myId)) {
+                alert('Sei già assegnato a un veicolo! Lascia prima il posto attuale.');
+                return;
+            }
+            
+            const player = playersList.find(p => p.number == myId);
+            const myName = player ? `#${player.number} ${player.name}` : `#${myId}`;
+            
+            if (!currentModalTrasporti.vehicles[vIdx].passengers) {
+                currentModalTrasporti.vehicles[vIdx].passengers = [];
+            }
+            if (!currentModalTrasporti.vehicles[vIdx].passengerNames) {
+                currentModalTrasporti.vehicles[vIdx].passengerNames = [];
+            }
+            
+            currentModalTrasporti.vehicles[vIdx].passengers[slotIdx] = myId;
+            currentModalTrasporti.vehicles[vIdx].passengerNames[slotIdx] = myName;
+            
+            await saveModalTrasporti();
+            renderModalContent();
+        }
+        
+        async function leavePassengerSeat(vIdx, slotIdx) {
+            currentModalTrasporti.vehicles[vIdx].passengers[slotIdx] = '';
+            currentModalTrasporti.vehicles[vIdx].passengerNames[slotIdx] = '';
+            
+            await saveModalTrasporti();
+            renderModalContent();
+        }
+        
+        async function removePassengerAdmin(vIdx, slotIdx) {
+            if (!isAdmin) return;
+            currentModalTrasporti.vehicles[vIdx].passengers[slotIdx] = '';
+            currentModalTrasporti.vehicles[vIdx].passengerNames[slotIdx] = '';
+            
+            await saveModalTrasporti();
+            renderModalContent();
+        }
+        
+        async function removeVehicleModal(vIdx) {
+            if (!isAdmin) return;
+            if (!confirm('Rimuovere questo veicolo?')) return;
+            
+            currentModalTrasporti.vehicles.splice(vIdx, 1);
+            
+            await saveModalTrasporti();
+            renderModalContent();
+        }
+        
+        async function updateVehicleNotes(vIdx, notes) {
+            if (!isAdmin) return;
+            currentModalTrasporti.vehicles[vIdx].notes = notes;
+            await saveModalTrasporti();
+        }
+        
+        async function addMyVehicle() {
+            const seats = parseInt(document.getElementById('newVehicleSeats').value);
+            const myId = getCurrentPlayerIdentifier();
+            const player = playersList.find(p => p.number == myId);
+            const myName = player ? `#${player.number} ${player.name}` : `#${myId}`;
+            
+            // Controlla se sono già autista di un altro veicolo
+            const alreadyDriver = currentModalTrasporti.vehicles.some(v => 
+                String(v.driver) === myId || (v.driverName && v.driverName.includes(`#${myId}`))
+            );
+            
+            if (alreadyDriver) {
+                alert('Sei già autista di un altro veicolo!');
+                return;
+            }
+            
+            // Se sono passeggero da qualche parte, mi rimuovo
+            currentModalTrasporti.vehicles.forEach(v => {
+                if (v.passengers) {
+                    v.passengers = v.passengers.map((p, i) => {
+                        if (String(p) === myId || (v.passengerNames && v.passengerNames[i] && v.passengerNames[i].includes(`#${myId}`))) {
+                            if (v.passengerNames) v.passengerNames[i] = '';
+                            return '';
+                        }
+                        return p;
+                    });
+                }
+            });
+            
+            // Aggiungi nuovo veicolo
+            const maxId = currentModalTrasporti.vehicles.reduce((max, v) => Math.max(max, v.id || 0), 0);
+            currentModalTrasporti.vehicles.push({
+                id: maxId + 1,
+                seats: seats,
+                driver: myId,
+                driverName: myName,
+                passengers: [],
+                passengerNames: [],
+                notes: ''
+            });
+            
+            await saveModalTrasporti();
+            renderModalContent();
+        }
+        
+        async function saveModalTrasporti() {
+            if (!currentModalMatchId) return;
+            
+            try {
+                await fetch(`${FIREBASE_URL}/trasporti/${currentModalMatchId}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentModalTrasporti)
+                });
+            } catch (e) {
+                console.error('Errore salvataggio:', e);
+                alert('Errore nel salvataggio. Riprova.');
+            }
         }
     </script>
 </body>
