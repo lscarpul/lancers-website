@@ -993,6 +993,19 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
+    <!-- Modal Info Partita -->
+    <div id="matchInfoModal" class="match-info-modal">
+        <div class="match-info-modal-content">
+            <div class="match-info-modal-header">
+                <h2 id="matchInfoTitle">📋 Dettagli Partita</h2>
+                <button class="match-info-modal-close" onclick="closeMatchInfoModal()">✕</button>
+            </div>
+            <div class="match-info-modal-body" id="matchInfoBody">
+                <!-- Contenuto dinamico -->
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Gestione Trasporti -->
     <div id="trasportiModal" class="trasporti-modal">
         <div class="trasporti-modal-content">
@@ -1008,6 +1021,100 @@
 
     <script src="script.js?v=44"></script>
     <script>
+        // Database info partite
+        const matchesInfo = {
+            // AMICHEVOLI MARZO
+            '01MAR': { opponent: 'Amichevole Interna', type: 'casa', time: '10:00', ritrovo: '09:30 al campo', luogo: 'Campo Lancers', note: 'Amichevole interna preparazione stagione' },
+            '08MAR': { opponent: 'Castenaso/Phoenix', type: 'casa', time: '10:00', ritrovo: '09:30 al campo', luogo: 'Campo Lancers', note: 'Amichevole pre-stagione' },
+            '14MAR': { opponent: 'Fortitudo Bologna', type: 'trasferta', time: '11:00', ritrovo: 'Da definire', luogo: 'Stadio Gianni Falchi, Bologna', maps: 'https://maps.google.com/?q=Stadio+Gianni+Falchi+Bologna' },
+            '22MAR': { opponent: 'Fiorentina', type: 'trasferta', time: '11:00', ritrovo: 'Da definire', luogo: 'Campo Fiorentina Baseball, Firenze', maps: 'https://maps.google.com/?q=Fiorentina+Baseball+Firenze' },
+            '29MAR': { opponent: 'A.S.D BSC Arezzo', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' },
+            // APRILE
+            '04APR': { opponent: 'Health & Performance S.S.D', type: 'trasferta', time: '09:00/11:00', ritrovo: 'Da definire', luogo: 'Campo Health & Performance', note: '04/04 ore 09:00 - 12/04 ore 11:00' },
+            '19APR': { opponent: 'Livorno 1940 Baseball', type: 'trasferta', time: '11:00', ritrovo: 'Da definire', luogo: 'Campo Livorno 1940', maps: 'https://maps.google.com/?q=Livorno+Baseball' },
+            '26APR': { opponent: 'Longbridge 2000 B.C', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' },
+            // MAGGIO
+            '03MAG': { opponent: 'Colorno B.C.', type: 'trasferta', time: '11:00', ritrovo: 'Da definire', luogo: 'Campo Colorno B.C.', maps: 'https://maps.google.com/?q=Colorno+Baseball+Parma' },
+            '10MAG': { opponent: 'A.S.D BSC Arezzo', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' },
+            '17MAG': { opponent: 'Cali Roma XII', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' },
+            '30MAG': { opponent: 'Padule Baseball A.S.D', type: 'trasferta', time: '15:00', ritrovo: 'Da definire', luogo: 'Campo Padule Baseball', maps: 'https://maps.google.com/?q=Padule+Baseball' },
+            // GIUGNO
+            '07GIU': { opponent: 'Health & Performance S.S.D', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' },
+            '14GIU': { opponent: 'Livorno 1940 Baseball', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' },
+            '21GIU': { opponent: 'Longbridge 2000 B.C', type: 'trasferta', time: '11:00', ritrovo: 'Da definire', luogo: 'Campo Longbridge 2000', maps: 'https://maps.google.com/?q=Longbridge+2000+Baseball' },
+            '28GIU': { opponent: 'Colorno B.C.', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' },
+            // LUGLIO
+            '05LUG': { opponent: 'A.S.D BSC Arezzo', type: 'trasferta', time: '11:00', ritrovo: 'Da definire', luogo: 'Campo BSC Arezzo', maps: 'https://maps.google.com/?q=BSC+Arezzo+Baseball' },
+            '12LUG': { opponent: 'Cali Roma XII', type: 'trasferta', time: '11:00', ritrovo: 'Da definire', luogo: 'Campo Cali Roma XII', maps: 'https://maps.google.com/?q=Cali+Roma+Baseball' },
+            // AGOSTO
+            '02AGO': { opponent: 'Padule Baseball A.S.D', type: 'casa', time: '11:00', ritrovo: '10:00 al campo', luogo: 'Campo Lancers' }
+        };
+        
+        // Aggiungi bottoni info alle card partite
+        document.addEventListener('DOMContentLoaded', function() {
+            addMatchInfoButtons();
+            loadTrasportiForCalendar();
+        });
+        
+        function addMatchInfoButtons() {
+            const cards = document.querySelectorAll('.match-card');
+            cards.forEach(card => {
+                const matchInfo = card.querySelector('.match-info');
+                const opponent = matchInfo?.querySelector('.opponent')?.textContent || '';
+                const matchTime = matchInfo?.querySelector('.match-time')?.textContent || '';
+                
+                // Solo per partite (contiene vs, @, ✈️, 🏠)
+                if (!opponent.includes('vs') && !opponent.includes('@') && !matchTime.includes('✈️') && !matchTime.includes('🏠')) return;
+                
+                const dateSpan = card.querySelector('.match-date');
+                const day = dateSpan?.querySelector('.day')?.textContent;
+                const month = dateSpan?.querySelector('.month')?.textContent;
+                if (!day || !month) return;
+                
+                const matchKey = `${day}${month}`;
+                if (!matchesInfo[matchKey]) return;
+                
+                // Controlla se esiste già il bottone
+                if (matchInfo.querySelector('.match-info-btn')) return;
+                
+                const btn = document.createElement('button');
+                btn.className = 'match-info-btn';
+                btn.innerHTML = 'ℹ️ Info';
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    openMatchInfoModal(matchKey);
+                };
+                matchInfo.appendChild(btn);
+            });
+        }
+        
+        function openMatchInfoModal(matchKey) {
+            const info = matchesInfo[matchKey];
+            if (!info) return;
+            
+            document.getElementById('matchInfoTitle').textContent = `📋 ${info.opponent}`;
+            
+            let html = `
+                <div class="match-detail-row"><strong>🏟️ Tipo:</strong><span>${info.type === 'casa' ? '🏠 Casa' : '✈️ Trasferta'}</span></div>
+                <div class="match-detail-row"><strong>⚾ Orario:</strong><span>${info.time}</span></div>
+                <div class="match-detail-row"><strong>🕐 Ritrovo:</strong><span>${info.ritrovo}</span></div>
+                <div class="match-detail-row"><strong>📍 Luogo:</strong><span>${info.luogo}</span></div>
+            `;
+            if (info.note) {
+                html += `<div class="match-detail-row"><strong>📝 Note:</strong><span>${info.note}</span></div>`;
+            }
+            if (info.maps) {
+                html += `<a href="${info.maps}" target="_blank" class="match-map-btn">📍 Apri Maps</a>`;
+            }
+            
+            document.getElementById('matchInfoBody').innerHTML = html;
+            document.getElementById('matchInfoModal').classList.add('open');
+        }
+        
+        function closeMatchInfoModal() {
+            document.getElementById('matchInfoModal').classList.remove('open');
+        }
+        
         // Lista giocatori per mapping
         const playersList = [
             { number: 0, name: 'Niccolò Bucci' },
@@ -1056,9 +1163,6 @@
         let currentModalTrasporti = { vehicles: [] };
         const currentPlayerData = JSON.parse(sessionStorage.getItem('playerData') || '{}');
         const isAdmin = [25, 19, 38, 6, 'ADMIN'].includes(currentPlayerData.number);
-        
-        // Carica trasporti al load
-        document.addEventListener('DOMContentLoaded', loadTrasportiForCalendar);
         
         async function loadTrasportiForCalendar() {
             try {
@@ -1499,6 +1603,96 @@
         }
         .trasporti-modal-body {
             padding: 1.5rem;
+        }
+
+        /* Modal Info Partita */
+        .match-info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .match-info-modal.open { display: block; }
+        .match-info-modal-content {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            overflow: hidden;
+        }
+        .match-info-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .match-info-modal-header h2 {
+            margin: 0;
+            color: #60a5fa;
+            font-size: 1.2rem;
+        }
+        .match-info-modal-close {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+        }
+        .match-info-modal-body {
+            padding: 1.5rem;
+        }
+        .match-detail-row {
+            display: flex;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .match-detail-row:last-child { border-bottom: none; }
+        .match-detail-row strong {
+            min-width: 120px;
+            color: #60a5fa;
+        }
+        .match-detail-row span {
+            color: #e2e8f0;
+        }
+        .match-info-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+        .match-info-btn:hover {
+            background: rgba(59, 130, 246, 0.5);
+        }
+        .match-map-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
         }
     </style>
 </body>
