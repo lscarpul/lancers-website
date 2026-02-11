@@ -315,6 +315,134 @@
             margin-top: 2px;
         }
 
+        /* AI Coach Section */
+        .ai-coach-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.15) 50%, rgba(34, 197, 94, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-left: 5px solid #8b5cf6;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-coach-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            animation: pulse-ai 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-ai {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        .ai-coach-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .ai-title-group h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: white;
+            font-weight: 800;
+        }
+        
+        .ai-title-group p {
+            margin: 0.25rem 0 0;
+            font-size: 0.85rem;
+            color: #a78bfa;
+        }
+        
+        .ai-advice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-advice-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .ai-advice-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .ai-advice-item.positive { border-left: 4px solid #22c55e; }
+        .ai-advice-item.warning { border-left: 4px solid #f59e0b; }
+        .ai-advice-item.critical { border-left: 4px solid #ef4444; }
+        .ai-advice-item.info { border-left: 4px solid #3b82f6; }
+        
+        .ai-advice-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .ai-advice-title {
+            font-weight: 700;
+            color: white;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .ai-advice-text {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+        
+        .ai-summary {
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-summary-title {
+            font-weight: 700;
+            color: #a78bfa;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .ai-summary-text {
+            color: white;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
         /* Stats Table */
         .table-container {
             overflow-x: auto;
@@ -502,9 +630,9 @@
                 role: 'Prima Base',
                 role2: 'DH - Esterno',
                 age: 32,
-                turni: 217,
-                kPercent: '17,5%',
-                bbPercent: '11,0%',
+                turni: 184,
+                kPercent: '20,7%',
+                bbPercent: '13,0%',
                 skills: {
                     avg: 7,
                     potenza: 9,
@@ -537,9 +665,9 @@
                 number: 32,
                 role: 'Interno',
                 age: 25,
-                turni: 191,
-                kPercent: '27,2%',
-                bbPercent: '15,1%',
+                turni: 146,
+                kPercent: '35,6%',
+                bbPercent: '19,9%',
                 skills: {
                     avg: 5,
                     potenza: 4,
@@ -547,10 +675,10 @@
                     difesa: 8,
                     lancio: 6
                 },
-                puntiForza: 'Corsa sulle basi - Mentalità',
-                puntiDeboli: 'Potenza battuta - Strikeout',
-                vorreiLavorare: 'Corsa sulle basi, battuta, Tattiche di base, Mentalità/concentrazione, precisione di tiro',
-                mioObiettivo: 'Migliorare media battuta/arrivo in base, acquisire più sicurezza e reattività per le giocate difensive, aumentare la velocità della corsa',
+                puntiForza: 'Corsa sulle basi, battuta, Tattiche di base, Mentalità/concentrazione, precisione di tiro, bunt, occhio su strike/ball',
+                puntiDeboli: 'Movimento, forza, tempismo, lettura sugli effetti, rapidità di gambe, anticipazione della giocata',
+                vorreiLavorare: 'Migliorare il movimento della battuta, sviluppare rapidità ed esplosività (battuta e corsa)',
+                mioObiettivo: 'Migliorare media battuta/arrivo in base, acquisire più sicurezza e reattività per le giocate difensive, aumentare la velocità della corsa, migliorare media difensiva',
                 valutazioni: {
                     fisica: 'Da migliorare l\'esplosività delle gambe per aumentare efficacia offensiva e difensiva.',
                     battuta: 'La potenza non è il suo punto di forza. Deve puntare sulla continuità, sul contatto verso il campo opposto e su un migliore approccio al turno. Importante ridurre gli strikeout e continuare a valorizzare la capacità di prendere basi su ball. Utile introdurre il bunt a sorpresa.',
@@ -572,9 +700,9 @@
                 number: 4,
                 role: 'Esterno',
                 age: 21,
-                turni: 226,
-                kPercent: '26,1%',
-                bbPercent: '11,0%',
+                turni: 191,
+                kPercent: '30,9%',
+                bbPercent: '13,1%',
                 skills: {
                     avg: 4,
                     potenza: 7,
@@ -585,7 +713,7 @@
                 puntiForza: 'Battuta',
                 puntiDeboli: 'Difesa',
                 vorreiLavorare: 'Difesa',
-                mioObiettivo: '350 avg',
+                mioObiettivo: '.350 avg',
                 valutazioni: {
                     fisica: 'Atletismo naturale di alto livello. Si può impostare un lavoro specifico per eccellere ulteriormente nella corsa.',
                     battuta: 'Potenza naturale evidente. Questo aspetto va prioritizzato lavorando su lettura del lancio e disciplina al piatto per rendere la potenza più costante e produttiva.',
@@ -615,12 +743,12 @@
                     potenza: 7,
                     corsa: 6,
                     difesa: 6,
-                    lancio: 5
+                    lancio: 6
                 },
-                puntiForza: 'Buona memoria, conoscenza schemi',
-                puntiDeboli: 'Lettura del lanciatore, gestione pressione',
-                vorreiLavorare: 'Non saper passare sopra gli errori',
-                mioObiettivo: 'Migliorare l\'approccio alla battuta e al gioco in generale, rimanendo sereno',
+                puntiForza: 'Buona memoria, conoscenza degli schemi',
+                puntiDeboli: 'Non saper passare sopra gli errori per poi influenzare le prestazioni successive',
+                vorreiLavorare: 'Sulla lettura del lanciatore così da rubare con più facilità, e gestione della pressione anche autoinflitta',
+                mioObiettivo: 'Migliorare l\'approccio alla battuta e al gioco in generale così da riuscire a rendere al meglio rimanendo sereno e diventando un punto di riferimento per i miei compagni soprattutto i più giovani',
                 valutazioni: {
                     fisica: 'Buona condizione generale, ma è necessario lavorare sull’elasticità per migliorare fluidità e prevenzione infortuni.',
                     battuta: 'Ottimo profilo da leadoff. Legge bene i lanci, prende basi e usa tutto il campo. Non è un battitore di potenza, ma è estremamente funzionale all’attacco.',
@@ -642,9 +770,9 @@
                 number: 3,
                 role: 'Esterno',
                 age: 21,
-                turni: 341,
-                kPercent: '21,4%',
-                bbPercent: '11,4%',
+                turni: 293,
+                kPercent: '24,9%',
+                bbPercent: '13,3%',
                 skills: {
                     avg: 5,
                     potenza: 6,
@@ -653,9 +781,9 @@
                     lancio: 8
                 },
                 puntiForza: 'Difesa e garra',
-                puntiDeboli: 'Impegno e troppo impulsivo',
-                vorreiLavorare: 'Approccio alla battuta, hitting power, piu extrabase, effetti',
-                mioObiettivo: 'Battere sopra 300 e giocare il piu possibile',
+                puntiDeboli: 'Impegno e troppo impulsivo negli atteggiamenti',
+                vorreiLavorare: 'Approccio alla battuta, hitting power, più extrabase, effetti',
+                mioObiettivo: 'Battere sopra .300 e giocare il più possibile',
                 valutazioni: {
                     fisica: 'Fisico ancora esile ma con potenza evidente. Molto rapido di gambe.',
                     battuta: 'La media battuta va consolidata aumentando la produzione di extrabase. Necessaria una migliore gestione del turno.',
@@ -687,9 +815,9 @@
                     difesa: 5,
                     lancio: 7
                 },
-                puntiForza: 'Gestione della tensione',
-                puntiDeboli: 'Maggiore sicurezza e controllo',
-                vorreiLavorare: 'Migliorarmi a livello mentale e di prestazioni',
+                puntiForza: '.',
+                puntiDeboli: 'Gestione della tensione in alcune situazioni',
+                vorreiLavorare: 'Maggiore sicurezza e controllo',
                 mioObiettivo: 'Migliorarmi a livello mentale e di prestazioni',
                 valutazioni: {
                     fisica: 'Fisicità importante e altezza sopra la media. Deve aumentare la massa muscolare.',
@@ -712,9 +840,9 @@
                 number: 8,
                 role: 'Esterno',
                 age: 26,
-                turni: 234,
-                kPercent: '30,3%',
-                bbPercent: '15,8%',
+                turni: 180,
+                kPercent: '39,4%',
+                bbPercent: '20,6%',
                 skills: {
                     avg: 4,
                     potenza: 7,
@@ -722,10 +850,10 @@
                     difesa: 8,
                     lancio: 5
                 },
-                puntiForza: 'Esterno affidabile e buon braccio',
-                puntiDeboli: 'Manca potenza in battuta e confidence',
-                vorreiLavorare: 'Sullo swing, che sia corretto, efficace e consistente',
-                mioObiettivo: 'Finire con più di .250 avg, diminuire K, fare allenamento da lanciatore',
+                puntiForza: 'Sono un esterno affidabile e con un buon braccio. Solitamente finisco il campionato con un buon numero di basi su ball, sono discreto nel bunt.',
+                puntiDeboli: 'Non ho per niente potenza in battuta e spesso non mi sento di avere confidence nel box, perché non sono consistente con il mio giro e impatto raramente la palla piena. Prendo un po\' troppi strikeout.',
+                vorreiLavorare: 'Sullo swing, che sia corretto, efficace e consistente. Mi piacerebbe riuscire ad essere pronto e fiducioso nel box, sia tecnicamente che mentalmente.',
+                mioObiettivo: 'Mi piacerebbe riuscire a finire con più di .250 di avg, tendente a .300; mi piacerebbe riuscire a guadagnare un posto da titolare più fisso rispetto agli anni passati (ovvero giocare più inning); vorrei riuscire a diminuire il ratio di strikeout; mi piacerebbe ipoteticamente fare qualche allenamento da lanciatore, o almeno essere guardato ogni tanto da Carlos',
                 valutazioni: {
                     fisica: 'Nella media, da aumentare massa ed esplosività.',
                     battuta: 'Deve lavorare sul contatto per mettere più palle in gioco. Utile sviluppare contatto a destra e bunt a sorpresa. Troppi strikeout nonostante una buona capacità di prendere basi.',
@@ -758,9 +886,9 @@
                     difesa: 7,
                     lancio: 7
                 },
-                puntiForza: 'Versatilità',
-                puntiDeboli: 'Mancanza blocchi da catcher',
-                vorreiLavorare: 'Esplosività, tiro in seconda',
+                puntiForza: 'Mi possono bene o male mettere in tutte le posizioni interne compreso catcher oppure se in caso di situazione mi mettono a correre sulle basi',
+                puntiDeboli: 'Forse mancanza di alcuni blocchi da catcher e la battuta da migliorare',
+                vorreiLavorare: 'Esplosività con le gambe per il tiro in seconda da catcher, sulla potenza del braccio e meccanica',
                 mioObiettivo: 'Diventare un vero catcher e apprendere meglio i turni in battuta',
                 valutazioni: {
                     fisica: 'Atleta naturale. Deve imparare a controllare meglio il proprio corpo.',
@@ -780,9 +908,9 @@
                 number: 14,
                 role: 'Esterno',
                 age: 22,
-                turni: 197,
-                kPercent: '30,4%',
-                bbPercent: '14,2%',
+                turni: 162,
+                kPercent: '37,0%',
+                bbPercent: '17,3%',
                 skills: {
                     avg: 5,
                     potenza: 2,
@@ -791,8 +919,8 @@
                     lancio: 5
                 },
                 puntiForza: 'Corsa e non voler mollare mai',
-                puntiDeboli: 'Troppo emotivo in partita',
-                vorreiLavorare: 'Mettere in campo qualsiasi palla',
+                puntiDeboli: 'A volte mi faccio trasportare troppo dalla partita e capita che mi rigiri in modo sbagliato verso i miei compagni',
+                vorreiLavorare: 'Sul migliorare la capacità di mettere in campo qualsiasi palla ed evitare pop o flyout',
                 mioObiettivo: 'Media alta di arrivo in base, rubate e punti',
                 valutazioni: {
                     fisica: 'Statura bassa ma fisicità tonica.',
@@ -816,9 +944,9 @@
                 role: 'Ricevitore',
                 role2: 'DH',
                 age: 20,
-                turni: 99,
-                kPercent: '16,0%',
-                bbPercent: '4,0%',
+                turni: 90,
+                kPercent: '17,8%',
+                bbPercent: '4,4%',
                 skills: {
                     avg: 7,
                     potenza: 5,
@@ -826,10 +954,10 @@
                     difesa: 5,
                     lancio: 4
                 },
-                puntiForza: 'Media battuta, contatto',
+                puntiForza: 'Media battuta, contatto con la palla a battere',
                 puntiDeboli: 'Resistenza, velocità',
-                vorreiLavorare: 'Potenza, resistenza, velocità',
-                mioObiettivo: 'Mantenere average, aumentare potenza e rubate',
+                vorreiLavorare: 'Potenza, resistenza, velocità dei movimenti',
+                mioObiettivo: 'Mantenere o aumentare l\'average in battuta, aumentare la potenza e il valore delle battute, aumentare le rubate, essere più solido difensivamente, aumentare la velocità dei movimenti',
                 valutazioni: {
                     fisica: 'Deve lavorare in modo significativo sulla forma atletica.',
                     battuta: 'Swing naturale e buon contatto su tutto il campo. Poche BB ma anche pochi K. Manca concentrazione e un piano chiaro alla battuta. Potenzialmente battitore di potenza.',
@@ -852,34 +980,35 @@
                 role: 'Lanciatore',
                 age: 22,
                 turni: 0,
+                inningLanciati: '150.1',
                 kPercent: '10.5 K/9',
                 bbPercent: '7.1 BB/9',
                 skills: {
-                    avg: 7,
-                    potenza: 8,
-                    corsa: 5,
-                    difesa: 7,
-                    lancio: 4
+                    era: 7,
+                    strikeout: 8,
+                    controllo: 5,
+                    velocita: 7,
+                    forza: 4
                 },
-                puntiForza: 'Atletismo - Slider - Velocità',
-                puntiDeboli: 'Controllo - Concentrazione',
-                vorreiLavorare: 'Controllo - minimizzare sforzi',
+                puntiForza: 'Atletismo - Slider - Velocità di tiro buona',
+                puntiDeboli: 'Controllo - Concentrazione - Serenità',
+                vorreiLavorare: 'Controllo - minimizzare gli sforzi in partita',
                 mioObiettivo: 'ERA < 4.5, più di 60 inning',
                 valutazioni: {
                     fisica: 'Fisico atletico e rapido di gambe. Buona base generale. È fondamentale continuare il lavoro atletico e di prevenzione per ridurre il rischio di infortuni e aumentare la capacità di sostenere un numero maggiore di inning stagionali.',
                     battuta: '-',
-                    difesa: 'Aspetto principale su cui intervenire. Il controllo cala sensibilmente con uomini in base. La dritta è solida, lo slider è un lancio di alto livello e potenzialmente dominante. Serve maggiore fiducia nella zona e nella sequenza di lanci chiamata dal catcher.',
+                    difesa: 'Aspetto principale su cui intervenire. Il controllo cala sensibilmente con uomini in base. La dritta è solida, lo slider è un lancio di alto livello e potenzialmente dominante. Serve maggiore fiducia nella zona e nella sequenza di lanci chiamata dal catcher. Velocità: Buona velocità di base, adeguata al livello. Non è l\'elemento limitante del suo profilo.',
                     generale: 'Lanciatore con grande potenziale di strikeout, ma con un rapporto K/BB ancora troppo sbilanciato. Deve semplificare l\'approccio mentale: pensare meno, affidarsi di più all\'allenatore e al catcher. Se riesce a ridurre le basi su ball, può diventare un lanciatore estremamente efficace e affidabile su lunghi stint.'
                 },
-                obiettivi: ['IP stagionali >60', 'BB stagionali <30', 'Attaccare i battitori, non pensare troppo ai lanci', 'Continuare a lavorare sulla meccanica'],
+                obiettivi: ['Attaccare i battitori', 'Non pensare troppo ai lanci', 'Continuare a lavorare sulla meccanica'],
                 lavoroAutonomo: ['Ascoltare e migliorare la fiducia in sè'],
                 statistiche: [
-                    { anno: '2025', w: 3, l: 5, era: '7.81', ip: '40.1', k: 35, bb: 35, whip: '1.92' },
-                    { anno: '2024', w: 3, l: 5, era: '5.28', ip: '58.0', k: 36, bb: 34, whip: '1.62' },
-                    { anno: '2023', w: 0, l: 1, era: '5.32', ip: '22.0', k: 28, bb: 13, whip: '2.05' },
-                    { anno: '2022', w: 1, l: 2, era: '8.10', ip: '30.0', k: 28, bb: 27, whip: '2.30' }
+                    { anno: '2025', w: 3, l: 5, era: '7.81', app: 16, gs: 4, ip: '40.1', h: 42, r: 54, er: 35, bb: 35, so: 62, whip: '1.92' },
+                    { anno: '2024', w: 3, l: 5, era: '5.28', app: 11, gs: 11, ip: '58.0', h: 58, r: 37, er: 34, bb: 36, so: 59, whip: '1.62' },
+                    { anno: '2023', w: 0, l: 1, era: '5.32', app: 10, gs: 2, ip: '22.0', h: 26, r: 13, er: 13, bb: 19, so: 28, whip: '2.05' },
+                    { anno: '2022', w: 1, l: 2, era: '8.10', app: 10, gs: 5, ip: '30.0', h: 41, r: 37, er: 27, bb: 28, so: 27, whip: '2.30' }
                 ],
-                totali: { w: 7, l: 13, era: '6.53', ip: '150.1', k: 127, bb: 109, whip: '1.90' }
+                totali: { w: 7, l: 13, era: '6.53', app: 47, gs: 22, ip: '150.1', h: 167, r: 141, er: 109, bb: 118, so: 176, whip: '1.90' }
             },
             89: {
                 name: 'Daniele Silvestri',
@@ -887,33 +1016,35 @@
                 role: 'Lanciatore',
                 age: 21,
                 turni: 0,
+                inningLanciati: '39.2',
                 kPercent: '9.5 K/9',
                 bbPercent: '18.6 BB/9',
                 skills: {
-                    avg: 2,
-                    potenza: 5,
-                    corsa: 7,
-                    difesa: 4,
-                    lancio: 0
+                    era: 2,
+                    strikeout: 5,
+                    controllo: 4,
+                    velocita: 7,
+                    forza: 4
                 },
-                puntiForza: 'Velocità, punto di rilascio, rotazione',
-                puntiDeboli: 'Stress, ansia, controllo',
-                vorreiLavorare: 'Gestione ansia e controllo',
-                mioObiettivo: 'Dominare i battitori, gestire la partita a mente lucida',
+                puntiForza: 'Velocità, punto di rilascio, rotazione dritta, rotazione curva, rotazione slider',
+                puntiDeboli: 'Stress, ansia, controllo, change up, gestione uomini sulle basi',
+                vorreiLavorare: 'Gestione dell\'ansia e del controllo, velocità, sviluppare un cambio competitivo, pickoff e gestione uomini sulle basi',
+                mioObiettivo: 'Salire sul monte e dominare i battitori, gestire la partita a mente lucida senza ansia e stress (non scrivo numeri perché ritengo che a questi livelli i numeri siano facilmente falsabili)',
                 valutazioni: {
                     fisica: 'Giocatore piuttosto alto, ma attualmente carente di muscolatura sia nella parte inferiore che in quella superiore del corpo. È prioritario aumentare forza e stabilità, soprattutto nelle gambe, per migliorare equilibrio, ripetibilità del gesto e prevenzione degli infortuni.',
                     battuta: '-',
-                    difesa: 'Gravemente insufficiente al momento, con evidenti difficoltà soprattutto con uomini in base. La perdita di controllo compromette l\'efficacia complessiva e limita fortemente l\'utilizzo in partita. Serve un lavoro strutturato sulla meccanica, sul ritmo e sulla semplificazione dell\'esecuzione.',
+                    difesa: 'Gravemente insufficiente al momento, con evidenti difficoltà soprattutto con uomini in base. La perdita di controllo compromette l\'efficacia complessiva e limita fortemente l\'utilizzo in partita. Serve un lavoro strutturato sulla meccanica, sul ritmo e sulla semplificazione dell\'esecuzione. Velocità: Buona velocità di base, coerente con il profilo fisico. Il problema non è la "stuff", ma la capacità di comandarla.',
                     generale: 'Lanciatore giovane con margine di crescita, ma attualmente non affidabile in gara a causa dell\'elevato numero di basi su ball. Deve ridurre il carico mentale, affidarsi maggiormente all\'allenatore e al catcher e investire seriamente nel lavoro atletico. Solo migliorando il controllo e la tenuta fisica potrà aumentare gli inning stagionali e trovare un ruolo stabile.'
                 },
-                obiettivi: ['IP stagionali >40', 'BB stagionali <25', 'Attaccare i battitori', 'Imparare a lavorare con i tempi tra i battitori', 'Migliorare la concentrazione'],
+                obiettivi: ['Attaccare i battitori', 'Imparare a lavorare con i tempi tra i battitori', 'Migliorare la concentrazione'],
                 lavoroAutonomo: ['Aumentare la fiducia nei lanci', 'Continuare a lavorare sulla meccanica'],
                 statistiche: [
-                    { anno: '2025', w: 0, l: 1, era: '19.70', ip: '12.1', k: 7, bb: 27, whip: '3.39' },
-                    { anno: '2024', w: 0, l: 1, era: '18.31', ip: '19.2', k: 26, bb: 40, whip: '3.54' },
-                    { anno: '2022', w: 0, l: 3, era: '24.16', ip: '6.1', k: 7, bb: 14, whip: '4.92' }
+                    { anno: '2025', w: 0, l: 1, era: '19.70', app: 7, gs: 1, ip: '12.1', h: 14, r: 28, er: 27, bb: 27, so: 8, whip: '3.39' },
+                    { anno: '2024', w: 0, l: 1, era: '18.31', app: 13, gs: 1, ip: '19.2', h: 28, r: 48, er: 40, bb: 40, so: 26, whip: '3.54' },
+                    { anno: '2023', w: 0, l: 0, era: '6.75', app: 2, gs: 0, ip: '1.1', h: 2, r: 1, er: 1, bb: 1, so: 1, whip: '2.73' },
+                    { anno: '2022', w: 0, l: 3, era: '24.16', app: 8, gs: 2, ip: '6.1', h: 16, r: 20, er: 17, bb: 14, so: 7, whip: '4.92' }
                 ],
-                totali: { w: 0, l: 5, era: '19.29', ip: '39.2', k: 42, bb: 82, whip: '3.62' }
+                totali: { w: 0, l: 5, era: '19.29', app: 30, gs: 4, ip: '39.2', h: 60, r: 97, er: 85, bb: 82, so: 42, whip: '3.62' }
             },
             98: {
                 name: 'Federico Paperini',
@@ -931,7 +1062,7 @@
                     lancio: 5
                 },
                 puntiForza: 'Corsa',
-                puntiDeboli: 'Timore palla in box',
+                puntiDeboli: 'Battuta, Timore palla in box battuta',
                 vorreiLavorare: 'Battuta',
                 mioObiettivo: 'Serie B',
                 valutazioni: {
@@ -960,10 +1091,10 @@
                     difesa: 7,
                     lancio: 6
                 },
-                puntiForza: 'Contatto, presa al volo',
-                puntiDeboli: 'Poca cattiveria sportiva',
-                vorreiLavorare: 'Palla profonda',
-                mioObiettivo: 'Creare buon ambiente, dimostrare valore',
+                puntiForza: 'Contatto, presa al volo e disciplina',
+                puntiDeboli: 'Poca cattiveria sportiva, difficoltà nella palla a terra',
+                vorreiLavorare: 'Riuscire ad avere la palla profonda',
+                mioObiettivo: 'Creare un buon ambiente con la squadra, dimostrare il mio valore aiutando la squadra dove e quando serve',
                 valutazioni: {
                     fisica: 'Buona altezza, fisico esile ma allenabile. Da verificare la rapidità delle gambe e la forza del braccio per definirne meglio il profilo atletico e difensivo.',
                     battuta: 'Battitore mancino, elemento interessante da sfruttare nel lineup. Meccanica di base buona; è necessario valutarne l\'efficacia in situazione reale, con battute in campo e in partita.',
@@ -979,9 +1110,9 @@
                 number: 38,
                 role: 'Interno',
                 age: 38,
-                turni: 416,
-                kPercent: '11,3%',
-                bbPercent: '10,5%',
+                turni: 345,
+                kPercent: '14%',
+                bbPercent: '13%',
                 skills: {
                     avg: 7,
                     potenza: 6,
@@ -989,10 +1120,10 @@
                     difesa: 8,
                     lancio: 7
                 },
-                puntiForza: 'Esperienza, passione',
-                puntiDeboli: 'Gestione stress',
-                vorreiLavorare: 'Qualità del turno',
-                mioObiettivo: 'Continuità in battuta e difesa, riferimento per compagni',
+                puntiForza: 'Esperienza, passione, volontà di apprendere',
+                puntiDeboli: 'Gestione situazioni di stress',
+                vorreiLavorare: 'Migliorare qualità del turno, prendere più basi',
+                mioObiettivo: 'Vorrei trovare continuità sia in battuta che in difesa, essere un riferimento per i compagni',
                 valutazioni: {
                     fisica: 'Giocatore con buona forma fisica e forza generale. Nonostante l\'età, mantiene una condizione atletica di base solida che gli consente affidabilità e continuità di utilizzo.',
                     battuta: 'Battitore di contatto, è capace di battere in tutte le zone del campo. Gestisce bene il turno e si adatta alle situazioni di gioco. Può essere schierato efficacemente in qualsiasi posizione del lineup.',
@@ -1014,9 +1145,9 @@
                 number: 6,
                 role: 'Esterno',
                 age: 34,
-                turni: 411,
-                kPercent: '14,1%',
-                bbPercent: '10,4%',
+                turni: 323,
+                kPercent: '18%',
+                bbPercent: '13%',
                 skills: {
                     avg: 5,
                     potenza: 6,
@@ -1024,10 +1155,10 @@
                     difesa: 6,
                     lancio: 6
                 },
-                puntiForza: 'Lettura battitore, posizionamento',
-                puntiDeboli: 'Si spegne cervello troppo presto',
+                puntiForza: 'Lettura del battitore e dove posizionarmi',
+                puntiDeboli: 'Mi si spegne il cervello troppo presto',
                 vorreiLavorare: 'Aspetto mentale',
-                mioObiettivo: 'Media alta arrivi in base',
+                mioObiettivo: 'Avere una media alta per gli arrivi in base',
                 valutazioni: {
                     fisica: 'Giocatore atletico con buona forza generale. Nonostante l\'età, mantiene una condizione fisica solida e affidabile, che gli consente continuità di rendimento.',
                     battuta: 'Giocatore con ottime percentuali di arrivi in base. Sa usare con intelligenza il campo opposto ed è efficace nel gioco di sacrificio e nel bunt. Profilo offensivo funzionale e utile in più situazioni di lineup.',
@@ -1050,9 +1181,9 @@
                 role: 'Terza Base',
                 role2: 'Prima Base',
                 age: 32,
-                turni: 440,
-                kPercent: '10,0%',
-                bbPercent: '11,0%',
+                turni: 343,
+                kPercent: '13%',
+                bbPercent: '14%',
                 skills: {
                     avg: 8,
                     potenza: 6,
@@ -1060,10 +1191,10 @@
                     difesa: 7,
                     lancio: 7
                 },
-                puntiForza: 'Visione di gioco, Testa',
-                puntiDeboli: 'Tecnica di battuta',
-                vorreiLavorare: 'Incrementare AVG e extra basi',
-                mioObiettivo: 'Miglioramento',
+                puntiForza: 'Visione di gioco',
+                puntiDeboli: 'Testa - Attitudine',
+                vorreiLavorare: 'Miglioramento tecnica di battuta e approccio',
+                mioObiettivo: 'Incrementare AVG e extra basi',
                 valutazioni: {
                     fisica: 'Giocatore atletico con forza sopra la media. Continua a svolgere un buon lavoro sulla preparazione atletica; è importante mantenere e incrementare il focus su flessibilità e mobilità per preservare qualità del movimento e prevenire infortuni.',
                     battuta: 'Battitore intelligente, capace di colpire con forza e di produrre punti. Utilizza bene il campo opposto. Alcuni aspetti della meccanica possono essere affinati per rendere il gesto più fluido e ripetibile, aumentando la costanza del rendimento.',
@@ -1141,10 +1272,17 @@
 
             if (player) {
                 // Helpers
+                const isPitcher = player.role === 'Lanciatore';
+                
                 const renderSkills = (skills) => {
-                    const skillLabels = { avg: 'Media Battuta', potenza: 'Potenza', corsa: 'Corsa', difesa: 'Difesa', lancio: 'Lancio' };
+                    // Labels diverse per lanciatori e battitori
+                    const batterLabels = { avg: 'Media Battuta', potenza: 'Potenza', corsa: 'Corsa', difesa: 'Difesa', lancio: 'Forza Braccio' };
+                    const pitcherLabels = { era: 'ERA', strikeout: 'Strikeout', controllo: 'Controllo', velocita: 'Velocità', forza: 'Forza Lancio' };
+                    const skillLabels = isPitcher ? pitcherLabels : batterLabels;
+                    
                     return Object.entries(skills).map(([key, val]) => {
                         const width = val * 10;
+                        const label = skillLabels[key] || key;
                         return `
                             <div class="skill-row">
                                 <div class="skill-header">
@@ -1260,6 +1398,197 @@
                     return `<th>ANNO</th> <th>TEAM</th> <th>GG</th> <th>AB</th> <th>R</th> <th>H</th> <th>AVG</th> <th>OBP</th> <th>BB</th> <th>SO</th> <th>SB</th>`;
                 }
 
+                // AI Coach - Generatore di consigli personalizzati
+                const generateAIAdvice = (player) => {
+                    const advices = [];
+                    const isPitcher = player.role === 'Lanciatore';
+                    
+                    // Parse percentuali
+                    const parsePercent = (str) => {
+                        if (!str || str === '-') return null;
+                        return parseFloat(str.replace(',', '.').replace('%', ''));
+                    };
+                    
+                    const kPct = parsePercent(player.kPercent);
+                    const bbPct = parsePercent(player.bbPercent);
+                    
+                    if (isPitcher) {
+                        // Consigli per lanciatori
+                        const totali = player.totali || {};
+                        const era = parseFloat(totali.era) || 0;
+                        const whip = parseFloat(totali.whip) || 0;
+                        const kPer9 = parsePercent(player.kPercent);
+                        const bbPer9 = parsePercent(player.bbPercent);
+                        
+                        // ERA Analysis
+                        if (era > 0) {
+                            if (era < 3.50) {
+                                advices.push({ type: 'positive', icon: '🌟', title: 'ERA Eccellente', text: `La tua ERA di ${era.toFixed(2)} è di alto livello. Mantieni questa consistenza lavorando sulla ripetibilità della meccanica.` });
+                            } else if (era < 5.00) {
+                                advices.push({ type: 'info', icon: '📊', title: 'ERA nella Media', text: `ERA di ${era.toFixed(2)} - C'è margine di miglioramento. Concentrati sulla riduzione delle basi concesse e sul lanciare più spesso in vantaggio nel conteggio.` });
+                            } else {
+                                advices.push({ type: 'warning', icon: '⚠️', title: 'ERA da Migliorare', text: `ERA di ${era.toFixed(2)} - Priorità: ridurre i punti concessi. Lavora sul controllo, evita i conteggi sfavorevoli e fidati di più della tua difesa.` });
+                            }
+                        }
+                        
+                        // WHIP Analysis
+                        if (whip > 0) {
+                            if (whip < 1.20) {
+                                advices.push({ type: 'positive', icon: '🎯', title: 'WHIP Solido', text: `WHIP di ${whip.toFixed(2)} indica ottimo controllo del traffico basi. Continua così!` });
+                            } else if (whip > 1.80) {
+                                advices.push({ type: 'critical', icon: '🚨', title: 'Troppi Corridori', text: `WHIP di ${whip.toFixed(2)} significa troppi uomini in base. Focus: attaccare la zona strike dal primo lancio.` });
+                            }
+                        }
+                        
+                        // BB/9 Analysis
+                        if (bbPer9 && bbPer9 > 5) {
+                            advices.push({ type: 'critical', icon: '🎯', title: 'Controllo Prioritario', text: `${bbPer9.toFixed(1)} BB/9 è troppo alto. Suggerimento: semplifica la meccanica, lavora sul ritmo e fidati della tua dritta nella zona.` });
+                        }
+                        
+                        // K/BB Ratio
+                        if (kPer9 && bbPer9 && bbPer9 > 0) {
+                            const ratio = kPer9 / bbPer9;
+                            if (ratio < 1.5) {
+                                advices.push({ type: 'warning', icon: '⚖️', title: 'Rapporto K/BB', text: `Il rapporto K/BB di ${ratio.toFixed(2)} può migliorare. Obiettivo: almeno 2 strikeout per ogni base concessa.` });
+                            } else if (ratio >= 2) {
+                                advices.push({ type: 'positive', icon: '💪', title: 'Buon K/BB', text: `Rapporto K/BB di ${ratio.toFixed(2)} - Stai dominando i battitori!` });
+                            }
+                        }
+                        
+                        // Mental game
+                        if (player.puntiDeboli && (player.puntiDeboli.toLowerCase().includes('ansia') || player.puntiDeboli.toLowerCase().includes('stress'))) {
+                            advices.push({ type: 'info', icon: '🧠', title: 'Preparazione Mentale', text: 'Prova tecniche di respirazione tra i lanci. 4 secondi inspira, 4 trattieni, 4 espira. Questo aiuta a resettare la mente dopo ogni lancio.' });
+                        }
+                        
+                    } else {
+                        // Consigli per battitori/difensori
+                        const totali = player.totali || {};
+                        const avg = parseFloat((totali.avg || '').replace('.', '0.')) || 0;
+                        const obp = parseFloat((totali.obp || '').replace('.', '0.')) || 0;
+                        const so = parseInt(totali.so) || 0;
+                        const bb = parseInt(totali.bb) || 0;
+                        const sb = parseInt(totali.sb) || 0;
+                        const ab = parseInt(totali.ab) || 1;
+                        
+                        // AVG Analysis
+                        if (avg > 0) {
+                            if (avg >= 0.300) {
+                                advices.push({ type: 'positive', icon: '🔥', title: 'Media Battuta Eccellente', text: `Media di ${avg.toFixed(3)} - Sei tra i migliori! Mantieni l'approccio aggressivo sugli strike.` });
+                            } else if (avg >= 0.250) {
+                                advices.push({ type: 'info', icon: '📈', title: 'Media Battuta Solida', text: `Media di ${avg.toFixed(3)} - Buona base. Per salire, lavora sulla copertura della palla esterna e sul timing.` });
+                            } else if (avg < 0.200) {
+                                advices.push({ type: 'critical', icon: '🎯', title: 'Media da Alzare', text: `Media di ${avg.toFixed(3)} - Priorità: mettere più palle in gioco. Accorcia lo swing con 2 strike e cerca il contatto.` });
+                            }
+                        }
+                        
+                        // K% Analysis
+                        if (kPct !== null) {
+                            if (kPct > 30) {
+                                advices.push({ type: 'critical', icon: '⚡', title: 'Troppi Strikeout', text: `${kPct.toFixed(1)}% di K è alto. Suggerimenti: migliora la selezione dei lanci, allunga i turni vedendo più lanci, lavora sul contatto con 2 strike.` });
+                            } else if (kPct > 25) {
+                                advices.push({ type: 'warning', icon: '👁️', title: 'Strikeout da Ridurre', text: `${kPct.toFixed(1)}% K - Puoi migliorare. Focus: riconosci meglio gli effetti e non inseguire palle fuori zona.` });
+                            } else if (kPct < 15) {
+                                advices.push({ type: 'positive', icon: '✨', title: 'Ottimo Contatto', text: `Solo ${kPct.toFixed(1)}% K - Eccellente capacità di mettere la palla in gioco!` });
+                            }
+                        }
+                        
+                        // BB% Analysis
+                        if (bbPct !== null) {
+                            if (bbPct >= 15) {
+                                advices.push({ type: 'positive', icon: '👀', title: 'Ottima Disciplina', text: `${bbPct.toFixed(1)}% BB - Eccellente occhio al piatto! Questa è una skill preziosa.` });
+                            } else if (bbPct < 8) {
+                                advices.push({ type: 'warning', icon: '⏳', title: 'Più Pazienza', text: `${bbPct.toFixed(1)}% BB - Prova ad allungare i turni. Vedere più lanci aiuta a leggere meglio il lanciatore.` });
+                            }
+                        }
+                        
+                        // BB/K Ratio
+                        if (bb > 0 && so > 0) {
+                            const bbkRatio = bb / so;
+                            if (bbkRatio < 0.5) {
+                                advices.push({ type: 'warning', icon: '⚖️', title: 'Rapporto BB/K', text: `Rapporto BB/K di ${bbkRatio.toFixed(2)} - Obiettivo: almeno 0.5. Lavora sulla selezione e non inseguire palle cattive.` });
+                            } else if (bbkRatio >= 0.75) {
+                                advices.push({ type: 'positive', icon: '🎯', title: 'Approccio Equilibrato', text: `Ottimo rapporto BB/K di ${bbkRatio.toFixed(2)} - Hai un buon equilibrio tra aggressività e pazienza.` });
+                            }
+                        }
+                        
+                        // Speed/SB suggestions
+                        if (player.skills && player.skills.corsa >= 7 && sb < 5 && ab > 50) {
+                            advices.push({ type: 'info', icon: '🏃', title: 'Sfrutta la Velocità', text: 'Hai gambe veloci ma poche rubate. Lavora sulla lettura dei lanciatori e sull\'anticipo per aumentare le SB.' });
+                        } else if (sb >= 10) {
+                            advices.push({ type: 'positive', icon: '⚡', title: 'Ottima Velocità', text: `${sb} basi rubate - Stai sfruttando bene la tua velocità!` });
+                        }
+                        
+                        // Defense suggestions based on skills
+                        if (player.skills && player.skills.difesa < 5) {
+                            advices.push({ type: 'warning', icon: '🛡️', title: 'Focus Difesa', text: 'La difesa ha margini di miglioramento. Dedica tempo extra al lavoro con le ground ball e al posizionamento.' });
+                        }
+                        
+                        // Age-based suggestions
+                        if (player.age <= 21) {
+                            advices.push({ type: 'info', icon: '📚', title: 'Fase di Sviluppo', text: 'Sei giovane - è il momento perfetto per costruire fondamentali solidi. Non avere fretta, concentrati sul processo.' });
+                        } else if (player.age >= 30) {
+                            advices.push({ type: 'info', icon: '🏆', title: 'Esperienza Conta', text: 'La tua esperienza è preziosa. Usa la conoscenza del gioco per compensare e aiuta i più giovani.' });
+                        }
+                    }
+                    
+                    // Limita a 4 consigli massimo
+                    return advices.slice(0, 4);
+                };
+                
+                // Genera sommario AI
+                const generateAISummary = (player, advices) => {
+                    const isPitcher = player.role === 'Lanciatore';
+                    const positives = advices.filter(a => a.type === 'positive').length;
+                    const warnings = advices.filter(a => a.type === 'warning' || a.type === 'critical').length;
+                    
+                    if (isPitcher) {
+                        if (warnings > positives) {
+                            return `📌 Priorità principale: lavorare sul controllo e sulla gestione mentale della partita. Ogni allenamento dedica almeno 10 minuti al lavoro sulla zona strike con focus sulla ripetibilità del gesto.`;
+                        } else {
+                            return `📌 Sei sulla strada giusta! Continua a perfezionare la meccanica e mantieni alta la fiducia nei tuoi lanci. Obiettivo: dominare con consistenza.`;
+                        }
+                    } else {
+                        if (warnings > positives) {
+                            return `📌 Focus di questa stagione: migliorare l'approccio al piatto. Dedica tempo alla macchina lanciabatti lavorando sul riconoscimento dei lanci e sul timing.`;
+                        } else {
+                            return `📌 Stai performando bene! Per fare il salto di qualità, concentrati sui dettagli e mantieni alta la consistenza in ogni turno.`;
+                        }
+                    }
+                };
+                
+                // Render AI Coach section
+                const renderAICoach = (player) => {
+                    const advices = generateAIAdvice(player);
+                    if (advices.length === 0) return '';
+                    
+                    const summary = generateAISummary(player, advices);
+                    
+                    return `
+                        <div class="card col-span-12 ai-coach-card">
+                            <div class="ai-coach-header">
+                                <div class="ai-avatar">🤖</div>
+                                <div class="ai-title-group">
+                                    <h3>AI Coach - Analisi Personalizzata</h3>
+                                    <p>Consigli basati sulle tue statistiche e caratteristiche</p>
+                                </div>
+                            </div>
+                            <div class="ai-advice-grid">
+                                ${advices.map(a => `
+                                    <div class="ai-advice-item ${a.type}">
+                                        <div class="ai-advice-icon">${a.icon}</div>
+                                        <div class="ai-advice-title">${a.title}</div>
+                                        <div class="ai-advice-text">${a.text}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="ai-summary">
+                                <div class="ai-summary-title">💡 Consiglio Principale</div>
+                                <div class="ai-summary-text">${summary}</div>
+                            </div>
+                        </div>
+                    `;
+                };
+
                 container.innerHTML = `
                     <div class="personal-hero">
                         <div class="hero-content">
@@ -1367,6 +1696,8 @@
                                 </table>
                             </div>
                         </div>
+
+                        ${renderAICoach(player)}
                     </div>
 
                     <div style="text-align:center; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
