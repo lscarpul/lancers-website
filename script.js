@@ -295,14 +295,14 @@ const allEvents = [
     { date: '2026-09-29', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     
     // PARTITE CAMPIONATO (Aprile - Agosto 2026)
-    { date: '2026-04-12', type: 'match-home', title: 'Health & Performance S.S.D', time: '🕐 11:00', tag: '🏠 Casa' },
+    { date: '2026-04-12', type: 'match-away', title: 'Health & Performance S.S.D', time: '🕐 11:00', tag: '✈️ Trasferta' },
     { date: '2026-04-19', type: 'match-away', title: 'Livorno 1940 Baseball', time: '🕐 11:00', tag: '✈️ Trasferta' },
     { date: '2026-04-26', type: 'match-home', title: 'Longbridge 2000 B.C', time: '🕐 11:00', tag: '🏠 Casa' },
     { date: '2026-05-03', type: 'match-away', title: 'Colorno B.C.', time: '🕐 11:00', tag: '✈️ Trasferta' },
     { date: '2026-05-10', type: 'match-home', title: 'A.S.D BSC Arezzo', time: '🕐 11:00', tag: '🏠 Casa' },
     { date: '2026-05-17', type: 'match-home', title: 'Cali Roma XII', time: '🕐 11:00', tag: '🏠 Casa' },
     { date: '2026-05-30', type: 'match-away', title: 'Padule Baseball A.S.D', time: '🕐 15:00', tag: '✈️ Trasferta' },
-    { date: '2026-06-07', type: 'match-away', title: 'Health & Performance S.S.D', time: '🕐 11:00', tag: '✈️ Trasferta' },
+    { date: '2026-06-07', type: 'match-home', title: 'Health & Performance S.S.D', time: '🕐 11:00', tag: '🏠 Casa' },
     { date: '2026-06-14', type: 'match-home', title: 'Livorno 1940 Baseball', time: '🕐 11:00', tag: '🏠 Casa' },
     { date: '2026-06-21', type: 'match-away', title: 'Longbridge 2000 B.C', time: '🕐 11:00', tag: '✈️ Trasferta' },
     { date: '2026-06-28', type: 'match-home', title: 'Colorno B.C.', time: '🕐 11:00', tag: '🏠 Casa' },
