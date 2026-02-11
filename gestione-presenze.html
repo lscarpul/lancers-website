@@ -1070,16 +1070,31 @@
             }
         }
 
+        // Verifica se un evento è scaduto (passato)
+        function isEventExpired(eventDate) {
+            const now = new Date();
+            const eventDateTime = new Date(eventDate);
+            // Evento scaduto se la data è passata
+            return eventDateTime < now;
+        }
+
         // Ottieni stato presenza per un giocatore e data
         function getPlayerPresence(playerNumber, eventDate) {
             // dateKey format: 2026_02_03
             const dateKey = eventDate.replace(/-/g, '_');
             
             // playerNumber is stored directly (e.g., "25", not "player_25")
+            let status = null;
             if (presencesCache[playerNumber] && presencesCache[playerNumber][dateKey]) {
-                return presencesCache[playerNumber][dateKey].response;
+                status = presencesCache[playerNumber][dateKey].response;
             }
-            return null;
+            
+            // Se l'evento è scaduto e lo stato è "maybe" o "null" (in attesa), converte automaticamente in "no"
+            if (isEventExpired(eventDate) && (status === 'maybe' || status === null)) {
+                return 'no';
+            }
+            
+            return status;
         }
 
         // Mostra tab
