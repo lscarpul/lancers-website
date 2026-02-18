@@ -443,6 +443,232 @@
             line-height: 1.6;
         }
 
+        /* Chatbot Styles */
+        .chatbot-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .chatbot-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .chatbot-info p {
+            margin: 0.25rem 0 0 0;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message-avatar.bot {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+        }
+
+        .message-avatar.user {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 0.875rem 1.125rem;
+            border-radius: 16px;
+            line-height: 1.5;
+        }
+
+        .chat-message.bot .message-content {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #cbd5e1;
+        }
+
+        .chat-message.user .message-content {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: white;
+            text-align: right;
+        }
+
+        .chatbot-input-area {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chatbot-suggestions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .suggestion-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+            padding: 0.5rem 0.875rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .chatbot-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .chatbot-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .chatbot-input::placeholder {
+            color: #64748b;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border: none;
+            border-radius: 12px;
+            padding: 0.875rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 0.375rem;
+            padding: 0.875rem 1.125rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            animation: typing 1.4s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
         /* Stats Table */
         .table-container {
             overflow-x: auto;
@@ -1556,40 +1782,261 @@
                     }
                 };
                 
-                // Render AI Coach section
+                // Chatbot AI Coach con API Groq
                 const renderAICoach = (player) => {
-                    const advices = generateAIAdvice(player);
-                    if (advices.length === 0) return '';
-                    
-                    const summary = generateAISummary(player, advices);
-                    
                     return `
-                        <div class="card col-span-12 ai-coach-card">
-                            <div class="ai-coach-header">
-                                <div class="ai-avatar">🤖</div>
-                                <div class="ai-title-group">
-                                    <h3>AI Coach - Analisi Personalizzata</h3>
-                                    <p>Consigli basati sulle tue statistiche e caratteristiche</p>
-                                </div>
-                            </div>
-                            <div class="ai-advice-grid">
-                                ${advices.map(a => `
-                                    <div class="ai-advice-item ${a.type}">
-                                        <div class="ai-advice-icon">${a.icon}</div>
-                                        <div class="ai-advice-title">${a.title}</div>
-                                        <div class="ai-advice-text">${a.text}</div>
+                        <div class="card col-span-12">
+                            <div class="chatbot-container">
+                                <div class="chatbot-header">
+                                    <div class="chatbot-avatar">🤖</div>
+                                    <div class="chatbot-info">
+                                        <h3>AI Coach Personale</h3>
+                                        <p>Chiedimi qualsiasi cosa sulle tue statistiche e performance</p>
                                     </div>
-                                `).join('')}
-                            </div>
-                            <div class="ai-summary">
-                                <div class="ai-summary-title">💡 Consiglio Principale</div>
-                                <div class="ai-summary-text">${summary}</div>
+                                </div>
+                                <div class="chatbot-messages" id="chatMessages">
+                                    <div class="chat-message bot">
+                                        <div class="message-avatar bot">🤖</div>
+                                        <div class="message-content">
+                                            Ciao <strong>${player.name}</strong>! Sono il tuo AI Coach personale powered by Groq AI. 
+                                            Ho analizzato le tue statistiche e posso aiutarti a migliorare. 
+                                            Cosa vorresti sapere? 💪
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chatbot-input-area">
+                                    <div class="chatbot-suggestions" id="suggestions">
+                                        <button class="suggestion-btn" data-msg="Come posso migliorare?">Come posso migliorare?</button>
+                                        <button class="suggestion-btn" data-msg="Analizza le mie statistiche">Analizza le mie statistiche</button>
+                                        <button class="suggestion-btn" data-msg="Quali sono i miei punti deboli?">Punti deboli?</button>
+                                        <button class="suggestion-btn" data-msg="Suggerisci esercizi">Suggerisci esercizi</button>
+                                    </div>
+                                    <div class="chatbot-input-wrapper">
+                                        <input type="text" class="chatbot-input" id="chatInput" placeholder="Scrivi un messaggio...">
+                                        <button class="send-btn" id="sendBtn">Invia</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
                 };
 
-                container.innerHTML = `
+                // Inizializza Chatbot con AI reale
+                const initChatbot = (player) => {
+                    const messagesContainer = document.getElementById('chatMessages');
+                    const chatInput = document.getElementById('chatInput');
+                    const sendBtn = document.getElementById('sendBtn');
+                    const suggestions = document.querySelectorAll('.suggestion-btn');
+
+                    let conversationHistory = [];
+
+                    suggestions.forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const msg = btn.dataset.msg;
+                            sendMessage(msg);
+                        });
+                    });
+
+                    const sendMessage = async (text) => {
+                        if (!text.trim()) return;
+
+                        addMessage(text, 'user');
+                        chatInput.value = '';
+                        sendBtn.disabled = true;
+
+                        showTyping();
+
+                        try {
+                            const response = await getAIResponse(text, player, conversationHistory);
+                            hideTyping();
+                            addMessage(response, 'bot');
+                            
+                            conversationHistory.push({ role: 'user', content: text });
+                            conversationHistory.push({ role: 'assistant', content: response });
+                            
+                            if (conversationHistory.length > 10) {
+                                conversationHistory = conversationHistory.slice(-10);
+                            }
+                        } catch (error) {
+                            hideTyping();
+                            addMessage('Mi dispiace, ho avuto un problema tecnico. Riprova tra poco! 🔧', 'bot');
+                            console.error('AI Error:', error);
+                        } finally {
+                            sendBtn.disabled = false;
+                        }
+                    };
+
+                    sendBtn.addEventListener('click', () => sendMessage(chatInput.value));
+                    chatInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') sendMessage(chatInput.value);
+                    });
+
+                    const addMessage = (text, type) => {
+                        const msgDiv = document.createElement('div');
+                        msgDiv.className = \`chat-message \${type}\`;
+                        msgDiv.innerHTML = \`
+                            <div class="message-avatar \${type}">\${type === 'bot' ? '🤖' : '👤'}</div>
+                            <div class="message-content">\${text}</div>
+                        \`;
+                        messagesContainer.appendChild(msgDiv);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    };
+
+                    let typingIndicator = null;
+                    const showTyping = () => {
+                        typingIndicator = document.createElement('div');
+                        typingIndicator.className = 'chat-message bot';
+                        typingIndicator.id = 'typing';
+                        typingIndicator.innerHTML = \`
+                            <div class="message-avatar bot">🤖</div>
+                            <div class="message-content">
+                                <div class="typing-indicator">
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                </div>
+                            </div>
+                        \`;
+                        messagesContainer.appendChild(typingIndicator);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    };
+
+                    const hideTyping = () => {
+                        if (typingIndicator) {
+                            typingIndicator.remove();
+                            typingIndicator = null;
+                        }
+                    };
+                };
+
+                // Funzione per chiamare API AI (Groq - gratuita e veloce)
+                const getAIResponse = async (userMessage, player, history) => {
+                    const GROQ_API_KEY = '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';
+                    const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+                    const isPitcher = player.role === 'Lanciatore';
+                    const playerContext = preparePlayerContext(player);
+
+                    const systemPrompt = \`Sei un allenatore di baseball esperto e motivazionale. Stai parlando con \${player.name}, \${player.age} anni, \${player.role}.
+
+\${playerContext}
+
+ISTRUZIONI:
+- Rispondi in italiano in modo professionale ma amichevole
+- Usa emoji per rendere il messaggio più coinvolgente
+- Basa i tuoi consigli sulle statistiche reali del giocatore
+- Sii specifico e pratico con esercizi e suggerimenti
+- Usa tag HTML per formattare (es: <strong>, <br>)
+- Mantieni le risposte concise ma complete (max 200 parole)
+- Motivazionale ma realistico
+- Se chiede esercizi, dai routine specifiche con ripetizioni e tempi\`;
+
+                    const messages = [
+                        { role: 'system', content: systemPrompt },
+                        ...history.slice(-6),
+                        { role: 'user', content: userMessage }
+                    ];
+
+                    try {
+                        const response = await fetch(GROQ_API_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': \`Bearer \${GROQ_API_KEY}\`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                model: 'llama-3.1-8b-instant',
+                                messages: messages,
+                                temperature: 0.7,
+                                max_tokens: 500,
+                                top_p: 0.9
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(\`API Error: \${response.status}\`);
+                        }
+
+                        const data = await response.json();
+                        return data.choices[0].message.content;
+                    } catch (error) {
+                        console.error('Groq API Error:', error);
+                        return generateFallbackResponse(userMessage, player);
+                    }
+                };
+
+                // Prepara contesto completo del giocatore
+                const preparePlayerContext = (player) => {
+                    const isPitcher = player.role === 'Lanciatore';
+                    const totali = player.totali || {};
+                    
+                    let context = \`📊 STATISTICHE:\\n\`;
+                    
+                    if (isPitcher) {
+                        context += \`- Inning Lanciati: \${player.inningLanciati}\\n\`;
+                        context += \`- ERA: \${totali.era || 'N/A'}\\n\`;
+                        context += \`- WHIP: \${totali.whip || 'N/A'}\\n\`;
+                        context += \`- K/9: \${player.kPercent}\\n\`;
+                        context += \`- BB/9: \${player.bbPercent}\\n\`;
+                        context += \`- Strikeout totali: \${totali.so || 'N/A'}\\n\`;
+                        context += \`- Basi su ball totali: \${totali.bb || 'N/A'}\\n\`;
+                    } else {
+                        context += \`- Turni: \${player.turni}\\n\`;
+                        context += \`- AVG: \${totali.avg || 'N/A'}\\n\`;
+                        context += \`- OBP: \${totali.obp || 'N/A'}\\n\`;
+                        context += \`- SLG: \${totali.slg || 'N/A'}\\n\`;
+                        context += \`- K%: \${player.kPercent}\\n\`;
+                        context += \`- BB%: \${player.bbPercent}\\n\`;
+                        context += \`- Strikeout: \${totali.so || 'N/A'}\\n\`;
+                        context += \`- Basi su ball: \${totali.bb || 'N/A'}\\n\`;
+                        context += \`- Basi rubate: \${totali.sb || 'N/A'}\\n\`;
+                    }
+
+                    if (player.puntiForza) {
+                        context += \`\\n💪 PUNTI DI FORZA: \${player.puntiForza}\\n\`;
+                    }
+                    
+                    if (player.puntiDeboli) {
+                        context += \`\\n⚠️ PUNTI DEBOLI: \${player.puntiDeboli}\\n\`;
+                    }
+
+                    if (player.obiettivi && player.obiettivi.length > 0) {
+                        context += \`\\n🎯 OBIETTIVI STAGIONALI:\\n\`;
+                        player.obiettivi.forEach(o => context += \`- \${o}\\n\`);
+                    }
+
+                    if (player.valutazioni && player.valutazioni.generale) {
+                        context += \`\\n📝 VALUTAZIONE STAFF: \${player.valutazioni.generale}\\n\`;
+                    }
+
+                    return context;
+                };
+
+                // Risposta fallback se API non funziona
+                const generateFallbackResponse = (message, player) => {
+                    const msg = message.toLowerCase();
+                    const totali = player.totali || {};
+                    const isPitcher = player.role === 'Lanciatore';
+                    
+                    if (msg.includes('statistic') || msg.includes('analiz')) {
+                        if (isPitcher) {
+                            return \`📊 <strong>Tue Statistiche</strong><br><br>ERA: \${totali.era || 'N/A'}, WHIP: \${totali.whip || 'N/A'}, K/9: \${player.kPercent}, BB/9: \${player.bbPercent}\`;
+                        } else {
+                            return \`📊 <strong>Tue Statistiche</strong><br><br>AVG: \${totali.avg || 'N/A'}, OBP: \${totali.obp || 'N/A'}, K%: \${player.kPercent}, BB%: \${player.bbPercent}\`;
+                        }
+                    }
+                    
+                    if (msg.includes('obiettiv')) {
+                        const obiettivi = player.obiettivi || [];
+                        if (obiettivi.length > 0) {
+                            return \`🎯 <strong>I Tuoi Obiettivi:</strong><br><br>\${obiettivi.map(o => \`• \${o}\`).join('<br>')}\`;
+                        }
+                    }
+                    
+                    return \`L'AI è temporaneamente non disponibile, ma posso comunque aiutarti! Prova a chiedermi delle tue statistiche, obiettivi o punti di forza. 💪\`;
+                };
+
+                container.innerHTML = \`
                     <div class="personal-hero">
                         <div class="hero-content">
                             <div class="player-badge">
@@ -1706,6 +2153,9 @@
                         <button id="clearDataBtn" class="back-btn" style="background: #6366f1; color: white; font-size: 0.85rem;">🔄 Aggiorna App (Cancella Cache)</button>
                     </div>
                 `;
+
+                // Inizializza chatbot dopo il render
+                initChatbot(player);
             } else {
                 container.innerHTML = '<div class="no-player"><h2>Profilo non trovato</h2><a href="index.html" class="back-btn">Torna alla home</a></div>';
             }
