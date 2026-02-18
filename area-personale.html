@@ -1873,11 +1873,11 @@
 
                     const addMessage = (text, type) => {
                         const msgDiv = document.createElement('div');
-                        msgDiv.className = \`chat-message \${type}\`;
-                        msgDiv.innerHTML = \`
-                            <div class="message-avatar \${type}">\${type === 'bot' ? '🤖' : '👤'}</div>
-                            <div class="message-content">\${text}</div>
-                        \`;
+                        msgDiv.className = `chat-message ${type}`;
+                        msgDiv.innerHTML = `
+                            <div class="message-avatar ${type}">${type === 'bot' ? '🤖' : '👤'}</div>
+                            <div class="message-content">${text}</div>
+                        `;
                         messagesContainer.appendChild(msgDiv);
                         messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     };
@@ -1887,7 +1887,7 @@
                         typingIndicator = document.createElement('div');
                         typingIndicator.className = 'chat-message bot';
                         typingIndicator.id = 'typing';
-                        typingIndicator.innerHTML = \`
+                        typingIndicator.innerHTML = `
                             <div class="message-avatar bot">🤖</div>
                             <div class="message-content">
                                 <div class="typing-indicator">
@@ -1896,7 +1896,7 @@
                                     <div class="typing-dot"></div>
                                 </div>
                             </div>
-                        \`;
+                        `;
                         messagesContainer.appendChild(typingIndicator);
                         messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     };
@@ -1917,9 +1917,9 @@
                     const isPitcher = player.role === 'Lanciatore';
                     const playerContext = preparePlayerContext(player);
 
-                    const systemPrompt = \`Sei un allenatore di baseball esperto e motivazionale. Stai parlando con \${player.name}, \${player.age} anni, \${player.role}.
+                    const systemPrompt = `Sei un allenatore di baseball esperto e motivazionale. Stai parlando con ${player.name}, ${player.age} anni, ${player.role}.
 
-\${playerContext}
+${playerContext}
 
 ISTRUZIONI:
 - Rispondi in italiano in modo professionale ma amichevole
@@ -1929,7 +1929,7 @@ ISTRUZIONI:
 - Usa tag HTML per formattare (es: <strong>, <br>)
 - Mantieni le risposte concise ma complete (max 200 parole)
 - Motivazionale ma realistico
-- Se chiede esercizi, dai routine specifiche con ripetizioni e tempi\`;
+- Se chiede esercizi, dai routine specifiche con ripetizioni e tempi`;
 
                     const messages = [
                         { role: 'system', content: systemPrompt },
@@ -1941,7 +1941,7 @@ ISTRUZIONI:
                         const response = await fetch(GROQ_API_URL, {
                             method: 'POST',
                             headers: {
-                                'Authorization': \`Bearer \${GROQ_API_KEY}\`,
+                                'Authorization': `Bearer ${GROQ_API_KEY}`,
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
@@ -1954,7 +1954,7 @@ ISTRUZIONI:
                         });
 
                         if (!response.ok) {
-                            throw new Error(\`API Error: \${response.status}\`);
+                            throw new Error(`API Error: ${response.status}`);
                         }
 
                         const data = await response.json();
@@ -1970,43 +1970,43 @@ ISTRUZIONI:
                     const isPitcher = player.role === 'Lanciatore';
                     const totali = player.totali || {};
                     
-                    let context = \`📊 STATISTICHE:\\n\`;
+                    let context = `📊 STATISTICHE:\n`;
                     
                     if (isPitcher) {
-                        context += \`- Inning Lanciati: \${player.inningLanciati}\\n\`;
-                        context += \`- ERA: \${totali.era || 'N/A'}\\n\`;
-                        context += \`- WHIP: \${totali.whip || 'N/A'}\\n\`;
-                        context += \`- K/9: \${player.kPercent}\\n\`;
-                        context += \`- BB/9: \${player.bbPercent}\\n\`;
-                        context += \`- Strikeout totali: \${totali.so || 'N/A'}\\n\`;
-                        context += \`- Basi su ball totali: \${totali.bb || 'N/A'}\\n\`;
+                        context += `- Inning Lanciati: ${player.inningLanciati}\n`;
+                        context += `- ERA: ${totali.era || 'N/A'}\n`;
+                        context += `- WHIP: ${totali.whip || 'N/A'}\n`;
+                        context += `- K/9: ${player.kPercent}\n`;
+                        context += `- BB/9: ${player.bbPercent}\n`;
+                        context += `- Strikeout totali: ${totali.so || 'N/A'}\n`;
+                        context += `- Basi su ball totali: ${totali.bb || 'N/A'}\n`;
                     } else {
-                        context += \`- Turni: \${player.turni}\\n\`;
-                        context += \`- AVG: \${totali.avg || 'N/A'}\\n\`;
-                        context += \`- OBP: \${totali.obp || 'N/A'}\\n\`;
-                        context += \`- SLG: \${totali.slg || 'N/A'}\\n\`;
-                        context += \`- K%: \${player.kPercent}\\n\`;
-                        context += \`- BB%: \${player.bbPercent}\\n\`;
-                        context += \`- Strikeout: \${totali.so || 'N/A'}\\n\`;
-                        context += \`- Basi su ball: \${totali.bb || 'N/A'}\\n\`;
-                        context += \`- Basi rubate: \${totali.sb || 'N/A'}\\n\`;
+                        context += `- Turni: ${player.turni}\n`;
+                        context += `- AVG: ${totali.avg || 'N/A'}\n`;
+                        context += `- OBP: ${totali.obp || 'N/A'}\n`;
+                        context += `- SLG: ${totali.slg || 'N/A'}\n`;
+                        context += `- K%: ${player.kPercent}\n`;
+                        context += `- BB%: ${player.bbPercent}\n`;
+                        context += `- Strikeout: ${totali.so || 'N/A'}\n`;
+                        context += `- Basi su ball: ${totali.bb || 'N/A'}\n`;
+                        context += `- Basi rubate: ${totali.sb || 'N/A'}\n`;
                     }
 
                     if (player.puntiForza) {
-                        context += \`\\n💪 PUNTI DI FORZA: \${player.puntiForza}\\n\`;
+                        context += `\n💪 PUNTI DI FORZA: ${player.puntiForza}\n`;
                     }
                     
                     if (player.puntiDeboli) {
-                        context += \`\\n⚠️ PUNTI DEBOLI: \${player.puntiDeboli}\\n\`;
+                        context += `\n⚠️ PUNTI DEBOLI: ${player.puntiDeboli}\n`;
                     }
 
                     if (player.obiettivi && player.obiettivi.length > 0) {
-                        context += \`\\n🎯 OBIETTIVI STAGIONALI:\\n\`;
-                        player.obiettivi.forEach(o => context += \`- \${o}\\n\`);
+                        context += `\n🎯 OBIETTIVI STAGIONALI:\n`;
+                        player.obiettivi.forEach(o => context += `- ${o}\n`);
                     }
 
                     if (player.valutazioni && player.valutazioni.generale) {
-                        context += \`\\n📝 VALUTAZIONE STAFF: \${player.valutazioni.generale}\\n\`;
+                        context += `\n📝 VALUTAZIONE STAFF: ${player.valutazioni.generale}\n`;
                     }
 
                     return context;
@@ -2020,23 +2020,23 @@ ISTRUZIONI:
                     
                     if (msg.includes('statistic') || msg.includes('analiz')) {
                         if (isPitcher) {
-                            return \`📊 <strong>Tue Statistiche</strong><br><br>ERA: \${totali.era || 'N/A'}, WHIP: \${totali.whip || 'N/A'}, K/9: \${player.kPercent}, BB/9: \${player.bbPercent}\`;
+                            return `📊 <strong>Tue Statistiche</strong><br><br>ERA: ${totali.era || 'N/A'}, WHIP: ${totali.whip || 'N/A'}, K/9: ${player.kPercent}, BB/9: ${player.bbPercent}`;
                         } else {
-                            return \`📊 <strong>Tue Statistiche</strong><br><br>AVG: \${totali.avg || 'N/A'}, OBP: \${totali.obp || 'N/A'}, K%: \${player.kPercent}, BB%: \${player.bbPercent}\`;
+                            return `📊 <strong>Tue Statistiche</strong><br><br>AVG: ${totali.avg || 'N/A'}, OBP: ${totali.obp || 'N/A'}, K%: ${player.kPercent}, BB%: ${player.bbPercent}`;
                         }
                     }
                     
                     if (msg.includes('obiettiv')) {
                         const obiettivi = player.obiettivi || [];
                         if (obiettivi.length > 0) {
-                            return \`🎯 <strong>I Tuoi Obiettivi:</strong><br><br>\${obiettivi.map(o => \`• \${o}\`).join('<br>')}\`;
+                            return `🎯 <strong>I Tuoi Obiettivi:</strong><br><br>${obiettivi.map(o => `• ${o}`).join('<br>')}`;
                         }
                     }
                     
-                    return \`L'AI è temporaneamente non disponibile, ma posso comunque aiutarti! Prova a chiedermi delle tue statistiche, obiettivi o punti di forza. 💪\`;
+                    return `L'AI è temporaneamente non disponibile, ma posso comunque aiutarti! Prova a chiedermi delle tue statistiche, obiettivi o punti di forza. 💪`;
                 };
 
-                container.innerHTML = \`
+                container.innerHTML = `
                     <div class="personal-hero">
                         <div class="hero-content">
                             <div class="player-badge">
