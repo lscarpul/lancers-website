@@ -1088,12 +1088,14 @@
             if (presencesCache[playerNumber] && presencesCache[playerNumber][dateKey]) {
                 status = presencesCache[playerNumber][dateKey].response;
             }
-            
-            // Se l'evento è scaduto e lo stato è "maybe" o "null" (in attesa), converte automaticamente in "no"
-            if (isEventExpired(eventDate) && (status === 'maybe' || status === null)) {
+            // Default: se non risponde, è presente
+            if (status === null || status === undefined) {
+                return 'yes';
+            }
+            // Se l'evento è scaduto e lo stato è "maybe", converte in "no"
+            if (isEventExpired(eventDate) && status === 'maybe') {
                 return 'no';
             }
-            
             return status;
         }
 
@@ -1126,7 +1128,7 @@
             document.getElementById('statsGrid').innerHTML = `
                 <div class="stat-card blue"><div class="stat-value">${totalResponses}</div><div class="stat-label">Risposte Totali</div></div>
                 <div class="stat-card green"><div class="stat-value">${totalPresent}</div><div class="stat-label">✅ Presenti</div></div>
-                <div class="stat-card yellow"><div class="stat-value">${totalMaybe}</div><div class="stat-label">⚠️ Forse</div></div>
+                <!-- Statistica 'forse' rimossa -->
                 <div class="stat-card red"><div class="stat-value">${totalAbsent}</div><div class="stat-label">❌ Assenti</div></div>
             `;
 
@@ -1215,7 +1217,7 @@
                     ${isWednesday ? `<p style="color: #a78bfa; font-size: 0.9rem; margin-top: 0.5rem;">${eventTypeLabel} - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
                     <div class="event-stats">
                         <span class="status-badge present">✅ ${presentList.length}</span>
-                        <span class="status-badge maybe">⚠️ ${maybeList.length}</span>
+                        <!-- Badge 'forse' rimosso -->
                         <span class="status-badge absent">❌ ${absentList.length}</span>
                         <span class="status-badge pending">⏳ ${pendingList.length}</span>
                     </div>
@@ -1234,18 +1236,7 @@
                     </div>
                 </div>
 
-                <div class="presence-section">
-                    <h4>⚠️ Forse (${maybeList.length})</h4>
-                    <div class="presence-list">
-                        ${maybeList.map(p => `
-                            <div class="presence-item maybe">
-                                <span class="number">#${p.number}</span>
-                                <span class="name">${p.name} ${p.surname}</span>
-                                <span class="icon">⚠️</span>
-                            </div>
-                        `).join('') || '<p style="color: #64748b; padding: 0.5rem;">Nessuno</p>'}
-                    </div>
-                </div>
+                <!-- Sezione 'forse' rimossa -->
 
                 <div class="presence-section">
                     <h4>❌ Assenti (${absentList.length})</h4>
@@ -1335,7 +1326,7 @@
                                 </span></td>
                                 <td class="admin-actions">
                                     <button class="admin-btn yes ${p.status === 'yes' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'yes')" title="Presente">✅</button>
-                                    <button class="admin-btn maybe ${p.status === 'maybe' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'maybe')" title="Forse">⚠️</button>
+                                    <!-- Tasto 'forse' rimosso -->
                                     <button class="admin-btn no ${p.status === 'no' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'no')" title="Assente">❌</button>
                                 </td>
                             </tr>
@@ -1348,18 +1339,17 @@
         // Statistiche giocatori
         function loadPlayerStats() {
             const playerStatsHtml = allPlayers.map(player => {
-                let present = 0, maybe = 0, absent = 0;
+                let present = 0, absent = 0;
                 
                 // Cerca con il numero diretto
                 if (presencesCache[player.number]) {
                     Object.values(presencesCache[player.number]).forEach(response => {
                         if (response.response === 'yes') present++;
-                        else if (response.response === 'maybe') maybe++;
                         else if (response.response === 'no') absent++;
                     });
                 }
 
-                const total = present + maybe + absent;
+                const total = present + absent;
                 const rate = total > 0 ? Math.round((present / total) * 100) : 0;
                 const rateClass = rate >= 70 ? 'high' : rate >= 40 ? 'medium' : 'low';
 
@@ -1372,7 +1362,6 @@
                         </div>
                         <div class="mini-stats">
                             <div class="mini-stat green"><div class="mini-stat-value">${present}</div></div>
-                            <div class="mini-stat yellow"><div class="mini-stat-value">${maybe}</div></div>
                             <div class="mini-stat red"><div class="mini-stat-value">${absent}</div></div>
                         </div>
                         <div class="attendance-rate ${rateClass}">${rate}%</div>

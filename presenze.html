@@ -541,11 +541,7 @@
                     bgColor = 'rgba(239, 68, 68, 0.2)';
                     textColor = '#f87171';
                     break;
-                case 'maybe':
-                    responseText = '⚠️ Forse';
-                    bgColor = 'rgba(251, 191, 36, 0.2)';
-                    textColor = '#fbbf24';
-                    break;
+                // Rimosso 'forse'
             }
             
             buttonsContainer.innerHTML = `
@@ -566,7 +562,7 @@
             
             buttonsContainer.innerHTML = `
                 <button class="presence-btn-small yes" onclick="savePresence('${eventDate}', 'yes', ${eventIndex})">✅</button>
-                <button class="presence-btn-small maybe" onclick="savePresence('${eventDate}', 'maybe', ${eventIndex})">⚠️</button>
+                <!-- Tasto 'forse' rimosso -->
                 <button class="presence-btn-small no" onclick="savePresence('${eventDate}', 'no', ${eventIndex})">❌</button>
             `;
         }
@@ -682,7 +678,6 @@
                 } else {
                     buttonsHTML = `
                         <button class="presence-btn-small yes" onclick="savePresence('${event.date}', 'yes', ${index})">✅</button>
-                        <button class="presence-btn-small maybe" onclick="savePresence('${event.date}', 'maybe', ${index})">⚠️</button>
                         <button class="presence-btn-small no" onclick="savePresence('${event.date}', 'no', ${index})">❌</button>
                     `;
                 }

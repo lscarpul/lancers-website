@@ -421,7 +421,7 @@ function loadWeeklyEvents() {
                     </div>
                     <div class="event-presence-btns">
                         <button class="presence-btn yes" onclick="saveEventPresence('${event.date}', 'yes', this)" title="Ci sarò">✅</button>
-                        <button class="presence-btn maybe" onclick="saveEventPresence('${event.date}', 'maybe', this)" title="Forse">⚠️</button>
+                        <!-- Tasto 'forse' rimosso -->
                         <button class="presence-btn no" onclick="saveEventPresence('${event.date}', 'no', this)" title="Assente">❌</button>
                     </div>
                 </div>
@@ -469,7 +469,7 @@ async function saveEventPresence(date, status, btn) {
         btn.classList.add('selected');
         
         // Ripristina emoji
-        const emojis = { yes: '✅', maybe: '⚠️', no: '❌' };
+        const emojis = { yes: '✅', no: '❌' };
         btn.innerHTML = emojis[status];
         
         console.log(`✅ Presenza salvata: ${date} = ${status}`);
