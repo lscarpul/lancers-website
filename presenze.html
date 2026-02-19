@@ -1,3 +1,66 @@
+    <!-- Tab Bar fissa in basso -->
+    <nav class="tab-bar">
+        <a href="presenze.html" class="tab-bar-item" title="Presenze">
+            <span>📋</span>
+            <span>Presenze</span>
+        </a>
+        <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
+            <span>🏋️</span>
+            <span>Allenamenti</span>
+        </a>
+        <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
+            <span>⚾</span>
+            <span>Partite</span>
+        </a>
+        <a href="area-personale.html" class="tab-bar-item" title="Profilo">
+            <span>👤</span>
+            <span>Profilo</span>
+        </a>
+        <a href="documento.html" class="tab-bar-item" title="Documento">
+            <span>📄</span>
+            <span>Documento</span>
+        </a>
+    </nav>
+    <style>
+        .tab-bar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 64px;
+            background: linear-gradient(135deg, #0a1929 0%, #1a365d 100%);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+        .tab-bar-item {
+            flex: 1;
+            text-align: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            transition: color 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .tab-bar-item span:first-child {
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+        .tab-bar-item:hover, .tab-bar-item.active {
+            color: #f59e0b;
+        }
+        body { padding-bottom: 70px; }
+        @media (max-width: 600px) {
+            .tab-bar { height: 56px; }
+            .tab-bar-item span:first-child { font-size: 1.2rem; }
+        }
+    </style>
 <!DOCTYPE html>
 <html lang="it">
 <head>
