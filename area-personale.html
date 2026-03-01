@@ -1010,7 +1010,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=56"></script>
+    <script src="script.js?v=57"></script>
     <script>
         // Database completo giocatori - Stagione 2026
         // Include valutazioni staff, statistiche e obiettivi
@@ -2133,7 +2133,7 @@ ISTRUZIONI:
                         const data = await response.json();
                         return data.choices[0].message.content;
                     } catch (error) {
-                        console.error('Groq API Error:', error);
+                        console.warn('Groq API non disponibile, uso risposta locale:', error.message);
                         return generateFallbackResponse(userMessage, player);
                     }
                 };
@@ -2190,23 +2190,165 @@ ISTRUZIONI:
                     const msg = message.toLowerCase();
                     const totali = player.totali || {};
                     const isPitcher = player.role === 'Lanciatore';
-                    
-                    if (msg.includes('statistic') || msg.includes('analiz')) {
+                    const skills = player.skills || {};
+                    const obiettivi = player.obiettivi || [];
+                    const lavoroAutonomo = player.lavoroAutonomo || [];
+                    const valutazioni = player.valutazioni || {};
+
+                    // ── STATISTICHE ──────────────────────────────────────────
+                    if (msg.includes('statistic') || msg.includes('analiz') || msg.includes('numero') || msg.includes('dato')) {
                         if (isPitcher) {
-                            return `📊 <strong>Tue Statistiche</strong><br><br>ERA: ${totali.era || 'N/A'}, WHIP: ${totali.whip || 'N/A'}, K/9: ${player.kPercent}, BB/9: ${player.bbPercent}`;
+                            const era = totali.era || 'N/A';
+                            const whip = totali.whip || 'N/A';
+                            const k = player.kPercent || 'N/A';
+                            const bb = player.bbPercent || 'N/A';
+                            const note = parseFloat(era) > 4.5
+                                ? '⚠️ L\'ERA è alta: priorità al controllo dei lanci e alla riduzione dei walk.'
+                                : parseFloat(era) < 3.0
+                                ? '🌟 ERA eccellente! Sei tra i migliori. Mantieni la consistenza.'
+                                : '📈 ERA nella media. Piccoli miglioramenti al controllo ti porteranno al livello successivo.';
+                            return `📊 <strong>Le Tue Statistiche</strong><br><br>
+🔢 ERA: <strong>${era}</strong><br>
+🔢 WHIP: <strong>${whip}</strong><br>
+🎯 K%: <strong>${k}</strong><br>
+🚶 BB%: <strong>${bb}</strong><br><br>
+${note}<br><br>
+${k > 25 ? '✅ Ottimo tasso di strikeout, continua a lavorare sulla velocità e sul movimento.' : '💡 Lavora sulla varietà dei lanci per aumentare i K.'}`;
                         } else {
-                            return `📊 <strong>Tue Statistiche</strong><br><br>AVG: ${totali.avg || 'N/A'}, OBP: ${totali.obp || 'N/A'}, K%: ${player.kPercent}, BB%: ${player.bbPercent}`;
+                            const avg = totali.avg || 'N/A';
+                            const obp = totali.obp || 'N/A';
+                            const slg = totali.slg || 'N/A';
+                            const k = player.kPercent || 'N/A';
+                            const bb = player.bbPercent || 'N/A';
+                            const note = parseFloat(avg) >= 0.280
+                                ? '🌟 Media battuta ottima! Sei un punto di forza nell\'lineup.'
+                                : parseFloat(avg) >= 0.230
+                                ? '📈 Media nella norma. Focus sul contatto e sulle situazioni 2-strike.'
+                                : '💡 Lavora molto sul riconoscimento dei lanci e sul ridurre i K.';
+                            return `📊 <strong>Le Tue Statistiche</strong><br><br>
+🏏 AVG: <strong>${avg}</strong><br>
+📈 OBP: <strong>${obp}</strong><br>
+💪 SLG: <strong>${slg}</strong><br>
+🎯 K%: <strong>${k}</strong><br>
+🚶 BB%: <strong>${bb}</strong><br><br>
+${note}`;
                         }
                     }
-                    
-                    if (msg.includes('obiettiv')) {
-                        const obiettivi = player.obiettivi || [];
+
+                    // ── OBIETTIVI ────────────────────────────────────────────
+                    if (msg.includes('obiettiv') || msg.includes('goal') || msg.includes('stagione')) {
                         if (obiettivi.length > 0) {
-                            return `🎯 <strong>I Tuoi Obiettivi:</strong><br><br>${obiettivi.map(o => `• ${o}`).join('<br>')}`;
+                            return `🎯 <strong>I Tuoi Obiettivi Stagione 2026</strong><br><br>
+${player.mioObiettivo ? `<strong>Obiettivo principale:</strong> ${player.mioObiettivo}<br><br>` : ''}
+<strong>Traguardi specifici:</strong><br>
+${obiettivi.map(o => `• ${o}`).join('<br>')}<br><br>
+💪 Ogni allenamento è un passo verso questi obiettivi. Registra i progressi dopo ogni sessione!`;
+                        }
+                        return `🎯 Focus sulla stagione 2026: lavora ogni giorno con intenzione. Parla con lo staff per definire obiettivi misurabili!`;
+                    }
+
+                    // ── MIGLIORARE ───────────────────────────────────────────
+                    if (msg.includes('miglior') || msg.includes('consiglio') || msg.includes('come posso')) {
+                        if (isPitcher) {
+                            return `🚀 <strong>Come Migliorare</strong><br><br>
+<strong>1. Controllo e zona strike</strong><br>
+• 50 lanci di bullpen con focus sulla location, non sulla velocità<br>
+• Target: 65%+ lanci in zona<br><br>
+<strong>2. Sequenza dei lanci</strong><br>
+• Studia i tuoi avversari e varia la sequenza<br>
+• Non diventare prevedibile su 0-0 e 1-1<br><br>
+<strong>3. Mental game</strong><br>
+• Respira tra un lancio e l'altro<br>
+• Reset dopo ogni errore, pensa solo al prossimo lancio<br><br>
+<strong>4. Forza e stabilità</strong><br>
+• Core e gambe sono la base del lancio<br>
+• 3x settimana: plank, squat, hip hinge`;
+                        } else {
+                            return `🚀 <strong>Come Migliorare</strong><br><br>
+<strong>1. Approccio al piatto</strong><br>
+• Lavora sul riconoscimento dei lanci fin dalla mano<br>
+• Regola: 2 strike = proteggere e fare contatto<br><br>
+<strong>2. Meccanica di battuta</strong><br>
+• Video analisi del tuo swing con lo staff<br>
+• Focus su: stance, timing, extensione<br><br>
+<strong>3. Lavoro autonomo</strong><br>
+• Tee work ogni giorno: 3 serie x 20 swing<br>
+• Soft toss: 3 serie x 15<br>
+• Macchina lanciapalle: 30-50 lanci a sessione<br><br>
+<strong>4. Corsa e rapidità</strong><br>
+• Sprint 30m x 8 ripetizioni, 3 volte a settimana`;
                         }
                     }
-                    
-                    return `L'AI è temporaneamente non disponibile, ma posso comunque aiutarti! Prova a chiedermi delle tue statistiche, obiettivi o punti di forza. 💪`;
+
+                    // ── PUNTI DEBOLI ─────────────────────────────────────────
+                    if (msg.includes('debole') || msg.includes('problema') || msg.includes('difficolt')) {
+                        const skillValues = Object.entries(skills);
+                        const worst = skillValues.sort((a,b) => a[1]-b[1]).slice(0,2);
+                        const worstNames = worst.map(([k]) => k).join(', ');
+                        return `🔍 <strong>Aree di Miglioramento</strong><br><br>
+In base alle tue valutazioni, le aree con più margine di crescita sono: <strong>${worstNames || 'da valutare con lo staff'}</strong>.<br><br>
+${valutazioni.fisica ? `📋 Staff: "${valutazioni.fisica}"<br><br>` : ''}
+<strong>Piano d'azione:</strong><br>
+• Dedica almeno 20 minuti extra per sessione sui punti deboli<br>
+• Chiedi feedback specifico all'allenatore durante gli allenamenti<br>
+• Tieni un diario degli allenamenti per tracciare i progressi`;
+                    }
+
+                    // ── ESERCIZI ─────────────────────────────────────────────
+                    if (msg.includes('eserciz') || msg.includes('allenament') || msg.includes('routine') || msg.includes('workout')) {
+                        if (isPitcher) {
+                            return `🏋️ <strong>Routine Allenamento Lanciatore</strong><br><br>
+<strong>Warm-up (15 min)</strong><br>
+• Band pulls: 3x15<br>
+• Rotazioni spalle: 2x20<br>
+• Hip mobility: 2x10 per lato<br><br>
+<strong>Bullpen (30-40 lanci)</strong><br>
+• 10 fastball location<br>
+• 10 breaking ball<br>
+• 10-20 sequenze simulate<br><br>
+<strong>Palestra (3x/settimana)</strong><br>
+• Squat: 4x6 @75%<br>
+• Romanian deadlift: 3x8<br>
+• Overhead press: 3x10<br>
+• Core: plank 3x45s, rotazioni con palla medica`;
+                        } else {
+                            return `🏋️ <strong>Routine Allenamento Battitore</strong><br><br>
+<strong>Warm-up batting (10 min)</strong><br>
+• Swing a vuoto: 3x20<br>
+• Tee work sui punti deboli: 3x15<br><br>
+<strong>Sessione principale</strong><br>
+• Soft toss: 4x15<br>
+• Macchina lanciapalle: 40-60 lanci<br>
+• BP con lanciatore: 5x8 swing<br><br>
+<strong>Palestra (3x/settimana)</strong><br>
+• Deadlift: 4x5<br>
+• Pull-up: 3x8<br>
+• Rotational med ball throw: 3x10<br>
+• Sprint 30m: 8 ripetizioni`;
+                        }
+                    }
+
+                    // ── FORZA / PUNTI DI FORZA ───────────────────────────────
+                    if (msg.includes('forza') || msg.includes('bravo') || msg.includes('buono') || msg.includes('positiv') || msg.includes('punto di forz')) {
+                        const skillValues = Object.entries(skills);
+                        const best = skillValues.sort((a,b) => b[1]-a[1]).slice(0,2);
+                        const bestNames = best.map(([k,v]) => `${k} (${v}/10)`).join(', ');
+                        return `💪 <strong>I Tuoi Punti di Forza</strong><br><br>
+Le tue migliori qualità: <strong>${bestNames || 'in valutazione'}</strong>.<br><br>
+${valutazioni.generale ? `📋 Valutazione staff: "${valutazioni.generale}"<br><br>` : ''}
+Sfrutta questi punti nei momenti decisivi della partita. La fiducia si costruisce ripetendo ciò che sai fare bene!`;
+                    }
+
+                    // ── DEFAULT ──────────────────────────────────────────────
+                    return `👋 Ciao <strong>${player.name}</strong>! Sono il tuo coach locale.<br><br>
+Posso aiutarti con:<br>
+• 📊 <em>"Analizza le mie statistiche"</em><br>
+• 🎯 <em>"Quali sono i miei obiettivi"</em><br>
+• 🚀 <em>"Come posso migliorare"</em><br>
+• 🔍 <em>"Quali sono i miei punti deboli"</em><br>
+• 🏋️ <em>"Suggerisci esercizi"</em><br>
+• 💪 <em>"Quali sono i miei punti di forza"</em><br><br>
+Cosa vorresti sapere? 💪`;
                 };
 
                 container.innerHTML = `
