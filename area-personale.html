@@ -983,7 +983,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=51"></script>
+    <script src="script.js?v=52"></script>
     <script>
         // Database completo giocatori - Stagione 2026
         // Include valutazioni staff, statistiche e obiettivi
@@ -2211,38 +2211,38 @@ ISTRUZIONI:
                         <div class="obiettivo-hero">
                             <div class="obiettivo-label">Obiettivo stagione 2026</div>
                             <div class="obiettivo-text">${player.mioObiettivo || 'Obiettivo non definito'}</div>
-                            ${(player.obiettivi || []).length > 0 ? \`
+                            ${(player.obiettivi || []).length > 0 ? `
                             <div class="obiettivo-tasks">
-                                ${(player.obiettivi || []).map(o => \`<div class="obiettivo-task">${o}</div>\`).join('')}
-                            </div>\` : ''}
+                                ${(player.obiettivi || []).map(o => `<div class="obiettivo-task">${o}</div>`).join('')}
+                            </div>` : ''}
                         </div>
 
                         <!-- Lavoro autonomo -->
-                        ${(player.lavoroAutonomo || []).length > 0 ? \`
+                        ${(player.lavoroAutonomo || []).length > 0 ? `
                         <div class="autonomo-card">
                             <div class="autonomo-title">💪 Lavoro Autonomo</div>
                             <ul class="autonomo-list">
-                                ${(player.lavoroAutonomo || []).map(o => \`<li>${o}</li>\`).join('')}
+                                ${(player.lavoroAutonomo || []).map(o => `<li>${o}</li>`).join('')}
                             </ul>
-                        </div>\` : ''}
+                        </div>` : ''}
 
                         <!-- Mercoledì extra -->
                         ${(() => {
                             const trainings = getPlayerTrainings(player.number);
                             if (trainings.length === 0) return '';
-                            return \`
+                            return `
                                 <div class="autonomo-card" style="background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.25);">
                                     <div class="autonomo-title" style="color:#f59e0b;">📅 I tuoi mercoledì extra</div>
                                     <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.25rem;">
-                                        ${trainings.map(t => \`
+                                        ${trainings.map(t => `
                                             <div style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); padding: 0.5rem 0.9rem; border-radius: 10px;">
                                                 <div style="font-size:0.8rem; font-weight:700; color:#fbbf24;">${formatTrainingDate(t.date)}</div>
                                                 <div style="font-size:0.85rem; color:#e2e8f0;">🎯 ${t.tipo}</div>
                                             </div>
-                                        \`).join('')}
+                                        `).join('')}
                                     </div>
                                 </div>
-                            \`;
+                            `;
                         })()}
 
                         <!-- Punti forza / deboli (SWOT light) -->
@@ -2288,7 +2288,7 @@ ISTRUZIONI:
                         </div>
 
                         <!-- Valutazioni staff -->
-                        ${player.valutazioni ? \`
+                        ${player.valutazioni ? `
                         <div class="staff-note" style="margin-bottom:0.75rem;">
                             <div class="staff-note-label">🏋️ Preparazione fisica</div>
                             <div class="staff-note-text">${player.valutazioni.fisica || '-'}</div>
@@ -2304,7 +2304,7 @@ ISTRUZIONI:
                         <div class="staff-note" style="margin-bottom:1rem; border-left-color:#a78bfa;">
                             <div class="staff-note-label" style="color:#a78bfa;">📋 Valutazione generale</div>
                             <div class="staff-note-text">${player.valutazioni.generale || '-'}</div>
-                        </div>\` : ''}
+                        </div>` : ''}
 
                         <!-- Career stats table -->
                         <div class="card">
