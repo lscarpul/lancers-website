@@ -531,9 +531,12 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 600px;
+            height: 70vh;
+            min-height: 480px;
+            max-height: 720px;
             box-shadow: 0 8px 32px rgba(139, 92, 246, 0.10), 0 1.5px 8px rgba(0,0,0,0.08);
-            max-width: 480px;
+            max-width: 600px;
+            width: 100%;
             margin: 0 auto;
         }
 
@@ -632,14 +635,12 @@
         }
 
         .message-content {
-            max-width: 80vw;
+            max-width: 82vw;
             min-width: 60px;
-            max-height: 260px;
-            overflow-y: auto;
-            padding: 1.1rem 1.25rem;
+            padding: 1rem 1.2rem;
             border-radius: 18px;
-            line-height: 1.7;
-            font-size: 1.08rem;
+            line-height: 1.75;
+            font-size: 1rem;
             font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
             word-break: break-word;
             overflow-wrap: break-word;
@@ -751,19 +752,54 @@
         /* Responsive: chat su mobile */
         @media (max-width: 600px) {
             .chatbot-container {
-                max-width: 98vw;
-                height: 70vh;
+                max-width: 100%;
+                height: 75vh;
+                min-height: 420px;
+                border-radius: 14px;
             }
             .chatbot-messages {
-                padding: 1rem 0.5rem;
+                padding: 0.85rem 0.6rem;
+                gap: 1rem;
+            }
+            .chatbot-header {
+                padding: 0.9rem 1rem;
+            }
+            .chatbot-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+            .chatbot-info h3 {
+                font-size: 1rem;
+            }
+            .chatbot-info p {
+                font-size: 0.78rem;
+            }
+            .message-avatar {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
             }
             .message-content {
-                font-size: 0.98rem;
-                padding: 0.8rem 0.7rem;
+                font-size: 0.97rem;
+                padding: 0.85rem 1rem;
+                line-height: 1.7;
+                max-width: 88vw;
+            }
+            .chatbot-input-area {
+                padding: 0.75rem 0.75rem 0.5rem;
+            }
+            .chatbot-input {
+                font-size: 1rem;
+                padding: 0.85rem 1rem;
             }
             .send-btn {
-                padding: 0.8rem 1.1rem;
-                font-size: 0.98rem;
+                padding: 0.85rem 1.2rem;
+                font-size: 1rem;
+            }
+            .suggestion-btn {
+                font-size: 0.88rem;
+                padding: 0.45rem 0.9rem;
             }
         }
 
@@ -974,7 +1010,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=55"></script>
+    <script src="script.js?v=56"></script>
     <script>
         // Database completo giocatori - Stagione 2026
         // Include valutazioni staff, statistiche e obiettivi
@@ -2064,7 +2100,7 @@ ISTRUZIONI:
 - Basa i tuoi consigli sulle statistiche reali del giocatore
 - Sii specifico e pratico con esercizi e suggerimenti
 - Usa tag HTML per formattare (es: <strong>, <br>)
-- Mantieni le risposte concise ma complete (max 200 parole)
+- Rispondi in modo completo e dettagliato senza limitare la lunghezza
 - Motivazionale ma realistico
 - Se chiede esercizi, dai routine specifiche con ripetizioni e tempi`;
 
@@ -2085,7 +2121,7 @@ ISTRUZIONI:
                                 model: 'llama-3.1-8b-instant',
                                 messages: messages,
                                 temperature: 0.7,
-                                max_tokens: 500,
+                                max_tokens: 2048,
                                 top_p: 0.9
                             })
                         });
