@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lancers-app-v34';
+const CACHE_NAME = 'lancers-app-v35';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -152,7 +152,7 @@ async function checkAndSendNotifications() {
 
 // ===== INSTALLAZIONE =====
 self.addEventListener('install', (event) => {
-  console.log('🔧 Service Worker v32 installazione...');
+  console.log('🔧 Service Worker v33 installazione...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS_TO_CACHE))
@@ -162,7 +162,7 @@ self.addEventListener('install', (event) => {
 
 // ===== ATTIVAZIONE =====
 self.addEventListener('activate', (event) => {
-  console.log('✅ Service Worker v32 attivato!');
+  console.log('✅ Service Worker v33 attivato!');
   event.waitUntil(
     Promise.all([
       caches.keys().then((keyList) => {
@@ -187,13 +187,13 @@ self.addEventListener('activate', (event) => {
 let checkInterval = null;
 function startPeriodicCheck() {
   if (checkInterval) clearInterval(checkInterval);
-  // Controlla ogni 10 secondi se ci sono notifiche da inviare (più frequente per test)
+  // Controlla ogni 5 minuti se ci sono notifiche da inviare
   checkInterval = setInterval(async () => {
     const now = new Date().toLocaleTimeString();
     console.log(`⏰ [${now}] Controllo periodico notifiche...`);
     await checkAndSendNotifications();
-  }, 10 * 1000); // 10 secondi invece di 30
-  console.log('🔄 Controllo periodico avviato (ogni 10 secondi)');
+  }, 5 * 60 * 1000); // 5 minuti
+  console.log('🔄 Controllo periodico avviato (ogni 5 minuti)');
 }
 
 // ===== FETCH =====

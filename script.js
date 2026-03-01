@@ -1,5 +1,5 @@
 // ===== SCRIPT.JS v45 =====
-const APP_VERSION = '48';
+const APP_VERSION = '50';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -808,18 +808,18 @@ function startPersistentNotificationCheck() {
         clearInterval(persistentCheckInterval);
     }
     
-    console.log('🔄 Avvio check periodico notifiche (ogni 10 secondi)...');
+    console.log('🔄 Avvio check periodico notifiche (ogni 5 minuti)...');
     
     // Check immediato
     triggerServiceWorkerCheck();
     checkLocalPendingNotifications();
     
-    // Check ogni 10 secondi
+    // Check ogni 5 minuti
     persistentCheckInterval = setInterval(() => {
         console.log('⏰ Check periodico notifiche...');
         triggerServiceWorkerCheck();
         checkLocalPendingNotifications();
-    }, 10 * 1000);
+    }, 5 * 60 * 1000);
 }
 
 function triggerServiceWorkerCheck() {
