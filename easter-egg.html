@@ -255,6 +255,31 @@
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
         }
 
+        .hidden { display: none !important; }
+
+        .double-hr-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(239,68,68,0.25));
+            border: 2px solid #fbbf24;
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 1rem;
+            font-weight: 900;
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251,191,36,0.8);
+            box-shadow: 0 0 20px rgba(251,191,36,0.4);
+            animation: pulseGold 1s ease-in-out infinite alternate;
+            letter-spacing: 0.05em;
+            margin: 0 auto 6px;
+        }
+        @keyframes pulseGold {
+            0% { box-shadow: 0 0 10px rgba(251,191,36,0.3); }
+            100% { box-shadow: 0 0 28px rgba(251,191,36,0.8); }
+        }
+
         /* Game Area */
         .game-area {
             position: relative;
@@ -774,8 +799,10 @@
                             <div class="dot ball" id="b1"></div>
                             <div class="dot ball" id="b2"></div>
                             <div class="dot ball" id="b3"></div>
+                            <div class="dot ball" id="b4"></div>
                         </div>
                     </div>
+                    <div class="double-hr-indicator" id="doubleHrIndicator" style="display:none">💥 ×2 DOPPIO!</div>
                     <div class="count-group">
                         <span class="count-label" style="color: #ef4444;">S</span>
                         <div class="count-dots">
@@ -833,8 +860,8 @@
                             <p><strong>🎯 OBIETTIVO:</strong> Fai più Home Run possibili!</p>
                             <p><strong>👆 TOCCA/CLICCA</strong> quando la palla è nella zona</p>
                             <p><strong>⚡ TIMING PERFETTO</strong> = Home Run!</p>
-                            <p><strong>❌ 3 Strike</strong> = 1 Out | <strong>3 Outs</strong> = Game Over</p>
-                            <p><strong>🟢 4 Ball</strong> = Walk (+1 HR bonus!)</p>
+                            <p><strong>❌ 3 Strike</strong> = 1 Out | <strong>1 Out = GAME OVER!</strong></p>
+                            <p><strong>🟢 4 Ball</strong> = Prossimo HR vale <strong>DOPPIO!</strong></p>
                         </div>
                         <button class="play-btn" id="startBtn">▶️ GIOCA!</button>
                     </div>
@@ -902,7 +929,8 @@
             canSwing: false,
             ballX: 0,
             ballY: 0,
-            pitchInZone: false
+            pitchInZone: false,
+            doubleNextHR: false
         };
 
         // DOM Elements
@@ -926,12 +954,16 @@
             document.getElementById('pitchSpeed').textContent = game.speed;
 
             // Update count dots
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i <= 4; i++) {
                 document.getElementById('b' + i).classList.toggle('active', game.balls >= i);
             }
             for (let i = 1; i <= 2; i++) {
                 document.getElementById('s' + i).classList.toggle('active', game.strikes >= i);
             }
+
+            // Double HR indicator
+            const dbl = document.getElementById('doubleHrIndicator');
+            if (dbl) dbl.style.display = game.doubleNextHR ? 'flex' : 'none';
         }
 
         // Show Message
@@ -1103,12 +1135,18 @@
 
         // Handle Home Run
         function handleHomeRun() {
-            game.homeRuns++;
+            const isDouble = game.doubleNextHR;
+            game.homeRuns += isDouble ? 2 : 1;
             game.balls = 0;
             game.strikes = 0;
-            game.speed = Math.min(120, game.speed + 2);
+            game.doubleNextHR = false;
+            game.speed = Math.min(130, game.speed + 3);
             updateDisplay();
-            showMessage('🎉 HOME RUN! 🎉', 'homerun');
+            if (isDouble) {
+                showMessage('💥 DOPPIO HOME RUN! +2! 💥', 'homerun');
+            } else {
+                showMessage('🎉 HOME RUN! 🎉', 'homerun');
+            }
             createFireworks();
 
             setTimeout(() => {
@@ -1141,18 +1179,12 @@
                 game.outs++;
                 game.strikes = 0;
                 game.balls = 0;
+                game.doubleNextHR = false;
                 updateDisplay();
 
-                if (game.outs >= 3) {
-                    gameOver();
-                    showMessage('💀 GAME OVER 💀', 'out');
-                } else {
-                    showMessage('⚾ STRIKE OUT!', 'out');
-                    setTimeout(() => {
-                        ball.style.display = 'none';
-                        if (game.isPlaying) pitch();
-                    }, 1500);
-                }
+                // 1 out = game over
+                gameOver();
+                showMessage('💀 STRIKE OUT! GAME OVER 💀', 'out');
             } else {
                 showMessage('❌ STRIKE!', 'strike');
                 setTimeout(() => {
@@ -1169,17 +1201,17 @@
             updateDisplay();
 
             if (game.balls >= 4) {
-                // Walk - bonus HR
-                game.homeRuns++;
+                // Walk - next HR counts double!
+                game.doubleNextHR = true;
                 game.balls = 0;
                 game.strikes = 0;
                 updateDisplay();
-                showMessage('🚶 WALK! +1 HR', 'walk');
+                showMessage('🚶 WALK! Prossimo HR ×2!', 'walk');
 
                 setTimeout(() => {
                     ball.style.display = 'none';
                     if (game.isPlaying) pitch();
-                }, 1500);
+                }, 1800);
             } else {
                 showMessage('🟢 BALL', 'ball');
                 setTimeout(() => {
@@ -1281,6 +1313,7 @@
             game.outs = 0;
             game.balls = 0;
             game.strikes = 0;
+            game.doubleNextHR = false;
             game.speed = 80;
             game.isPlaying = false;
             game.ballActive = false;

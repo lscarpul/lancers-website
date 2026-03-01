@@ -1109,7 +1109,7 @@ footer, .footer {
     background: var(--primary);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.5rem calc(2rem + 90px);
     margin-top: 4rem;
 }
 
@@ -1127,22 +1127,33 @@ footer p, .footer p {
 
 /* Footer logout button */
 .footer-logout-btn {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 0.8rem 2rem;
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    margin: 1.5rem auto 0;
+    padding: 1rem 2rem;
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     color: white;
     border: none;
     border-radius: var(--radius-md);
-    font-weight: 600;
-    font-size: 0.95rem;
+    font-weight: 700;
+    font-size: 1rem;
     cursor: pointer;
     transition: var(--transition);
+    letter-spacing: 0.02em;
+    min-height: 52px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 .footer-logout-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
+}
+.footer-logout-btn:active {
+    transform: scale(0.97) !important;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
 }
 
 /* ===== TEST NOTIFICATION BUTTON ===== */
@@ -2390,4 +2401,264 @@ input:focus, select:focus, textarea:focus {
         padding-left: 14px;
         padding-right: 14px;
     }
+}
+
+/* ===================== MAJOR CSS OVERHAUL v47 ===================== */
+
+/* ── Typography scale ── */
+h1 { font-size: clamp(1.6rem, 5vw, 2.8rem); }
+h2 { font-size: clamp(1.2rem, 3.5vw, 2rem); }
+h3 { font-size: clamp(1rem, 2.8vw, 1.5rem); }
+h4 { font-size: clamp(0.9rem, 2.2vw, 1.1rem); }
+
+/* ── Fluid container ── */
+.container {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 clamp(14px, 4vw, 32px);
+}
+
+/* ── Navigation ── */
+.navbar {
+    padding: 0.75rem clamp(14px, 4vw, 5%) !important;
+}
+
+/* ── Glassmorphism improvement ── */
+.glass {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* ── Card grid auto-fit ── */
+.cards-grid, .stats-grid, .event-grid, .player-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: clamp(10px, 2vw, 20px);
+}
+
+/* ── Presence cards ── */
+.player-row, .presence-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+.player-name-cell {
+    min-width: 0;
+    flex: 1 1 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Tables responsive ── */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+}
+table {
+    min-width: 480px;
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: clamp(6px, 1.5vw, 12px) clamp(8px, 2vw, 16px);
+    white-space: nowrap;
+}
+
+/* ── Better buttons ── */
+.btn-primary, .btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: clamp(0.82rem, 2vw, 0.95rem);
+    border: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+.btn-primary:active, .btn-action:active {
+    transform: scale(0.96);
+    opacity: 0.88;
+}
+
+/* ── iOS Calendar ── */
+.ios-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: clamp(2px, 0.8vw, 6px);
+}
+.ios-cal-day {
+    aspect-ratio: 1;
+    min-height: 0;
+    padding: clamp(2px, 0.8vw, 4px);
+    border-radius: clamp(6px, 1.5vw, 10px);
+    font-size: clamp(0.7rem, 2vw, 0.9rem);
+}
+.ios-monthly-header {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 800;
+}
+.ios-prev-btn, .ios-next-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Home event cards ── */
+.home-event-card {
+    border-radius: var(--radius-md) !important;
+    transition: box-shadow 0.2s, transform 0.2s !important;
+}
+.home-event-card:active { transform: scale(0.98) !important; }
+
+/* ── Presence section ── */
+.presenze-section {
+    padding: clamp(1rem, 3vw, 2rem);
+}
+.presence-badge {
+    font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+    padding: 3px clamp(6px, 1.5vw, 12px);
+    border-radius: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ── Gestione admin table ── */
+.gestione-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+}
+.gestione-table th {
+    white-space: nowrap;
+    font-size: clamp(0.6rem, 1.6vw, 0.75rem);
+    letter-spacing: 0.04em;
+    padding: 8px 10px;
+}
+.gestione-table td {
+    padding: clamp(4px, 1.2vw, 8px) clamp(6px, 1.5vw, 10px);
+}
+
+/* ── Profile page ── */
+.profile-section {
+    padding: clamp(1rem, 3vw, 2rem);
+    margin-bottom: clamp(1rem, 3vw, 2rem);
+    border-radius: var(--radius-lg);
+}
+.obiettivo-hero {
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+    border-radius: var(--radius-xl);
+}
+
+/* ── Document links ── */
+.doc-link-card {
+    padding: clamp(1rem, 3vw, 1.5rem) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+/* ── Calendar event cards ── */
+.cal-event-card {
+    border-radius: clamp(10px, 2vw, 16px) !important;
+    margin-bottom: clamp(8px, 2vw, 12px) !important;
+}
+.cal-ev-title { font-size: clamp(0.82rem, 2.2vw, 0.95rem) !important; }
+.cal-ev-time  { font-size: clamp(0.65rem, 1.6vw, 0.75rem) !important; }
+.cal-ev-badge { font-size: clamp(0.58rem, 1.5vw, 0.65rem) !important; }
+
+/* ── Presentation hero ── */
+.hero-section, .hero {
+    padding: clamp(3rem, 8vw, 7rem) clamp(14px, 5vw, 5%);
+}
+.hero h1 {
+    font-size: clamp(1.8rem, 6vw, 4rem);
+}
+.hero p, .hero-sub {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+}
+
+/* ── Allenamenti page ── */
+.allenamento-header h1 {
+    font-size: clamp(1.3rem, 4vw, 2rem);
+}
+.wednesday-card .player-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* ── Scroll snap for horizontal sections ── */
+.scroll-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar { display: none; }
+.scroll-row > * { scroll-snap-align: start; flex-shrink: 0; }
+
+/* ── Loading skeleton ── */
+.skeleton {
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.09) 50%,
+        rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+@keyframes skeletonShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Focus visible for a11y ── */
+:focus-visible {
+    outline: 2px solid rgba(59,130,246,0.7);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ── Tablet (≤768px) improvements ── */
+@media (max-width: 768px) {
+    .cards-grid, .stats-grid { grid-template-columns: 1fr; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .hero-btns { flex-direction: column; width: 100%; }
+    .hero-btns a, .hero-btns button { width: 100%; text-align: center; }
+    footer, .footer { padding-top: 1.5rem; padding-bottom: calc(1.5rem + 90px) !important; }
+}
+
+/* ── Mobile (≤480px) improvements ── */
+@media (max-width: 480px) {
+    .navbar .team-name { display: none; }
+    .profile-stats { grid-template-columns: repeat(2, 1fr) !important; }
+    .gestione-table th:nth-child(n+5),
+    .gestione-table td:nth-child(n+5) { display: none; }
+    .presence-badge { font-size: 0.62rem; padding: 2px 6px; }
+    .ios-cal-day .day-num { font-size: 0.68rem; }
+    .home-event-card { padding: 0.75rem 0.9rem !important; }
+    .cal-ev-badge { display: none; }
+    .footer-logout-btn { font-size: 0.9rem; padding: 0.85rem 1rem; }
+}
+
+/* ── Ultra-small (≤360px) improvements ── */
+@media (max-width: 360px) {
+    .ios-cal-day { border-radius: 6px; padding: 2px; }
+    .ios-cal-day .day-num { font-size: 0.62rem; }
+    .cal-event-card { border-radius: 10px !important; }
+    .page-back-bar, .section-header { padding: 0.7rem 0.9rem; }
 }
