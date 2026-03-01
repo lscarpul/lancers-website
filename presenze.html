@@ -1,14 +1,14 @@
     <!-- Tab Bar fissa in basso -->
     <nav class="tab-bar">
-        <a href="presenze.html" class="tab-bar-item" title="Presenze">
-            <span>📋</span>
-            <span>Presenze</span>
+        <a href="index.html" class="tab-bar-item" title="Home">
+            <span>🏠</span>
+            <span>Home</span>
         </a>
-        <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
-            <span>🏋️</span>
-            <span>Allenamenti</span>
+        <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
+            <span>📅</span>
+            <span>Calendario</span>
         </a>
-        <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
+        <a href="calendario.html" class="tab-bar-item" title="Partite">
             <span>⚾</span>
             <span>Partite</span>
         </a>
@@ -16,7 +16,6 @@
             <span>👤</span>
             <span>Profilo</span>
         </a>
-        <!-- Documento rimosso -->
     </nav>
     <style>
         .tab-bar {
@@ -511,10 +510,14 @@
         </div>
     </nav>
 
+    <div class="page-back-bar">
+        <button onclick="history.back()" class="back-arrow-btn"><span class="arrow-icon">&#8592;</span> Indietro</button>
+    </div>
+
     <div class="presence-hero">
         <div class="hero-content">
             <h1>📋 Conferma Presenza</h1>
-            <p>Indica se sarai presente ai prossimi eventi</p>
+            <p>Sei automaticamente presente — segnala solo se sei assente</p>
         </div>
     </div>
 
@@ -528,7 +531,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=44"></script>
+    <script src="script.js?v=47"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
@@ -616,45 +619,25 @@
             const buttonsContainer = eventCard.querySelector('.event-buttons');
             if (!buttonsContainer) return;
             
-            let responseText = '';
-            let bgColor = '';
-            let textColor = '';
+            const eventDate = eventCard.dataset.eventDate;
             
-            switch(response) {
-                case 'yes':
-                    responseText = '✅ Presente';
-                    bgColor = 'rgba(34, 197, 94, 0.2)';
-                    textColor = '#4ade80';
-                    break;
-                case 'no':
-                    responseText = '❌ Assente';
-                    bgColor = 'rgba(239, 68, 68, 0.2)';
-                    textColor = '#f87171';
-                    break;
-                // Rimosso 'forse'
+            if (response === 'no') {
+                // Mostro come assente con bottone per annullare
+                buttonsContainer.innerHTML = `
+                    <div class="response-saved" style="background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: center; border: 1px solid rgba(239,68,68,0.33);">
+                        ❌ Assente
+                        <button onclick="savePresence('${eventDate}', 'yes', ${eventIndex})" style="display: block; margin: 0.5rem auto 0; background: none; border: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Annulla assenza</button>
+                    </div>
+                `;
+            } else {
+                // Default: presente automaticamente
+                buttonsContainer.innerHTML = `
+                    <div class="response-saved" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: center; border: 1px solid rgba(34,197,94,0.25);">
+                        ✅ Presente
+                        <button onclick="savePresence('${eventDate}', 'no', ${eventIndex})" style="display: block; margin: 0.5rem auto 0; background: none; border: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Segna assenza</button>
+                    </div>
+                `;
             }
-            
-            buttonsContainer.innerHTML = `
-                <div class="response-saved" style="background: ${bgColor}; color: ${textColor}; padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: center; border: 1px solid ${textColor}33;">
-                    ${responseText}
-                    <button onclick="showButtons(${eventIndex}, '${eventCard.dataset.eventDate}')" style="display: block; margin: 0.5rem auto 0; background: none; border: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Modifica</button>
-                </div>
-            `;
-        }
-
-        // Mostra i pulsanti per modificare la risposta
-        function showButtons(eventIndex, eventDate) {
-            const eventCard = document.querySelector(`[data-event-index="${eventIndex}"]`);
-            if (!eventCard) return;
-            
-            const buttonsContainer = eventCard.querySelector('.event-buttons');
-            if (!buttonsContainer) return;
-            
-            buttonsContainer.innerHTML = `
-                <button class="presence-btn-small yes" onclick="savePresence('${eventDate}', 'yes', ${eventIndex})">✅</button>
-                <!-- Tasto 'forse' rimosso -->
-                <button class="presence-btn-small no" onclick="savePresence('${eventDate}', 'no', ${eventIndex})">❌</button>
-            `;
         }
 
         // Ottieni le risposte salvate da Firebase (con fallback localStorage)
@@ -733,42 +716,24 @@
             
             // Genera le card per ogni evento
             let eventsHTML = nextEvents.map((event, index) => {
-                const alreadyResponded = savedResponses[event.date];
+                const savedResponse = savedResponses[event.date] ? savedResponses[event.date].response : 'yes';
                 let buttonsHTML = '';
                 
-                if (alreadyResponded) {
-                    let responseText = '';
-                    let bgColor = '';
-                    let textColor = '';
-                    
-                    switch(alreadyResponded.response) {
-                        case 'yes':
-                            responseText = '✅ Presente';
-                            bgColor = 'rgba(34, 197, 94, 0.2)';
-                            textColor = '#4ade80';
-                            break;
-                        case 'no':
-                            responseText = '❌ Assente';
-                            bgColor = 'rgba(239, 68, 68, 0.2)';
-                            textColor = '#f87171';
-                            break;
-                        case 'maybe':
-                            responseText = '⚠️ Forse';
-                            bgColor = 'rgba(251, 191, 36, 0.2)';
-                            textColor = '#fbbf24';
-                            break;
-                    }
-                    
+                if (savedResponse === 'no') {
+                    // Assente: mostra ❌ con opzione di annullare
                     buttonsHTML = `
-                        <div class="response-saved" style="background: ${bgColor}; color: ${textColor}; padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: center; border: 1px solid ${textColor}33;">
-                            ${responseText}
-                            <button onclick="showButtons(${index}, '${event.date}')" style="display: block; margin: 0.5rem auto 0; background: none; border: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Modifica</button>
+                        <div class="response-saved" style="background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: center; border: 1px solid rgba(239,68,68,0.33);">
+                            ❌ Assente
+                            <button onclick="savePresence('${event.date}', 'yes', ${index})" style="display: block; margin: 0.5rem auto 0; background: none; border: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Annulla assenza</button>
                         </div>
                     `;
                 } else {
+                    // Presente automaticamente (default)
                     buttonsHTML = `
-                        <button class="presence-btn-small yes" onclick="savePresence('${event.date}', 'yes', ${index})">✅</button>
-                        <button class="presence-btn-small no" onclick="savePresence('${event.date}', 'no', ${index})">❌</button>
+                        <div class="response-saved" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: center; border: 1px solid rgba(34,197,94,0.25);">
+                            ✅ Presente
+                            <button onclick="savePresence('${event.date}', 'no', ${index})" style="display: block; margin: 0.5rem auto 0; background: none; border: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">Segna assenza</button>
+                        </div>
                     `;
                 }
                 

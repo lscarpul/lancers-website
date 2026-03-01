@@ -1484,3 +1484,910 @@ input::placeholder {
 .animate-in {
     animation: fadeIn 0.6s ease forwards;
 }
+
+/* ===================================================
+   TRAINING TYPE BACKGROUNDS (v45)
+   =================================================== */
+.match-card.training {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(59, 130, 246, 0.05) 100%);
+    border-left: 4px solid #3b82f6;
+}
+.match-card.battuta, .match-card.specific.battuta {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.06) 100%);
+    border-left: 4px solid #f59e0b;
+}
+.match-card.difesa, .match-card.specific.difesa {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.22) 0%, rgba(34, 197, 94, 0.06) 100%);
+    border-left: 4px solid #22c55e;
+}
+.match-card.corsa {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(16, 185, 129, 0.06) 100%);
+    border-left: 4px solid #10b981;
+}
+.match-card.autonomous {
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.22) 0%, rgba(167, 139, 250, 0.06) 100%);
+    border-left: 4px solid #a78bfa;
+}
+.match-card.specific {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(236, 72, 153, 0.05) 100%);
+    border-left: 4px solid #ec4899;
+}
+.match-card.friendly {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.18) 0%, rgba(220, 38, 38, 0.05) 100%);
+    border-left: 4px solid #dc2626;
+}
+.match-card.match-home, .match-card.home {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.18) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border-left: 4px solid #22c55e;
+}
+.match-card.match-away, .match-card.away {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(59, 130, 246, 0.05) 100%);
+    border-left: 4px solid #3b82f6;
+}
+.match-card.event {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.22) 0%, rgba(234, 179, 8, 0.06) 100%);
+    border-left: 4px solid #eab308;
+}
+.match-card.tbd, .match-card.training-tbd {
+    background: linear-gradient(135deg, rgba(100, 116, 139, 0.15) 0%, rgba(100, 116, 139, 0.04) 100%);
+    border-left: 4px solid #64748b;
+}
+
+/* ===== BACK ARROW BUTTON ===== */
+.page-back-bar {
+    position: sticky;
+    top: 60px;
+    z-index: 900;
+    padding: 0.6rem 1.2rem;
+    background: rgba(10, 22, 40, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+}
+.back-arrow-btn {
+    background: none;
+    border: none;
+    color: #60a5fa;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.back-arrow-btn:hover {
+    background: rgba(96, 165, 250, 0.12);
+    color: white;
+}
+.back-arrow-btn .arrow-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+/* ===== iOS CALENDAR STYLES ===== */
+.ios-calendar {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+}
+.ios-cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.ios-cal-month {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.02em;
+}
+.ios-cal-nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #60a5fa;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.ios-cal-nav-btn:hover {
+    background: rgba(96, 165, 250, 0.2);
+    color: white;
+}
+.ios-cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 0.25rem;
+}
+.ios-cal-weekday {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    padding: 0.4rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.ios-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+.ios-cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.25rem 0.1rem 0.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+    min-height: 44px;
+}
+.ios-cal-day:hover {
+    background: rgba(255,255,255,0.07);
+}
+.ios-cal-day.selected {
+    background: #3b82f6;
+}
+.ios-cal-day.today .day-num {
+    background: #ef4444;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ios-cal-day.other-month .day-num {
+    color: #3a4a60;
+}
+.ios-cal-day .day-num {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 2px;
+}
+.day-dots {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 36px;
+}
+.day-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.dot-training { background: #3b82f6; }
+.dot-battuta { background: #f59e0b; }
+.dot-difesa { background: #22c55e; }
+.dot-specific { background: #ec4899; }
+.dot-friendly { background: #dc2626; }
+.dot-match-home { background: #22c55e; }
+.dot-match-away { background: #60a5fa; }
+.dot-event { background: #eab308; }
+.dot-autonomous { background: #a78bfa; }
+.dot-wednesday { background: #14b8a6; }
+
+.ios-cal-events {
+    margin-top: 1.5rem;
+}
+.ios-cal-events-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    margin-bottom: 0.75rem;
+}
+.ios-event-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    margin-bottom: 0.6rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+}
+.ios-event-item:hover {
+    transform: translateX(3px);
+}
+.ios-event-stripe {
+    width: 4px;
+    height: 100%;
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 14px 0 0 14px;
+}
+.ios-event-info {
+    flex: 1;
+    min-width: 0;
+}
+.ios-event-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ios-event-meta {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+.ios-event-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+/* Event item backgrounds by type */
+.ios-event-item.training { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.2); }
+.ios-event-item.battuta { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.2); }
+.ios-event-item.difesa { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.2); }
+.ios-event-item.specific { background: rgba(236,72,153,0.12); border: 1px solid rgba(236,72,153,0.2); }
+.ios-event-item.friendly { background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.2); }
+.ios-event-item.match-home { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.2); }
+.ios-event-item.match-away { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.2); }
+.ios-event-item.event { background: rgba(234,179,8,0.12); border: 1px solid rgba(234,179,8,0.2); }
+.ios-event-item.autonomous { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.2); }
+.ios-event-item.wednesday { background: rgba(20,184,166,0.12); border: 1px solid rgba(20,184,166,0.2); }
+.ios-event-presence {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+.ios-presence-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+}
+.ios-presence-status.present { background: rgba(34,197,94,0.2); color: #4ade80; }
+.ios-presence-status.absent { background: rgba(239,68,68,0.2); color: #f87171; }
+.ios-mark-absent-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 0.72rem;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+}
+.ios-mark-absent-btn:hover { color: #f87171; }
+
+/* Profile scroll sections */
+.profile-section {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+}
+.profile-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 0 1rem;
+    position: sticky;
+    top: 110px;
+    background: linear-gradient(to bottom, #0a1929 80%, transparent);
+    z-index: 10;
+}
+.profile-section-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.profile-section-divider {
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+}
+
+/* Obiettivo card */
+.obiettivo-hero {
+    background: linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(245,158,11,0.05) 100%);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+.obiettivo-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #f59e0b;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+.obiettivo-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1.4;
+}
+.obiettivo-tasks {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.obiettivo-task {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+}
+.obiettivo-task::before {
+    content: '→';
+    color: #f59e0b;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+/* Autonomo tasks */
+.autonomo-card {
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+.autonomo-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+.autonomo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.autonomo-list li {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+.autonomo-list li::before {
+    content: '💪';
+    flex-shrink: 0;
+}
+
+/* Note staff cards */
+.staff-note {
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-left: 4px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+}
+.staff-note-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #60a5fa;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.35rem;
+}
+.staff-note-text {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+/* Documento links section */
+.doc-link-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    color: white;
+}
+.doc-link-card:hover {
+    background: rgba(255,255,255,0.09);
+    transform: translateX(4px);
+}
+.doc-link-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+.doc-link-info h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.2rem;
+}
+.doc-link-info p {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Home weekly events as presence cards */
+.home-event-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s;
+}
+.home-event-card:hover {
+    background: rgba(255,255,255,0.07);
+}
+.home-event-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 44px;
+    text-align: center;
+}
+.home-event-day-num {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+}
+.home-event-day-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+}
+.home-event-middle {
+    flex: 1;
+    min-width: 0;
+}
+.home-event-type-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 0.3rem;
+}
+.home-event-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.home-event-time {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 0.1rem;
+}
+.home-event-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+.home-presence-badge {
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+.home-presence-badge.present {
+    background: rgba(34,197,94,0.18);
+    color: #4ade80;
+    border: 1px solid rgba(34,197,94,0.25);
+}
+.home-presence-badge.absent {
+    background: rgba(239,68,68,0.18);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.25);
+}
+.home-absence-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 0.72rem;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+}
+.home-absence-btn:hover { color: #f87171; }
+.home-presence-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 0.72rem;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+}
+.home-presence-btn:hover { color: #4ade80; }
+
+/* ===== POPUP SHEET ANIMATION ===== */
+@keyframes slideUpSheet {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Home event card type colors */
+.home-event-card.training { border-left: 3px solid #3b82f6; }
+.home-event-card.battuta { border-left: 3px solid #f59e0b; }
+.home-event-card.difesa { border-left: 3px solid #22c55e; }
+.home-event-card.specific { border-left: 3px solid #ec4899; }
+.home-event-card.friendly { border-left: 3px solid #dc2626; }
+.home-event-card.match-home { border-left: 3px solid #22c55e; }
+.home-event-card.match-away { border-left: 3px solid #60a5fa; }
+.home-event-card.event { border-left: 3px solid #eab308; }
+.home-event-card.wednesday-specific { border-left: 3px solid #14b8a6; }
+
+/* ===================== CALENDAR EVENT CARDS ===================== */
+.cal-empty-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 0;
+    color: #64748b;
+    gap: 8px;
+}
+.cal-empty-day span { font-size: 2rem; }
+.cal-empty-day p { font-size: 0.95rem; }
+
+.cal-event-card {
+    display: flex;
+    background: #1e293b;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.cal-event-card:active { transform: scale(0.98); }
+
+.cal-ev-stripe {
+    width: 5px;
+    flex-shrink: 0;
+    border-radius: 0;
+}
+
+.cal-ev-body {
+    padding: 12px 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.cal-ev-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.cal-ev-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.cal-ev-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cal-ev-time {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+.cal-ev-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.03em;
+}
+
+/* Match detail block */
+.cal-ev-details {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.cal-ev-detail-row {
+    display: flex;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: #cbd5e1;
+    align-items: flex-start;
+}
+.cal-ev-detail-row strong { color: #f1f5f9; }
+.cal-ev-maps-btn {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 8px;
+    background: rgba(96,165,250,0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(96,165,250,0.25);
+}
+
+/* My wednesday badge */
+.cal-ev-mine-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fbbf24;
+    background: rgba(251,191,36,0.1);
+    border: 1px solid rgba(251,191,36,0.25);
+    border-radius: 6px;
+    padding: 3px 8px;
+    display: inline-block;
+    margin: 6px 0 2px;
+}
+
+/* Presence row */
+.cal-ev-presence {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+}
+.cal-pres-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+.cal-pres-badge.present {
+    background: rgba(34,197,94,0.12);
+    color: #4ade80;
+    border: 1px solid rgba(34,197,94,0.25);
+}
+.cal-pres-badge.absent {
+    background: rgba(239,68,68,0.12);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.25);
+}
+.cal-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 0.7rem;
+    color: #64748b;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+    margin-left: auto;
+    transition: color 0.2s;
+}
+.cal-toggle-btn:hover { color: #94a3b8; }
+.cal-toggle-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* type-specific card accents */
+.cal-ev-match-home { background: linear-gradient(135deg, #1e293b 90%, rgba(34,197,94,0.05) 100%); }
+.cal-ev-match-away { background: linear-gradient(135deg, #1e293b 90%, rgba(96,165,250,0.05) 100%); }
+.cal-ev-friendly   { background: linear-gradient(135deg, #1e293b 90%, rgba(220,38,38,0.05) 100%); }
+.cal-ev-battuta    { background: linear-gradient(135deg, #1e293b 90%, rgba(245,158,11,0.05) 100%); }
+.cal-ev-difesa     { background: linear-gradient(135deg, #1e293b 90%, rgba(34,197,94,0.05) 100%); }
+.cal-ev-wednesday  { background: linear-gradient(135deg, #1e293b 90%, rgba(20,184,166,0.05) 100%); }
+
+/* ===================== GLOBAL VISUAL IMPROVEMENTS v46 ===================== */
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,0.35); }
+
+/* Navbar improvements */
+.navbar {
+    border-bottom: 1px solid rgba(59,130,246,0.15) !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+/* Tab bar improvements */
+.tab-bar {
+    background: rgba(10,22,40,0.97) !important;
+    border-top: 1px solid rgba(59,130,246,0.15) !important;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+.tab-bar-item { transition: all 0.2s; }
+.tab-bar-item.active span:first-child { filter: drop-shadow(0 0 6px currentColor); }
+
+/* Glass card hover lift */
+.glass, .glass-card, .card {
+    transition: box-shadow 0.25s, transform 0.25s;
+}
+.glass:hover, .glass-card:hover { 
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+}
+
+/* Improved button base */
+button, .btn {
+    transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s !important;
+}
+button:active:not(:disabled), .btn:active {
+    transform: scale(0.97) !important;
+    opacity: 0.85;
+}
+
+/* Improved stat / score cards */
+.stat-card, .score-card, .info-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+/* Section header improvements */
+.section-header h2,
+.weekly-header h2,
+.ios-cal-events-header,
+.section-title {
+    letter-spacing: -0.02em;
+}
+.ios-cal-events-header {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    padding: 12px 4px 6px;
+    margin-bottom: 4px;
+}
+
+/* Presence / attendance page improvements */
+.presence-card {
+    background: linear-gradient(135deg, #1e293b 0%, #162032 100%) !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.presence-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
+
+/* Doc link cards */
+.doc-link-card {
+    background: linear-gradient(135deg, #1e293b 0%, #162032 100%) !important;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+.doc-link-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.4) !important;
+    border-color: rgba(59,130,246,0.3) !important;
+}
+
+/* Better form inputs */
+input, select, textarea {
+    font-family: 'Montserrat', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: rgba(59,130,246,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12) !important;
+}
+
+/* iOS Calendar improvements */
+.ios-cal-day {
+    transition: background 0.15s, transform 0.15s;
+}
+.ios-cal-day:active { transform: scale(0.92); }
+
+/* Home event card improvement */
+.home-event-card {
+    background: linear-gradient(135deg, #1e293b 0%, #162032 100%) !important;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.28);
+}
+
+/* Page back bar */
+.page-back-bar {
+    background: rgba(10,22,40,0.95) !important;
+    border-bottom: 1px solid rgba(59,130,246,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Training bg cards mini-improvement */
+.allenamento-card, .training-card {
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.allenamento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35) !important;
+}
+
+/* Profile page */
+.obiettivo-hero {
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4) !important;
+}
+
+/* Gestione presenze admin page */
+.gestione-table tr {
+    transition: background 0.15s;
+}
+.gestione-table tr:hover td { background: rgba(59,130,246,0.05); }
+
+/* Improve overall page padding on mobile */
+@media (max-width: 480px) {
+    .container, .page-content, main > .container {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+}

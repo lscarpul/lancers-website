@@ -1,15 +1,15 @@
 </main>
     <!-- Tab Bar fissa in basso -->
     <nav class="tab-bar">
-        <a href="presenze.html" class="tab-bar-item" title="Presenze">
-            <span>📋</span>
-            <span>Presenze</span>
+        <a href="index.html" class="tab-bar-item" title="Home">
+            <span>🏠</span>
+            <span>Home</span>
         </a>
-        <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
-            <span>🏋️</span>
-            <span>Allenamenti</span>
+        <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
+            <span>📅</span>
+            <span>Calendario</span>
         </a>
-        <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
+        <a href="calendario.html" class="tab-bar-item" title="Partite">
             <span>⚾</span>
             <span>Partite</span>
         </a>
@@ -17,7 +17,6 @@
             <span>👤</span>
             <span>Profilo</span>
         </a>
-        <!-- Documento rimosso -->
     </nav>
     <style>
         .tab-bar {
@@ -666,6 +665,77 @@
         .credits-footer strong {
             color: #94a3b8;
         }
+
+        /* ===== LEADERBOARD OVERLAY STYLES ===== */
+        .personal-best-block {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            margin: 8px 0;
+            text-align: center;
+        }
+        .personal-best-block.new-record {
+            background: rgba(251,191,36,0.1);
+            border-color: rgba(251,191,36,0.3);
+            color: #fbbf24;
+        }
+        .personal-best-block strong { color: #f1f5f9; }
+
+        .leaderboard-block {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .lb-loading {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.82rem;
+            margin: 6px 0;
+        }
+        .lb-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .lb-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .lb-row {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 7px 10px;
+            gap: 8px;
+        }
+        .lb-row.lb-me {
+            background: rgba(96,165,250,0.1);
+            border: 1px solid rgba(96,165,250,0.3);
+        }
+        .lb-medal { font-size: 1rem; flex-shrink: 0; }
+        .lb-name {
+            flex: 1;
+            font-size: 0.78rem;
+            color: #e2e8f0;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lb-score {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #4ade80;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -776,7 +846,12 @@
                             <span id="finalScore">0</span>
                             <span>Home Run</span>
                         </div>
-                        <p id="rankMessage">Caricamento classifica...</p>
+                        <div id="personalBestBlock" class="personal-best-block" style="display:none">
+                            <span id="personalBestMsg"></span>
+                        </div>
+                        <div id="leaderboardBlock" class="leaderboard-block">
+                            <p class="lb-loading">⏳ Caricamento classifica...</p>
+                        </div>
                         <button class="play-btn" id="retryBtn">🔄 RIPROVA</button>
                     </div>
                 </div>
@@ -1114,26 +1189,89 @@
             }
         }
 
-        // Game Over
-        function gameOver() {
-            game.isPlaying = false;
-            ball.style.display = 'none';
+        // ===== FIREBASE LEADERBOARD =====
+        const MINIGAME_FB = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
 
-            document.getElementById('finalScore').textContent = game.homeRuns;
+        async function saveAndShowLeaderboard(score) {
+            const player = getPlayerInfo();
+            const pbBlock = document.getElementById('personalBestBlock');
+            const pbMsg = document.getElementById('personalBestMsg');
+            const lbBlock = document.getElementById('leaderboardBlock');
 
-            // Show simple message
-            const rankMsg = document.getElementById('rankMessage');
-            if (game.homeRuns >= 10) {
-                rankMsg.textContent = `🏆 Incredibile! ${game.homeRuns} Home Run!`;
-            } else if (game.homeRuns >= 5) {
-                rankMsg.textContent = `🎉 Ottimo lavoro! ${game.homeRuns} Home Run!`;
-            } else if (game.homeRuns >= 1) {
-                rankMsg.textContent = `👍 Bene! Prova a battere il tuo record!`;
+            // 1. Read existing score for this player
+            let prevBest = 0;
+            try {
+                const r = await fetch(MINIGAME_FB + '/minigioco/scores/' + player.number + '.json');
+                const d = await r.json();
+                if (d && d.bestScore) prevBest = d.bestScore;
+            } catch(e) { console.warn(e); }
+
+            // 2. Save new record if better
+            const newBest = Math.max(prevBest, score);
+            try {
+                await fetch(MINIGAME_FB + '/minigioco/scores/' + player.number + '.json', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        name: player.name,
+                        number: player.number,
+                        bestScore: newBest,
+                        lastScore: score,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+            } catch(e) { console.warn(e); }
+
+            // 3. Personal best message
+            pbBlock.style.display = '';
+            if (score > prevBest && prevBest > 0) {
+                pbMsg.innerHTML = '🏆 <strong>Nuovo record!</strong> ' + score + ' HR (prima: ' + prevBest + ')';
+                pbBlock.className = 'personal-best-block new-record';
+            } else if (prevBest > 0) {
+                pbMsg.innerHTML = '📊 Il tuo record: <strong>' + newBest + '</strong> HR';
+                pbBlock.className = 'personal-best-block';
             } else {
-                rankMsg.textContent = `😅 Nessun Home Run... Riprova!`;
+                pbMsg.innerHTML = '🎯 Primo punteggio registrato: <strong>' + score + '</strong> HR!';
+                pbBlock.className = 'personal-best-block new-record';
             }
 
+            // 4. Load all scores and show top 5
+            try {
+                const r2 = await fetch(MINIGAME_FB + '/minigioco/scores.json');
+                const allScores = await r2.json();
+                if (allScores) {
+                    const sorted = Object.values(allScores)
+                        .filter(s => s && s.bestScore !== undefined)
+                        .sort((a, b) => b.bestScore - a.bestScore)
+                        .slice(0, 5);
+
+                    let html = '<div class="lb-title">🏅 Top 5 Classifica</div><div class="lb-rows">';
+                    sorted.forEach((s, i) => {
+                        const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+                        const isMe = String(s.number) === String(player.number);
+                        html += '<div class="lb-row' + (isMe ? ' lb-me' : '') + '">';
+                        html += '<span class="lb-medal">' + medals[i] + '</span>';
+                        html += '<span class="lb-name">' + (s.name || 'Giocatore') + '</span>';
+                        html += '<span class="lb-score">' + s.bestScore + ' HR</span>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                    lbBlock.innerHTML = html;
+                } else {
+                    lbBlock.innerHTML = '<p class="lb-loading">Nessun punteggio registrato</p>';
+                }
+            } catch(e) {
+                lbBlock.innerHTML = '<p class="lb-loading">Classifica non disponibile</p>';
+            }
+        }
+
+        // Game Over
+        async function gameOver() {
+            game.isPlaying = false;
+            ball.style.display = 'none';
+            document.getElementById('finalScore').textContent = game.homeRuns;
+            document.getElementById('leaderboardBlock').innerHTML = '<p class="lb-loading">⏳ Salvataggio punteggio...</p>';
             gameOverOverlay.classList.remove('hidden');
+            await saveAndShowLeaderboard(game.homeRuns);
         }
 
         // Reset Game

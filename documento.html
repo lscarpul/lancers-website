@@ -1,22 +1,21 @@
     <!-- Tab Bar fissa in basso -->
     <nav class="tab-bar">
-        <a href="presenze.html" class="tab-bar-item" title="Presenze">
-            <span>📋</span>
-            <span>Presenze</span>
+        <a href="index.html" class="tab-bar-item" title="Home">
+            <span>🏠</span>
+            <span>Home</span>
         </a>
-        <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
-            <span>🏋️</span>
-            <span>Allenamenti</span>
+        <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
+            <span>📅</span>
+            <span>Calendario</span>
         </a>
-        <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
+        <a href="calendario.html" class="tab-bar-item" title="Partite">
             <span>⚾</span>
             <span>Partite</span>
         </a>
-        <a href="area-personale.html" class="tab-bar-item" title="Profilo">
+        <a href="area-personale.html" class="tab-bar-item active" title="Profilo">
             <span>👤</span>
             <span>Profilo</span>
         </a>
-        <!-- Documento rimosso -->
     </nav>
     <style>
         .tab-bar {
@@ -336,25 +335,11 @@
             <span></span>
         </div>
     </nav>
-                <nav class="tab-bar">
-                    <a href="presenze.html" class="tab-bar-item" title="Presenze">
-                        <span>📋</span>
-                        <span>Presenze</span>
-                    </a>
-                    <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
-                        <span>🏋️</span>
-                        <span>Allenamenti</span>
-                    </a>
-                    <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
-                        <span>⚾</span>
-                        <span>Partite</span>
-                    </a>
-                    <a href="area-personale.html" class="tab-bar-item" title="Profilo">
-                        <span>👤</span>
-                        <span>Profilo</span>
-                    </a>
-                    <!-- Documento rimosso -->
-                </nav>
+
+    <div class="page-back-bar">
+        <button onclick="history.back()" class="back-arrow-btn"><span class="arrow-icon">&#8592;</span> Indietro</button>
+    </div>
+
         <!-- Header Banner -->
         <div class="doc-header-banner">
             <h1>⚾ LANCERS B.C.</h1>
@@ -1086,7 +1071,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=44"></script>
+    <script src="script.js?v=47"></script>
     <script>
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

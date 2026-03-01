@@ -1,5 +1,5 @@
-// ===== SCRIPT.JS v44 =====
-const APP_VERSION = '44';
+// ===== SCRIPT.JS v45 =====
+const APP_VERSION = '47';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -201,18 +201,19 @@ document.head.appendChild(style);
 // Eventi comuni a tutti i giocatori
 const allEvents = [
     // FEBBRAIO 2026 (dal 3 febbraio in poi)
+    // NOTA: i sabati non sono più allenamenti (da 28/02/2026 in poi)
     { date: '2026-02-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-05', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-07', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
+    // 2026-02-07 sabato → rimosso (sabati non sono più allenamenti)
     { date: '2026-02-10', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-12', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-14', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
+    // 2026-02-14 sabato → rimosso
     { date: '2026-02-17', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-19', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-21', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
+    // 2026-02-21 sabato → rimosso
     { date: '2026-02-24', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-02-26', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-02-28', type: 'tbd', title: 'Allenamento', time: '🕐 Da definire', tag: '❓ Da definire' },
+    // 2026-02-28 sabato → rimosso (da ieri in poi i sabati non sono più allenamenti)
     
     // MARZO 2026
     { date: '2026-03-01', type: 'friendly', title: 'Amichevole Interna', time: '🏠 Domenica', tag: '✅ Confermata' },
@@ -366,130 +367,150 @@ function getPlayerEvents(playerNumber) {
 }
 
 // ===== LOAD WEEKLY EVENTS =====
+function getHomeEventTypeInfo(type) {
+    const map = {
+        'training':   { label: '🏋️ Allenamento', color: '#3b82f6', cls: 'training' },
+        'specific':   { label: '🎯 Specifico',   color: '#ec4899', cls: 'specific' },
+        'battuta':    { label: '🏏 Battuta',      color: '#f59e0b', cls: 'battuta' },
+        'difesa':     { label: '🧤 Difesa',       color: '#22c55e', cls: 'difesa' },
+        'autonomous': { label: '💪 Autonomo',     color: '#a78bfa', cls: 'autonomous' },
+        'friendly':   { label: '🤝 Amichevole',  color: '#dc2626', cls: 'friendly' },
+        'match-home': { label: '🏠 Partita',      color: '#22c55e', cls: 'match-home' },
+        'match-away': { label: '✈️ Trasferta',    color: '#60a5fa', cls: 'match-away' },
+        'event':      { label: '🎪 Evento',       color: '#eab308', cls: 'event' },
+        'wednesday':  { label: '🎯 Specifico',    color: '#14b8a6', cls: 'wednesday-specific' },
+    };
+    return map[type] || { label: '📅 Evento', color: '#64748b', cls: 'training' };
+}
+
 function loadWeeklyEvents() {
     console.log('📅 loadWeeklyEvents() chiamata');
     const eventsList = document.getElementById('eventsList');
     const weekDatesEl = document.getElementById('weekDates');
-    
+
     console.log('   eventsList:', eventsList);
     console.log('   weekDatesEl:', weekDatesEl);
-    
+
     if (!eventsList || !weekDatesEl) {
         console.log('❌ Elementi non trovati, esco');
         return;
     }
-    
+
     const today = new Date();
-    console.log('   today:', today);
+    today.setHours(0, 0, 0, 0);
     const { start, end } = getWeekRange(today);
-    console.log('   week range:', start, '-', end);
-    
-    // Mostra le date della settimana
     weekDatesEl.textContent = formatWeekRange(start, end);
-    
-    // Filtra eventi della settimana
-    const weekEvents = allEvents.filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate >= start && eventDate <= end;
+
+    // Use player-specific events if logged in (includes Wednesday specifics)
+    let sourceEvents = allEvents;
+    try {
+        const pd = sessionStorage.getItem('playerData');
+        if (pd && typeof getPlayerEvents === 'function') {
+            const pl = JSON.parse(pd);
+            const pev = getPlayerEvents(pl.number);
+            if (pev && pev.length > 0) sourceEvents = pev;
+        }
+    } catch(e) {}
+
+    // Events this week, or if none, next 5 upcoming
+    let weekEvents = sourceEvents.filter(e => {
+        const d = new Date(e.date);
+        return d >= start && d <= end;
     });
-    
+    if (weekEvents.length === 0) {
+        weekEvents = sourceEvents.filter(e => new Date(e.date) >= today).slice(0, 5);
+        if (weekEvents.length > 0) {
+            weekDatesEl.textContent = 'Prossimi eventi';
+        }
+    }
     console.log('   weekEvents trovati:', weekEvents.length);
-    
-    // Genera HTML
+
     if (weekEvents.length === 0) {
         eventsList.innerHTML = `
             <div class="no-events">
                 <div class="emoji">😴</div>
-                <p>Nessun evento questa settimana</p>
+                <p>Nessun evento in programma</p>
             </div>
         `;
-    } else {
-        eventsList.innerHTML = weekEvents.map(event => {
-            const eventDate = new Date(event.date);
-            const dayName = getDayName(eventDate);
-            const dayNum = eventDate.getDate();
-            
-            return `
-                <div class="event-item ${event.type}" data-date="${event.date}">
-                    <div class="event-date-box">
-                        <span class="event-day">${dayName}</span>
-                        <span class="event-num">${dayNum}</span>
-                    </div>
-                    <div class="event-details">
-                        <h3>${event.title}</h3>
-                        <p>${event.time}</p>
-                    </div>
-                    <div class="event-presence-btns">
-                        <button class="presence-btn yes" onclick="saveEventPresence('${event.date}', 'yes', this)" title="Ci sarò">✅</button>
-                        <!-- Tasto 'forse' rimosso -->
-                        <button class="presence-btn no" onclick="saveEventPresence('${event.date}', 'no', this)" title="Assente">❌</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        // Carica lo stato delle presenze salvate
-        loadEventPresenceStatus();
-    }
-}
-
-// Salva presenza direttamente dall'evento nella home
-async function saveEventPresence(date, status, btn) {
-    const playerData = sessionStorage.getItem('playerData');
-    if (!playerData) {
-        alert('Devi essere loggato per confermare la presenza');
         return;
     }
-    
-    const player = JSON.parse(playerData);
-    const eventItem = btn.closest('.event-item');
-    const allBtns = eventItem.querySelectorAll('.presence-btn');
-    
-    // Disabilita tutti i pulsanti durante il salvataggio
-    allBtns.forEach(b => b.disabled = true);
-    btn.innerHTML = '⏳';
-    
-    try {
-        if (typeof LancersDB !== 'undefined') {
-            await LancersDB.save(player.number, date, status);
-        } else {
-            const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
-            const payload = { response: status, timestamp: new Date().toISOString() };
-            await fetch(`${baseUrl}/presenze/${player.number}/${date.replace(/-/g, '_')}.json`, {
-                method: 'PUT',
-                body: JSON.stringify(payload)
-            });
-        }
-        
-        // Aggiorna UI
-        allBtns.forEach(b => {
-            b.classList.remove('selected');
-            b.disabled = false;
-        });
-        btn.classList.add('selected');
-        
-        // Ripristina emoji
-        const emojis = { yes: '✅', no: '❌' };
-        btn.innerHTML = emojis[status];
-        
-        console.log(`✅ Presenza salvata: ${date} = ${status}`);
-    } catch (error) {
-        console.error('Errore salvataggio presenza:', error);
-        allBtns.forEach(b => b.disabled = false);
-        btn.innerHTML = status === 'yes' ? '✅' : status === 'maybe' ? '⚠️' : '❌';
-        alert('Errore nel salvataggio. Riprova.');
-    }
+
+    eventsList.innerHTML = weekEvents.map(event => {
+        const eventDate = new Date(event.date);
+        const dayNum = eventDate.getDate();
+        const dayName = getDayName(eventDate);
+        const info = getHomeEventTypeInfo(event.type);
+        return `
+            <div class="home-event-card ${info.cls}" data-hdate="${event.date}">
+                <div class="home-event-left">
+                    <span class="home-event-day-num">${dayNum}</span>
+                    <span class="home-event-day-name">${dayName}</span>
+                </div>
+                <div class="home-event-middle">
+                    <span class="home-event-type-badge" style="background:${info.color}20;color:${info.color};border:1px solid ${info.color}40;">${info.label}</span>
+                    <p class="home-event-title">${event.title}</p>
+                    <div class="home-event-time">${event.time || ''}</div>
+                </div>
+                <div class="home-event-right">
+                    <span class="home-presence-badge present" id="hbadge-${event.date}">✅ Presente</span>
+                    <button class="home-absence-btn" id="habsbtn-${event.date}" onclick="homeToggleAbsent('${event.date}', this)">Segna assenza</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Load saved presence states
+    homeLoadPresenceStatus(weekEvents.map(e => e.date));
 }
 
-// Carica stato presenze salvate per gli eventi della settimana
-async function loadEventPresenceStatus() {
-    const playerData = sessionStorage.getItem('playerData');
-    if (!playerData) return;
-    
-    const player = JSON.parse(playerData);
-    let responses = {};
-    
+async function homeToggleAbsent(date, btn) {
+    const badge = document.getElementById('hbadge-' + date);
+    const isAbsent = badge && badge.classList.contains('absent');
+    const newStatus = isAbsent ? 'yes' : 'no';
+
+    btn.disabled = true;
+    btn.textContent = '⏳';
+
     try {
+        const pd = sessionStorage.getItem('playerData');
+        if (!pd) { btn.disabled = false; return; }
+        const player = JSON.parse(pd);
+
+        if (typeof LancersDB !== 'undefined') {
+            await LancersDB.save(player.number, date, newStatus);
+        } else {
+            const baseUrl = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
+            await fetch(`${baseUrl}/presenze/${player.number}/${date.replace(/-/g, '_')}.json`, {
+                method: 'PUT',
+                body: JSON.stringify({ response: newStatus, timestamp: new Date().toISOString() })
+            });
+        }
+
+        if (badge) {
+            if (newStatus === 'no') {
+                badge.textContent = '❌ Assente';
+                badge.className = 'home-presence-badge absent';
+                btn.textContent = 'Torna presente';
+            } else {
+                badge.textContent = '✅ Presente';
+                badge.className = 'home-presence-badge present';
+                btn.textContent = 'Segna assenza';
+            }
+        }
+    } catch(e) {
+        console.error(e);
+        alert('Errore nel salvataggio. Riprova.');
+    }
+    btn.disabled = false;
+}
+
+async function homeLoadPresenceStatus(dates) {
+    try {
+        const pd = sessionStorage.getItem('playerData');
+        if (!pd) return;
+        const player = JSON.parse(pd);
+        let responses = {};
+
         if (typeof LancersDB !== 'undefined') {
             responses = await LancersDB.getPlayer(player.number);
         } else {
@@ -497,27 +518,37 @@ async function loadEventPresenceStatus() {
             const res = await fetch(`${baseUrl}/presenze/${player.number}.json`);
             const data = await res.json();
             if (data) {
-                Object.entries(data).forEach(([dateKey, value]) => {
-                    // dateKey is like '2026_01_15', convert to '2026-01-15'
-                    responses[dateKey.replace(/_/g, '-')] = value;
-                });
+                Object.entries(data).forEach(([k, v]) => { responses[k.replace(/_/g, '-')] = v; });
             }
         }
-        
-        // Aggiorna UI per ogni evento
-        document.querySelectorAll('.event-item[data-date]').forEach(item => {
-            const date = item.dataset.date;
-            const response = responses[date];
-            if (response) {
-                const status = response.response || response;
-                const btn = item.querySelector(`.presence-btn.${status}`);
-                if (btn) btn.classList.add('selected');
+
+        dates.forEach(date => {
+            const saved = responses[date];
+            if (saved) {
+                const status = saved.response || saved;
+                const badge = document.getElementById('hbadge-' + date);
+                const absbtn = document.getElementById('habsbtn-' + date);
+                if (status === 'no') {
+                    if (badge) { badge.textContent = '❌ Assente'; badge.className = 'home-presence-badge absent'; }
+                    if (absbtn) absbtn.textContent = 'Torna presente';
+                } else {
+                    if (badge) { badge.textContent = '✅ Presente'; badge.className = 'home-presence-badge present'; }
+                    if (absbtn) absbtn.textContent = 'Segna assenza';
+                }
             }
         });
-    } catch (error) {
-        console.error('Errore caricamento presenze:', error);
+    } catch(e) {
+        console.error('Errore caricamento presenze home:', e);
     }
 }
+
+// Legacy wrapper kept for popup
+async function saveEventPresence(date, status, btn) {
+    return homeToggleAbsent(date, btn);
+}
+
+// Legacy: no-op (replaced by homeLoadPresenceStatus)
+async function loadEventPresenceStatus() {}
 
 // Ottieni range della settimana (Lunedì - Domenica)
 function getWeekRange(date) {

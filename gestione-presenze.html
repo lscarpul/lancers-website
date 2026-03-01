@@ -1,14 +1,14 @@
     <!-- Tab Bar fissa in basso -->
     <nav class="tab-bar">
-        <a href="presenze.html" class="tab-bar-item" title="Presenze">
-            <span>📋</span>
-            <span>Presenze</span>
+        <a href="index.html" class="tab-bar-item" title="Home">
+            <span>🏠</span>
+            <span>Home</span>
         </a>
-        <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
-            <span>🏋️</span>
-            <span>Allenamenti</span>
+        <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
+            <span>📅</span>
+            <span>Calendario</span>
         </a>
-        <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
+        <a href="calendario.html" class="tab-bar-item" title="Partite">
             <span>⚾</span>
             <span>Partite</span>
         </a>
@@ -16,7 +16,6 @@
             <span>👤</span>
             <span>Profilo</span>
         </a>
-        <!-- Documento rimosso -->
     </nav>
     <style>
         .tab-bar {
@@ -930,6 +929,10 @@
         </div>
     </nav>
 
+    <div class="page-back-bar">
+        <button onclick="history.back()" class="back-arrow-btn"><span class="arrow-icon">&#8592;</span> Indietro</button>
+    </div>
+
     <div class="admin-hero">
         <h1>� Area Admin</h1>
         <p>Gestione presenze, trasporti e comunicazioni</p>
@@ -1051,7 +1054,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=44"></script>
+    <script src="script.js?v=47"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
@@ -1285,16 +1288,14 @@
 
             // Ottieni i giocatori rilevanti per questo evento
             const relevantPlayers = getPlayersForEvent(nextEvent);
-            const presentList = [], maybeList = [], absentList = [], pendingList = [];
+            const presentList = [], absentList = [];
 
             relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, nextEvent.date);
                 const playerInfo = { ...player, status };
                 
-                if (status === 'yes') presentList.push(playerInfo);
-                else if (status === 'maybe') maybeList.push(playerInfo);
-                else if (status === 'no') absentList.push(playerInfo);
-                else pendingList.push(playerInfo);
+                if (status === 'no') absentList.push(playerInfo);
+                else presentList.push(playerInfo); // yes o default = presente
             });
             
             const isWednesday = nextEvent.type === 'wednesday-specific';
@@ -1307,9 +1308,7 @@
                     ${isWednesday ? `<p style="color: #a78bfa; font-size: 0.9rem; margin-top: 0.5rem;">${eventTypeLabel} - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
                     <div class="event-stats">
                         <span class="status-badge present">✅ ${presentList.length}</span>
-                        <!-- Badge 'forse' rimosso -->
                         <span class="status-badge absent">❌ ${absentList.length}</span>
-                        <span class="status-badge pending">⏳ ${pendingList.length}</span>
                     </div>
                 </div>
 
@@ -1340,19 +1339,6 @@
                         `).join('') || '<p style="color: #64748b; padding: 0.5rem;">Nessuno</p>'}
                     </div>
                 </div>
-
-                <div class="presence-section">
-                    <h4>⏳ In attesa di risposta (${pendingList.length})</h4>
-                    <div class="presence-list">
-                        ${pendingList.map(p => `
-                            <div class="presence-item pending">
-                                <span class="number">#${p.number}</span>
-                                <span class="name">${p.name} ${p.surname}</span>
-                                <span class="icon">⏳</span>
-                            </div>
-                        `).join('') || '<p style="color: #64748b; padding: 0.5rem;">Nessuno</p>'}
-                    </div>
-                </div>
             `;
         }
 
@@ -1374,16 +1360,14 @@
             
             // Ottieni i giocatori rilevanti per questo evento
             const relevantPlayers = getPlayersForEvent(event);
-            const presentList = [], maybeList = [], absentList = [], pendingList = [];
+            const presentList = [], absentList = [];
 
             relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, event.date);
                 const playerInfo = { ...player, status };
                 
-                if (status === 'yes') presentList.push(playerInfo);
-                else if (status === 'maybe') maybeList.push(playerInfo);
-                else if (status === 'no') absentList.push(playerInfo);
-                else pendingList.push(playerInfo);
+                if (status === 'no') absentList.push(playerInfo);
+                else presentList.push(playerInfo); // yes o default = presente
             });
             
             const isWednesday = event.type === 'wednesday-specific';
@@ -1395,9 +1379,7 @@
                     ${isWednesday ? `<p style="color: #a78bfa; font-size: 0.9rem; margin-top: 0.5rem;">🎯 Mercoledì Specifico - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
                     <div class="event-stats">
                         <span class="status-badge present">✅ ${presentList.length}</span>
-                        <span class="status-badge maybe">⚠️ ${maybeList.length}</span>
                         <span class="status-badge absent">❌ ${absentList.length}</span>
-                        <span class="status-badge pending">⏳ ${pendingList.length}</span>
                     </div>
                 </div>
 
@@ -1406,16 +1388,16 @@
                         <tr><th>#</th><th>Giocatore</th><th>Ruolo</th><th>Stato</th><th>Azioni Admin</th></tr>
                     </thead>
                     <tbody>
-                        ${[...presentList, ...maybeList, ...absentList, ...pendingList].map(p => `
+                        ${[...presentList, ...absentList].map(p => `
                             <tr id="row-${p.number}-${event.date.replace(/-/g, '_')}">
                                 <td><span class="player-number">${p.number}</span></td>
                                 <td>${p.name} ${p.surname}</td>
                                 <td>${p.role}</td>
-                                <td><span class="status-badge ${p.status === 'yes' ? 'present' : p.status === 'maybe' ? 'maybe' : p.status === 'no' ? 'absent' : 'pending'}" id="status-${p.number}-${event.date.replace(/-/g, '_')}">
-                                    ${p.status === 'yes' ? '✅ Presente' : p.status === 'maybe' ? '⚠️ Forse' : p.status === 'no' ? '❌ Assente' : '⏳ In attesa'}
+                                <td><span class="status-badge ${p.status === 'no' ? 'absent' : 'present'}" id="status-${p.number}-${event.date.replace(/-/g, '_')}">
+                                    ${p.status === 'no' ? '❌ Assente' : '✅ Presente'}
                                 </span></td>
                                 <td class="admin-actions">
-                                    <button class="admin-btn yes ${p.status === 'yes' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'yes')" title="Presente">✅</button>
+                                    <button class="admin-btn yes ${p.status !== 'no' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'yes')" title="Presente">✅</button>
                                     <!-- Tasto 'forse' rimosso -->
                                     <button class="admin-btn no ${p.status === 'no' ? 'active' : ''}" onclick="setPresenceAdmin(${p.number}, '${event.date}', 'no')" title="Assente">❌</button>
                                 </td>
@@ -1502,8 +1484,8 @@
                 // Aggiorna UI - stato badge
                 const statusBadge = document.getElementById(statusId);
                 if (statusBadge) {
-                    statusBadge.className = `status-badge ${response === 'yes' ? 'present' : response === 'maybe' ? 'maybe' : 'absent'}`;
-                    statusBadge.innerHTML = response === 'yes' ? '✅ Presente' : response === 'maybe' ? '⚠️ Forse' : '❌ Assente';
+                    statusBadge.className = `status-badge ${response === 'no' ? 'absent' : 'present'}`;
+                    statusBadge.innerHTML = response === 'no' ? '❌ Assente' : '✅ Presente';
                 }
                 
                 // Aggiorna pulsanti attivi
@@ -1537,14 +1519,12 @@
             if (!event) return;
             
             const relevantPlayers = getPlayersForEvent(event);
-            let present = 0, maybe = 0, absent = 0, pending = 0;
+            let present = 0, absent = 0;
             
             relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, eventDate);
-                if (status === 'yes') present++;
-                else if (status === 'maybe') maybe++;
-                else if (status === 'no') absent++;
-                else pending++;
+                if (status === 'no') absent++;
+                else present++;
             });
             
             // Aggiorna i badge nell'event card
@@ -1554,9 +1534,7 @@
                 if (stats) {
                     stats.innerHTML = `
                         <span class="status-badge present">✅ ${present}</span>
-                        <span class="status-badge maybe">⚠️ ${maybe}</span>
                         <span class="status-badge absent">❌ ${absent}</span>
-                        <span class="status-badge pending">⏳ ${pending}</span>
                     `;
                 }
             }
@@ -1568,14 +1546,12 @@
             if (!nextEvent) { alert('Nessun evento in programma'); return; }
 
             const relevantPlayers = getPlayersForEvent(nextEvent);
-            const presentList = [], maybeList = [], absentList = [], pendingList = [];
+            const presentList = [], absentList = [];
             relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, nextEvent.date);
                 const name = `#${player.number} ${player.name} ${player.surname}`;
-                if (status === 'yes') presentList.push(name);
-                else if (status === 'maybe') maybeList.push(name);
-                else if (status === 'no') absentList.push(name);
-                else pendingList.push(name);
+                if (status === 'no') absentList.push(name);
+                else presentList.push(name);
             });
 
             const isWednesday = nextEvent.type === 'wednesday-specific';
@@ -1584,10 +1560,8 @@
             if (isWednesday) message += `🎯 _Mercoledì Specifico_\n`;
             message += `\n`;
             message += `✅ *PRESENTI (${presentList.length}):*\n${presentList.join('\n') || '(nessuno)'}\n\n`;
-            message += `⚠️ *FORSE (${maybeList.length}):*\n${maybeList.join('\n') || '(nessuno)'}\n\n`;
             message += `❌ *ASSENTI (${absentList.length}):*\n${absentList.join('\n') || '(nessuno)'}\n\n`;
-            message += `⏳ *IN ATTESA (${pendingList.length}):*\n${pendingList.join('\n') || '(nessuno)'}\n\n`;
-            message += `━━━━━━━━━━━━\n👥 Disponibili: ${presentList.length + maybeList.length}/${relevantPlayers.length}`;
+            message += `━━━━━━━━━━━━\n👥 Disponibili: ${presentList.length}/${relevantPlayers.length}`;
 
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
         }
@@ -1598,14 +1572,12 @@
             if (!nextEvent) { alert('Nessun evento in programma'); return; }
 
             const relevantPlayers = getPlayersForEvent(nextEvent);
-            const presentList = [], maybeList = [], absentList = [], pendingList = [];
+            const presentList = [], absentList = [];
             relevantPlayers.forEach(player => {
                 const status = getPlayerPresence(player.number, nextEvent.date);
                 const name = `#${player.number} ${player.name} ${player.surname}`;
-                if (status === 'yes') presentList.push(name);
-                else if (status === 'maybe') maybeList.push(name);
-                else if (status === 'no') absentList.push(name);
-                else pendingList.push(name);
+                if (status === 'no') absentList.push(name);
+                else presentList.push(name);
             });
 
             const isWednesday = nextEvent.type === 'wednesday-specific';
@@ -1615,10 +1587,8 @@
             if (isWednesday) body += `🎯 Tipo: Mercoledì Specifico (solo giocatori assegnati)\n`;
             body += `\n`;
             body += `✅ PRESENTI (${presentList.length}):\n${presentList.join('\n') || '(nessuno)'}\n\n`;
-            body += `⚠️ FORSE (${maybeList.length}):\n${maybeList.join('\n') || '(nessuno)'}\n\n`;
             body += `❌ ASSENTI (${absentList.length}):\n${absentList.join('\n') || '(nessuno)'}\n\n`;
-            body += `⏳ IN ATTESA (${pendingList.length}):\n${pendingList.join('\n') || '(nessuno)'}\n\n`;
-            body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTotale disponibili: ${presentList.length + maybeList.length}/${relevantPlayers.length}`;
+            body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTotale disponibili: ${presentList.length}/${relevantPlayers.length}`;
 
             window.open(`mailto:${STAFF_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
         }

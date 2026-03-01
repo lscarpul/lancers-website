@@ -1,14 +1,14 @@
     <!-- Tab Bar fissa in basso -->
     <nav class="tab-bar">
-        <a href="presenze.html" class="tab-bar-item" title="Presenze">
-            <span>📋</span>
-            <span>Presenze</span>
+        <a href="index.html" class="tab-bar-item active" title="Home">
+            <span>🏠</span>
+            <span>Home</span>
         </a>
-        <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
-            <span>🏋️</span>
-            <span>Allenamenti</span>
+        <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
+            <span>📅</span>
+            <span>Calendario</span>
         </a>
-        <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
+        <a href="calendario.html" class="tab-bar-item" title="Partite">
             <span>⚾</span>
             <span>Partite</span>
         </a>
@@ -16,7 +16,6 @@
             <span>👤</span>
             <span>Profilo</span>
         </a>
-        <!-- Documento rimosso -->
     </nav>
     <style>
         .tab-bar {
@@ -247,33 +246,25 @@
             const days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
             const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
             const dateStr = `${days[eventDate.getDay()]} ${eventDate.getDate()} ${months[eventDate.getMonth()]}`;
-            
+
             const popup = document.createElement('div');
             popup.id = 'presencePopup';
+            popup.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,0.65);display:flex;align-items:flex-end;backdrop-filter:blur(4px)';
+            popup.addEventListener('click', (e) => { if (e.target === popup) popup.remove(); });
             popup.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(8px);">
-                    <div style="background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%); border-radius: 20px; padding: 2rem; max-width: 400px; width: 100%; text-align: center; animation: slideUp 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(59, 130, 246, 0.3);">
-                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">⚾</div>
-                        <h2 style="color: #ffffff; margin-bottom: 0.5rem; font-size: 1.5rem;">Ci sarai?</h2>
-                        <p style="color: #94a3b8; margin-bottom: 1.5rem;">Conferma la presenza per il prossimo evento:</p>
-                        
-                        <div style="background: rgba(59, 130, 246, 0.2); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6; text-align: left;">
-                            <strong style="color: #60a5fa; display: block; font-size: 1.1rem; margin-bottom: 0.2rem;">${event.title}</strong>
-                            <div style="color: #e2e8f0; font-size: 0.9rem;">📅 ${dateStr}</div>
-                            <div style="color: #e2e8f0; font-size: 0.9rem;">🕐 ${event.time}</div>
-                        </div>
-                        
-                        <div style="display: grid; gap: 0.8rem;">
-                            <button onclick="quickSavePresence('${event.date}', 'yes')" style="padding: 1rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: transform 0.1s;">✅ CI SARÒ</button>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
-                                <!-- Tasto 'forse' rimosso -->
-                                <button onclick="quickSavePresence('${event.date}', 'no')" style="padding: 1rem; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">❌ ASSENTE</button>
-                            </div>
-                            
-                            <button onclick="document.getElementById('presencePopup').remove()" style="margin-top: 0.5rem; background: none; border: none; color: #94a3b8; cursor: pointer; text-decoration: underline;">Decido dopo</button>
-                        </div>
+                <div class="popup-sheet-card" style="background:#1e293b;border-radius:24px 24px 0 0;padding:1.5rem 1.5rem 2.2rem;width:100%;box-shadow:0 -8px 40px rgba(0,0,0,0.5);animation:slideUpSheet 0.32s cubic-bezier(0.34,1.2,0.64,1) both;border-top:1px solid rgba(255,255,255,0.08)">
+                    <div style="width:36px;height:4px;background:rgba(255,255,255,0.18);border-radius:4px;margin:0 auto 1.2rem"></div>
+                    <p style="color:#94a3b8;font-size:0.78rem;margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Prossimo evento</p>
+                    <div style="background:rgba(59,130,246,0.1);border-left:4px solid #3b82f6;border-radius:0 10px 10px 0;padding:0.9rem 1rem;margin-bottom:1.3rem">
+                        <strong style="color:#60a5fa;display:block;font-size:1rem;margin-bottom:0.2rem">${event.title}</strong>
+                        <span style="color:#cbd5e1;font-size:0.82rem">📅 ${dateStr} &nbsp;·&nbsp; 🕐 ${event.time}</span>
                     </div>
+                    <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:12px;padding:0.7rem 1rem;display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem">
+                        <span style="font-size:1.1rem">✅</span>
+                        <span style="color:#4ade80;font-weight:700;font-size:0.9rem">Hai risposto: Presente</span>
+                    </div>
+                    <button onclick="quickSavePresence('${event.date}','no')" style="width:100%;padding:0.85rem;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:12px;font-weight:700;cursor:pointer;font-size:0.9rem;font-family:inherit;margin-bottom:0.6rem;transition:background 0.2s">❌ Segna assenza</button>
+                    <button onclick="document.getElementById('presencePopup').remove()" style="width:100%;background:none;border:none;color:#64748b;cursor:pointer;text-decoration:underline;font-size:0.8rem;font-family:inherit;padding:0.4rem">Decido dopo</button>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -281,7 +272,7 @@
 
         // Funzione per salvare direttamente dal popup
         async function quickSavePresence(date, status) {
-            const popupContent = document.querySelector('#presencePopup > div > div');
+            const popupContent = document.querySelector('#presencePopup .popup-sheet-card');
             
             // Feedback visivo di caricamento
             popupContent.innerHTML = `
@@ -389,6 +380,6 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
     <script src="firebase-config.js"></script>
-    <script src="script.js?v=44"></script>
+    <script src="script.js?v=47"></script>
 </body>
 </html>

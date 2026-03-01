@@ -1,22 +1,21 @@
     <!-- Tab Bar fissa in basso -->
     <nav class="tab-bar">
-        <a href="presenze.html" class="tab-bar-item" title="Presenze">
-            <span>📋</span>
-            <span>Presenze</span>
+        <a href="index.html" class="tab-bar-item" title="Home">
+            <span>🏠</span>
+            <span>Home</span>
         </a>
-        <a href="allenamenti.html" class="tab-bar-item" title="Allenamenti">
-            <span>🏋️</span>
-            <span>Allenamenti</span>
+        <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
+            <span>📅</span>
+            <span>Calendario</span>
         </a>
-        <a href="calendario.html" class="tab-bar-item" title="Calendario Partite">
+        <a href="calendario.html" class="tab-bar-item" title="Partite">
             <span>⚾</span>
             <span>Partite</span>
         </a>
-        <a href="area-personale.html" class="tab-bar-item" title="Profilo">
+        <a href="area-personale.html" class="tab-bar-item active" title="Profilo">
             <span>👤</span>
             <span>Profilo</span>
         </a>
-        <!-- Documento rimosso -->
     </nav>
     <style>
         .tab-bar {
@@ -984,7 +983,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=44"></script>
+    <script src="script.js?v=47"></script>
     <script>
         // Database completo giocatori - Stagione 2026
         // Include valutazioni staff, statistiche e obiettivi
@@ -2178,120 +2177,188 @@ ISTRUZIONI:
                 };
 
                 container.innerHTML = `
+                    <!-- HERO GIOCATORE -->
                     <div class="personal-hero">
                         <div class="hero-content">
                             <div class="player-badge">
-                                <span class="player-number">#${player.number}</span>
+                                <span class="player-number">#\${player.number}</span>
                             </div>
-                            <h1 class="player-name">${player.name}</h1>
-                            <p class="player-role">${player.role}</p>
+                            <h1 class="player-name">\${player.name}</h1>
+                            <p class="player-role">\${player.role}</p>
                             <div class="hero-tags">
-                                <span class="hero-tag">Età: ${player.age}</span>
-                                <span class="hero-tag">Turni: ${player.turni}</span>
+                                <span class="hero-tag">Età: \${player.age}</span>
+                                <span class="hero-tag">Turni: \${player.turni}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="dashboard-container">
-                        <div class="stat-box col-span-3">
-                            <div class="stat-value">${player.kPercent || '-'}</div>
-                            <div class="stat-label">K %</div>
-                        </div>
-                        <div class="stat-box col-span-3">
-                            <div class="stat-value">${player.bbPercent || '-'}</div>
-                            <div class="stat-label">BB %</div>
-                        </div>
-                        
-                        <div class="card col-span-6">
-                            <h3 class="eval-title">SKILLS & TOOLS</h3>
-                            <div class="skills-wrapper">
-                                ${renderSkills(player.skills)}
-                            </div>
+                    <!-- ============================
+                         SEZIONE 1: OBIETTIVO
+                         ============================ -->
+                    <div class="profile-section">
+                        <div class="profile-section-header">
+                            <span class="profile-section-title">🎯 Il mio obiettivo</span>
+                            <div class="profile-section-divider"></div>
                         </div>
 
-                        <div class="card col-span-12">
-                            <h3 class="eval-title">VALUTAZIONI STAFF</h3>
-                            <div class="eval-grid">
-                                ${renderEval(player.valutazioni)}
-                            </div>
+                        <!-- Obiettivo principale -->
+                        <div class="obiettivo-hero">
+                            <div class="obiettivo-label">Obiettivo stagione 2026</div>
+                            <div class="obiettivo-text">\${player.mioObiettivo || 'Obiettivo non definito'}</div>
+                            \${(player.obiettivi || []).length > 0 ? \`
+                            <div class="obiettivo-tasks">
+                                \${(player.obiettivi || []).map(o => \`<div class="obiettivo-task">\${o}</div>\`).join('')}
+                            </div>\` : ''}
                         </div>
 
-                        <div class="card col-span-12">
-                            <div class="quad-grid">
-                                <div class="quad-box">
-                                    <div class="quad-title">PUNTI DI FORZA</div>
-                                    <div class="quad-content">${player.puntiForza}</div>
-                                </div>
-                                <div class="quad-box">
-                                    <div class="quad-title">PUNTI DEBOLI</div>
-                                    <div class="quad-content">${player.puntiDeboli}</div>
-                                </div>
-                                <div class="quad-box">
-                                    <div class="quad-title">VORREI LAVORARE SU</div>
-                                    <div class="quad-content">${player.vorreiLavorare}</div>
-                                </div>
-                                <div class="quad-box">
-                                    <div class="quad-title">IL MIO OBIETTIVO</div>
-                                    <div class="quad-content">${player.mioObiettivo}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card col-span-6">
-                            <h3 class="eval-title">🎯 OBIETTIVI 2026</h3>
-                            <ul class="goal-list">
-                                ${(player.obiettivi || []).map(o => `<li>${o}</li>`).join('')}
+                        <!-- Lavoro autonomo -->
+                        \${(player.lavoroAutonomo || []).length > 0 ? \`
+                        <div class="autonomo-card">
+                            <div class="autonomo-title">💪 Lavoro Autonomo</div>
+                            <ul class="autonomo-list">
+                                \${(player.lavoroAutonomo || []).map(o => \`<li>\${o}</li>\`).join('')}
                             </ul>
-                        </div>
-                        <div class="card col-span-6">
-                            <h3 class="eval-title">🔨 LAVORO AUTONOMO</h3>
-                            <ul class="goal-list work">
-                                ${(player.lavoroAutonomo || []).map(o => `<li>${o}</li>`).join('')}
-                            </ul>
-                        </div>
+                        </div>\` : ''}
 
-                        ${(() => {
+                        <!-- Mercoledì extra -->
+                        \${(() => {
                             const trainings = getPlayerTrainings(player.number);
                             if (trainings.length === 0) return '';
-                            return `
-                                <div class="card col-span-12" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%); border-left: 5px solid #f59e0b;">
-                                    <h3 class="eval-title" style="color: #fbbf24; -webkit-text-fill-color: #fbbf24; background: none;">📅 I TUOI MERCOLEDÌ EXTRA</h3>
-                                    <p style="color: #fcd34d; margin-bottom: 1rem; font-size: 0.9rem;">Allenamenti specifici personalizzati - Marzo/Luglio 2026</p>
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
-                                        ${trainings.map(t => `
-                                            <div style="background: rgba(255, 255, 255, 0.08); padding: 1rem; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.3);">
-                                                <div style="font-weight: 700; color: white; font-size: 1.1rem;">${formatTrainingDate(t.date)}</div>
-                                                <div style="color: #fbbf24; font-weight: 600; margin-top: 0.25rem;">🎯 ${t.tipo}</div>
+                            return \`
+                                <div class="autonomo-card" style="background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.25);">
+                                    <div class="autonomo-title" style="color:#f59e0b;">📅 I tuoi mercoledì extra</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.25rem;">
+                                        \${trainings.map(t => \`
+                                            <div style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); padding: 0.5rem 0.9rem; border-radius: 10px;">
+                                                <div style="font-size:0.8rem; font-weight:700; color:#fbbf24;">\${formatTrainingDate(t.date)}</div>
+                                                <div style="font-size:0.85rem; color:#e2e8f0;">🎯 \${t.tipo}</div>
                                             </div>
-                                        `).join('')}
+                                        \`).join('')}
                                     </div>
                                 </div>
-                            `;
+                            \`;
                         })()}
 
-                        <div class="card col-span-12">
-                            <h3 class="eval-title">📈 STATISTICHE CARRIERA</h3>
+                        <!-- Punti forza / deboli (SWOT light) -->
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap: 0.75rem; margin-top: 0.25rem;">
+                            <div class="staff-note" style="border-left-color:#22c55e;">
+                                <div class="staff-note-label" style="color:#4ade80;">✅ Punti di forza</div>
+                                <div class="staff-note-text">\${player.puntiForza || '-'}</div>
+                            </div>
+                            <div class="staff-note" style="border-left-color:#f87171;">
+                                <div class="staff-note-label" style="color:#f87171;">⚠️ Da migliorare</div>
+                                <div class="staff-note-text">\${player.puntiDeboli || '-'}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================
+                         SEZIONE 2: STATISTICHE
+                         ============================ -->
+                    <div class="profile-section">
+                        <div class="profile-section-header">
+                            <span class="profile-section-title">📈 Statistiche & Skills</span>
+                            <div class="profile-section-divider"></div>
+                        </div>
+
+                        <!-- Quick stats K%/BB% -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+                            <div class="stat-box" style="border-radius:16px; padding: 1.25rem; text-align:center;">
+                                <div class="stat-value">\${player.kPercent || '-'}</div>
+                                <div class="stat-label">K %</div>
+                            </div>
+                            <div class="stat-box" style="border-radius:16px; padding: 1.25rem; text-align:center;">
+                                <div class="stat-value">\${player.bbPercent || '-'}</div>
+                                <div class="stat-label">BB %</div>
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <h3 class="eval-title">SKILLS & TOOLS</h3>
+                            <div class="skills-wrapper">
+                                \${renderSkills(player.skills)}
+                            </div>
+                        </div>
+
+                        <!-- Valutazioni staff -->
+                        \${player.valutazioni ? \`
+                        <div class="staff-note" style="margin-bottom:0.75rem;">
+                            <div class="staff-note-label">🏋️ Preparazione fisica</div>
+                            <div class="staff-note-text">\${player.valutazioni.fisica || '-'}</div>
+                        </div>
+                        <div class="staff-note" style="margin-bottom:0.75rem; border-left-color:#f59e0b;">
+                            <div class="staff-note-label" style="color:#f59e0b;">🏏 Battuta</div>
+                            <div class="staff-note-text">\${player.valutazioni.battuta || '-'}</div>
+                        </div>
+                        <div class="staff-note" style="margin-bottom:0.75rem; border-left-color:#22c55e;">
+                            <div class="staff-note-label" style="color:#4ade80;">🧤 Difesa</div>
+                            <div class="staff-note-text">\${player.valutazioni.difesa || '-'}</div>
+                        </div>
+                        <div class="staff-note" style="margin-bottom:1rem; border-left-color:#a78bfa;">
+                            <div class="staff-note-label" style="color:#a78bfa;">📋 Valutazione generale</div>
+                            <div class="staff-note-text">\${player.valutazioni.generale || '-'}</div>
+                        </div>\` : ''}
+
+                        <!-- Career stats table -->
+                        <div class="card">
+                            <h3 class="eval-title">📊 Statistiche carriera</h3>
                             <div class="table-container">
                                 <table class="stats-table">
                                     <thead>
-                                        <tr>
-                                            ${renderStatsHeader(player.statistiche)}
-                                        </tr>
+                                        <tr>\${renderStatsHeader(player.statistiche)}</tr>
                                     </thead>
                                     <tbody>
-                                        ${renderStatsRows(player.statistiche, player.totali)}
+                                        \${renderStatsRows(player.statistiche, player.totali)}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        ${renderAICoach(player)}
+                        <!-- AI Coach -->
+                        \${renderAICoach(player)}
                     </div>
 
-                    <div style="text-align:center; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
-                        <a href="index.html" class="back-btn">← Torna alla Home</a>
-                        <button id="logoutBtn" class="back-btn" style="background: var(--danger); color: white;">Logout</button>
-                        <button id="clearDataBtn" class="back-btn" style="background: #6366f1; color: white; font-size: 0.85rem;">🔄 Aggiorna App (Cancella Cache)</button>
+                    <!-- ============================
+                         SEZIONE 3: DOCUMENTI
+                         ============================ -->
+                    <div class="profile-section">
+                        <div class="profile-section-header">
+                            <span class="profile-section-title">📄 Documenti</span>
+                            <div class="profile-section-divider"></div>
+                        </div>
+
+                        <a href="documento.html" class="doc-link-card">
+                            <span class="doc-link-icon">📄</span>
+                            <div class="doc-link-info">
+                                <h4>Scheda Giocatore</h4>
+                                <p>Documento ufficiale con stats e informazioni</p>
+                            </div>
+                            <span style="color:#64748b; font-size:1.2rem;">›</span>
+                        </a>
+
+                        <a href="presenze.html" class="doc-link-card">
+                            <span class="doc-link-icon">✅</span>
+                            <div class="doc-link-info">
+                                <h4>Le mie Presenze</h4>
+                                <p>Conferma presenza agli allenamenti e partite</p>
+                            </div>
+                            <span style="color:#64748b; font-size:1.2rem;">›</span>
+                        </a>
+
+                        <a href="calendario-completo.html" class="doc-link-card">
+                            <span class="doc-link-icon">📅</span>
+                            <div class="doc-link-info">
+                                <h4>Calendario Completo</h4>
+                                <p>Tutti gli allenamenti e le partite 2026</p>
+                            </div>
+                            <span style="color:#64748b; font-size:1.2rem;">›</span>
+                        </a>
+
+                        <div style="padding: 1.5rem 0; display: flex; flex-direction: column; gap: 0.75rem; align-items: center;">
+                            <button id="logoutBtn" class="back-btn" style="background: var(--danger); color: white; width: 100%; max-width: 400px;">🚪 Logout</button>
+                            <button id="clearDataBtn" class="back-btn" style="background: #6366f1; color: white; font-size: 0.85rem; width: 100%; max-width: 400px;">🔄 Aggiorna App (Cancella Cache)</button>
+                        </div>
                     </div>
                 `;
 
