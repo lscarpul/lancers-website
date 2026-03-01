@@ -1010,7 +1010,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=57"></script>
+    <script src="script.js?v=58"></script>
     <script>
         // Database completo giocatori - Stagione 2026
         // Include valutazioni staff, statistiche e obiettivi
@@ -2082,10 +2082,10 @@
                     };
                 };
 
-                // Funzione per chiamare API AI (Groq - gratuita e veloce)
+                // Funzione per chiamare API AI tramite proxy Cloudflare (chiave mai nel codice)
                 const getAIResponse = async (userMessage, player, history) => {
-                    const GROQ_API_KEY = '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';
-                    const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+                    // URL del Cloudflare Worker proxy — sostituire dopo il deploy
+                    const PROXY_URL = 'https://groq-proxy.lscarpul.workers.dev';
 
                     const isPitcher = player.role === 'Lanciatore';
                     const playerContext = preparePlayerContext(player);
@@ -2111,10 +2111,9 @@ ISTRUZIONI:
                     ];
 
                     try {
-                        const response = await fetch(GROQ_API_URL, {
+                        const response = await fetch(PROXY_URL, {
                             method: 'POST',
                             headers: {
-                                'Authorization': `Bearer ${GROQ_API_KEY}`,
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
