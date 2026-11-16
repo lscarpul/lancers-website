@@ -296,9 +296,9 @@ const allEvents = [
     { date: '2026-09-29', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     
     // NOVEMBRE - DICEMBRE 2026 (allenamenti lunedì e giovedì)
-    { date: '2026-11-15', type: 'match-home', title: 'Partita (conclusa)', time: '🕐 11:00', tag: '✅ Conclusa' },
+    { date: '2026-11-15', type: 'match-home', title: 'Partita di campionato', time: '🕐 11:00', tag: '🏁 Conclusa', concluded: true },
     { date: '2026-11-16', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
-    { date: '2026-11-18', type: 'specific', title: 'Allenamento speciale (finto, di prova)', time: '🕐 19:30 - 21:30', tag: '🎯 Speciale' },
+    { date: '2026-11-18', type: 'specific', title: 'Allenamento speciale', time: '🕐 19:30 - 21:30', tag: '🎯 Speciale' },
     { date: '2026-11-19', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-11-23', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-11-26', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },

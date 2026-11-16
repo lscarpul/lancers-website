@@ -412,6 +412,15 @@
                     html += '<div class="cal-ev-mine-badge">⭐ Il tuo mercoledì extra</div>';
                 }
 
+                // Evento già concluso: nessuna gestione presenza
+                if (e.concluded) {
+                    html += '<div class="cal-ev-presence">';
+                    html += '<span class="cal-pres-badge present">🏁 Partita conclusa</span>';
+                    html += '</div>';
+                    html += '</div></div>';
+                    return;
+                }
+
                 // Presence row
                 html += '<div class="cal-ev-presence">';
                 html += '<span class="cal-pres-badge ' + (isAbsent ? 'absent' : 'present') + '">';
