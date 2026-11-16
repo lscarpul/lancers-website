@@ -2023,9 +2023,10 @@ input::placeholder {
     font-weight: 700;
     color: white;
     margin: 0;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 .home-event-time {
     font-size: 0.78rem;

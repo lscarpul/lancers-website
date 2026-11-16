@@ -1,5 +1,5 @@
 // ===== SCRIPT.JS v45 =====
-const APP_VERSION = '59';
+const APP_VERSION = '60';
 console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -294,6 +294,24 @@ const allEvents = [
     { date: '2026-09-22', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-09-24', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     { date: '2026-09-29', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    
+    // NOVEMBRE - DICEMBRE 2026 (allenamenti lunedì e giovedì)
+    { date: '2026-11-15', type: 'match-home', title: 'Partita di campionato', time: '🕐 11:00', tag: '🏁 Conclusa', concluded: true },
+    { date: '2026-11-16', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-11-18', type: 'specific', title: 'Allenamento speciale', time: '🕐 19:30 - 21:30', tag: '🎯 Speciale' },
+    { date: '2026-11-19', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-11-23', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-11-26', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-11-30', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-03', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-07', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-10', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-14', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-17', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-21', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-24', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-28', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
+    { date: '2026-12-31', type: 'training', title: 'Allenamento', time: '🕐 19:30 - 21:30', tag: '🏋️ Allenamento' },
     
     // PARTITE CAMPIONATO (Aprile - Agosto 2026)
     { date: '2026-04-12', type: 'match-away', title: 'Health & Performance S.S.D', time: '🕐 11:00', tag: '✈️ Trasferta' },
