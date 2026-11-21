@@ -1,100 +1,28 @@
-    <!-- Tab Bar fissa in basso -->
-    <nav class="tab-bar">
-    <a href="index.html" class="tab-bar-item active" title="Home">
-        <span>🏠</span>
-        <span>Home</span>
-    </a>
-    <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
-        <span>📅</span>
-        <span>Calendario</span>
-    </a>
-    <a href="calendario.html" class="tab-bar-item" title="Partite">
-        <span>⚾</span>
-        <span>Partite</span>
-    </a>
-    <a href="area-personale.html" class="tab-bar-item" title="Profilo">
-        <span>👤</span>
-        <span>Profilo</span>
-    </a>
-</nav>
-<style>
-    .tab-bar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 64px;
-        background: linear-gradient(135deg, #0a1929 0%, #1a365d 100%);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
-        z-index: 9999;
-        width: 100vw;
-        max-width: 100vw;
-        min-width: 0;
-    }
-    .tab-bar-item {
-        flex: 1;
-        text-align: center;
-        color: #94a3b8;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 0.5rem 0;
-        transition: color 0.2s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .tab-bar-item span:first-child {
-        font-size: 1.5rem;
-        margin-bottom: 0.2rem;
-    }
-    .tab-bar-item span:last-child {
-        display: block;
-    }
-    .tab-bar-item:hover, .tab-bar-item.active {
-        color: #f59e0b;
-    }
-    body { padding-bottom: 70px; }
-    html, body {
-        height: 100%;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    @media (max-width: 420px) {
-        .tab-bar {
-            height: 48px;
-            width: 100vw;
-        }
-        .tab-bar-item span:last-child {
-            font-size: 0.7rem;
-        }
-        .tab-bar-item span:first-child {
-            font-size: 1.2rem;
-        }
-    }
-</style>
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Lancers Baseball - Home</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#0b1120">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a365d">
-<meta name="mobile-web-app-capable" content="yes">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a365d">
-<link rel="apple-touch-icon" href="icons/icon-192x192.png"> <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css?v=61">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
 </head>
 <body>
+<nav class="tab-bar" aria-label="Navigazione principale">
+    <a href="index.html" class="tab-bar-item active" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="calendario-completo.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>Calendario</span></a>
+    <a href="calendario.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.2 5.2c1.9 1.7 2.9 4.1 2.9 6.8s-1 5.1-2.9 6.8M17.8 5.2c-1.9 1.7-2.9 4.1-2.9 6.8s1 5.1 2.9 6.8"/></svg><span>Partite</span></a>
+    <a href="area-personale.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Profilo</span></a>
+</nav>
     <script>
         // Ripristina sessione da localStorage se disponibile
         if (localStorage.getItem('authenticated') === 'true') {
@@ -132,7 +60,7 @@
             <a href="index.html" style="text-decoration: none;"><h1 style="cursor: pointer;">Lancers Baseball Club</h1></a>
             <p id="welcomeMessage">Benvenuti nella nostra area riservata! Qui trovi tutto ciò che serve per la stagione 2026.</p>
             <div class="hero-buttons">
-                <a href="gestione-presenze.html" class="btn btn-staff">Area Admin</a>
+                <a href="gestione-presenze.html" class="btn btn-staff" style="display:none">🔐 Area Admin</a>
                 <a href="documento.html" class="btn btn-primary">📄 Documento</a>
             </div>
         </div>
@@ -161,14 +89,16 @@
                 const authorizedNumbers = [25, 19, 38, 6, 'ADMIN'];
                 if (authorizedNumbers.includes(player.number)) {
                     const btnContainer = document.querySelector('.hero-buttons');
-                    if (btnContainer && !document.querySelector('.btn-staff')) {
+                    const existingStaffBtn = document.querySelector('.btn-staff');
+                    if (existingStaffBtn) existingStaffBtn.style.display = '';
+                    if (btnContainer && !existingStaffBtn) {
                         const staffBtn = document.createElement('a');
                         staffBtn.href = 'gestione-presenze.html';
                         staffBtn.className = 'btn btn-staff';
-                        staffBtn.innerHTML = '� Area Admin';
-                        staffBtn.style.background = 'linear-gradient(135deg, #facc15 0%, #eab308 100%)';
+                        staffBtn.innerHTML = '🔐 Area Admin';
+                        staffBtn.style.background = 'linear-gradient(135deg, var(--gold) 0%, var(--gold) 100%)';
                         staffBtn.style.color = 'var(--text-dark)';
-                        staffBtn.style.boxShadow = '0 4px 20px rgba(234,179,8,0.35)';
+                        staffBtn.style.boxShadow = '0 4px 20px rgba(245, 184, 61,0.35)';
                         btnContainer.appendChild(staffBtn);
                     }
                 }
@@ -240,22 +170,22 @@
 
             const popup = document.createElement('div');
             popup.id = 'presencePopup';
-            popup.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,0.65);display:flex;align-items:flex-end;backdrop-filter:blur(4px)';
+            popup.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,0.65);display:flex;align-items:flex-end;';
             popup.addEventListener('click', (e) => { if (e.target === popup) popup.remove(); });
             popup.innerHTML = `
-                <div class="popup-sheet-card" style="background:#1e293b;border-radius:24px 24px 0 0;padding:1.5rem 1.5rem 2.2rem;width:100%;box-shadow:0 -8px 40px rgba(0,0,0,0.5);animation:slideUpSheet 0.32s cubic-bezier(0.34,1.2,0.64,1) both;border-top:1px solid rgba(255,255,255,0.08)">
+                <div class="popup-sheet-card" style="background:var(--surface);border-radius:24px 24px 0 0;padding:1.5rem 1.5rem 2.2rem;width:100%;box-shadow:0 -8px 40px rgba(0,0,0,0.5);animation:slideUpSheet 0.32s cubic-bezier(0.34,1.2,0.64,1) both;border-top:1px solid rgba(255,255,255,0.08)">
                     <div style="width:36px;height:4px;background:rgba(255,255,255,0.18);border-radius:4px;margin:0 auto 1.2rem"></div>
-                    <p style="color:#94a3b8;font-size:0.78rem;margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Prossimo evento</p>
-                    <div style="background:rgba(59,130,246,0.1);border-left:4px solid #3b82f6;border-radius:0 10px 10px 0;padding:0.9rem 1rem;margin-bottom:1.3rem">
-                        <strong style="color:#60a5fa;display:block;font-size:1rem;margin-bottom:0.2rem">${event.title}</strong>
-                        <span style="color:#cbd5e1;font-size:0.82rem">📅 ${dateStr} &nbsp;·&nbsp; 🕐 ${event.time}</span>
+                    <p style="color:var(--muted);font-size:0.78rem;margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Prossimo evento</p>
+                    <div style="background:rgba(76, 141, 255,0.1);border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:0.9rem 1rem;margin-bottom:1.3rem">
+                        <strong style="color:#8db6ff;display:block;font-size:1rem;margin-bottom:0.2rem">${event.title}</strong>
+                        <span style="color:var(--text-2);font-size:0.82rem">📅 ${dateStr} &nbsp;·&nbsp; 🕐 ${event.time}</span>
                     </div>
-                    <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:12px;padding:0.7rem 1rem;display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem">
+                    <div style="background:rgba(47, 191, 113,0.1);border:1px solid rgba(47, 191, 113,0.25);border-radius:12px;padding:0.7rem 1rem;display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem">
                         <span style="font-size:1.1rem">✅</span>
-                        <span style="color:#4ade80;font-weight:700;font-size:0.9rem">Hai risposto: Presente</span>
+                        <span style="color:#5ee39a;font-weight:700;font-size:0.9rem">Hai risposto: Presente</span>
                     </div>
-                    <button onclick="quickSavePresence('${event.date}','no')" style="width:100%;padding:0.85rem;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:12px;font-weight:700;cursor:pointer;font-size:0.9rem;font-family:inherit;margin-bottom:0.6rem;transition:background 0.2s">❌ Segna assenza</button>
-                    <button onclick="document.getElementById('presencePopup').remove()" style="width:100%;background:none;border:none;color:#64748b;cursor:pointer;text-decoration:underline;font-size:0.8rem;font-family:inherit;padding:0.4rem">Decido dopo</button>
+                    <button onclick="quickSavePresence('${event.date}','no')" style="width:100%;padding:0.85rem;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fb8a8a;border-radius:12px;font-weight:700;cursor:pointer;font-size:0.9rem;font-family:inherit;margin-bottom:0.6rem;transition:background 0.2s">❌ Segna assenza</button>
+                    <button onclick="document.getElementById('presencePopup').remove()" style="width:100%;background:none;border:none;color:var(--muted);cursor:pointer;text-decoration:underline;font-size:0.8rem;font-family:inherit;padding:0.4rem">Decido dopo</button>
                 </div>
             `;
             document.body.appendChild(popup);
@@ -297,7 +227,7 @@
                 popupContent.innerHTML = `
                     <div style="padding: 2rem;">
                         <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
-                        <h3 style="color: #48bb78;">Risposta salvata!</h3>
+                        <h3 style="color: var(--green);">Risposta salvata!</h3>
                         <p>Grazie per aver risposto.</p>
                     </div>
                 `;
@@ -371,6 +301,6 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
     <script src="firebase-config.js"></script>
-    <script src="script.js?v=60"></script>
+    <script src="script.js?v=61"></script>
 </body>
 </html>

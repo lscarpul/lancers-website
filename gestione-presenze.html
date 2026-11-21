@@ -1,93 +1,20 @@
-    <!-- Tab Bar fissa in basso -->
-    <nav class="tab-bar">
-    <a href="index.html" class="tab-bar-item active" title="Home">
-        <span>🏠</span>
-        <span>Home</span>
-    </a>
-    <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
-        <span>📅</span>
-        <span>Calendario</span>
-    </a>
-    <a href="calendario.html" class="tab-bar-item" title="Partite">
-        <span>⚾</span>
-        <span>Partite</span>
-    </a>
-    <a href="area-personale.html" class="tab-bar-item" title="Profilo">
-        <span>👤</span>
-        <span>Profilo</span>
-    </a>
-</nav>
-<style>
-    .tab-bar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 64px;
-        background: linear-gradient(135deg, #0a1929 0%, #1a365d 100%);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
-        z-index: 9999;
-        width: 100vw;
-        max-width: 100vw;
-        min-width: 0;
-    }
-    .tab-bar-item {
-        flex: 1;
-        text-align: center;
-        color: #94a3b8;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 0.5rem 0;
-        transition: color 0.2s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .tab-bar-item span:first-child {
-        font-size: 1.5rem;
-        margin-bottom: 0.2rem;
-    }
-    .tab-bar-item span:last-child {
-        display: block;
-    }
-    .tab-bar-item:hover, .tab-bar-item.active {
-        color: #f59e0b;
-    }
-    body { padding-bottom: 70px; }
-    html, body {
-        height: 100%;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    @media (max-width: 420px) {
-        .tab-bar {
-            height: 48px;
-            width: 100vw;
-        }
-        .tab-bar-item span:last-child {
-            font-size: 0.7rem;
-        }
-        .tab-bar-item span:first-child {
-            font-size: 1.2rem;
-        }
-    }
-</style>
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Area Admin - Lancers Baseball</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0b1120">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0a1929">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css?v=61">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
     <style>
         * {
             margin: 0;
@@ -96,31 +23,26 @@
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a1929 0%, #0f2847 50%, #1a365d 100%);
+            background: linear-gradient(135deg, var(--bg-elev) 0%, var(--surface-2) 50%, var(--surface-2) 100%);
             color: white;
         }
 
-        /* Navbar override */
-        .navbar {
-            background: rgba(10, 25, 41, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+
 
         /* Hero */
         .admin-hero {
             padding: 6rem 5% 3rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(237, 137, 54, 0.1) 0%, rgba(26, 54, 93, 0.2) 100%);
+            background: linear-gradient(135deg, rgba(245, 184, 61, 0.1) 0%, rgba(23, 34, 58, 0.2) 100%);
         }
 
         .admin-hero h1 {
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #ed8936, #f6ad55, #ed8936);
+            background: linear-gradient(90deg, var(--gold), var(--gold), var(--gold));
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -128,7 +50,7 @@
         }
 
         .admin-hero p {
-            color: #94a3b8;
+            color: var(--muted);
             font-size: 1.1rem;
         }
 
@@ -142,7 +64,6 @@
         /* Glass Card */
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-            backdrop-filter: blur(10px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 1.5rem;
@@ -150,7 +71,7 @@
         }
 
         .glass-card h3 {
-            color: #ed8936;
+            color: var(--gold);
             font-size: 1.2rem;
             margin-bottom: 1rem;
             display: flex;
@@ -170,12 +91,12 @@
         }
 
         .access-denied h2 {
-            color: #ef4444;
+            color: var(--red);
             margin-bottom: 1rem;
         }
 
         .access-denied p {
-            color: #94a3b8;
+            color: var(--muted);
         }
 
         /* Stats Grid */
@@ -199,11 +120,11 @@
             transform: translateY(-3px);
         }
 
-        .stat-card.green { border-color: #22c55e; }
-        .stat-card.red { border-color: #ef4444; }
-        .stat-card.yellow { border-color: #eab308; }
-        .stat-card.blue { border-color: #3b82f6; }
-        .stat-card.orange { border-color: #ed8936; }
+        .stat-card.green { border-color: var(--green); }
+        .stat-card.red { border-color: var(--red); }
+        .stat-card.yellow { border-color: var(--gold); }
+        .stat-card.blue { border-color: var(--blue); }
+        .stat-card.orange { border-color: var(--gold); }
 
         .stat-value {
             font-size: 2.5rem;
@@ -212,7 +133,7 @@
         }
 
         .stat-label {
-            color: #94a3b8;
+            color: var(--muted);
             font-size: 0.85rem;
             margin-top: 0.25rem;
         }
@@ -230,11 +151,11 @@
             border: none;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.1);
-            color: #94a3b8;
+            color: var(--muted);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
+            
         }
 
         .tab-btn:hover {
@@ -243,8 +164,8 @@
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
-            color: #0a1929;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold) 100%);
+            color: var(--bg-elev);
         }
 
         .tab-content {
@@ -257,8 +178,8 @@
 
         /* Event Card */
         .event-card {
-            background: rgba(237, 137, 54, 0.1);
-            border-left: 4px solid #ed8936;
+            background: rgba(245, 184, 61, 0.1);
+            border-left: 4px solid var(--gold);
             padding: 1.25rem;
             border-radius: 12px;
             margin-bottom: 1rem;
@@ -271,7 +192,7 @@
         }
 
         .event-card p {
-            color: #94a3b8;
+            color: var(--muted);
             font-size: 0.9rem;
         }
 
@@ -293,10 +214,10 @@
             font-weight: 600;
         }
 
-        .status-badge.present { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-        .status-badge.absent { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .status-badge.maybe { background: rgba(234, 179, 8, 0.2); color: #eab308; }
-        .status-badge.pending { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+        .status-badge.present { background: rgba(47, 191, 113, 0.2); color: var(--green); }
+        .status-badge.absent { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+        .status-badge.maybe { background: rgba(245, 184, 61, 0.2); color: var(--gold); }
+        .status-badge.pending { background: rgba(148, 163, 184, 0.2); color: var(--muted); }
 
         /* Players Table */
         .players-table {
@@ -312,8 +233,8 @@
         }
 
         .players-table th {
-            background: rgba(237, 137, 54, 0.2);
-            color: #ed8936;
+            background: rgba(245, 184, 61, 0.2);
+            color: var(--gold);
             font-weight: 700;
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -328,8 +249,8 @@
         }
 
         .player-number {
-            background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
-            color: #0a1929;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold) 100%);
+            color: var(--bg-elev);
             padding: 0.25rem 0.6rem;
             border-radius: 8px;
             font-weight: 700;
@@ -367,7 +288,7 @@
         }
 
         .player-card-role {
-            color: #64748b;
+            color: var(--muted);
             font-size: 0.85rem;
         }
 
@@ -383,9 +304,9 @@
             min-width: 40px;
         }
 
-        .mini-stat.green { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-        .mini-stat.red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .mini-stat.yellow { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+        .mini-stat.green { background: rgba(47, 191, 113, 0.2); color: var(--green); }
+        .mini-stat.red { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+        .mini-stat.yellow { background: rgba(245, 184, 61, 0.2); color: var(--gold); }
 
         .mini-stat-value {
             font-weight: 700;
@@ -398,9 +319,9 @@
             padding: 0.5rem;
         }
 
-        .attendance-rate.high { color: #22c55e; }
-        .attendance-rate.medium { color: #eab308; }
-        .attendance-rate.low { color: #ef4444; }
+        .attendance-rate.high { color: var(--green); }
+        .attendance-rate.medium { color: var(--gold); }
+        .attendance-rate.low { color: var(--red); }
 
         /* Presence List */
         .presence-section {
@@ -431,14 +352,14 @@
             border-left: 3px solid;
         }
 
-        .presence-item.present { border-color: #22c55e; }
-        .presence-item.absent { border-color: #ef4444; }
-        .presence-item.maybe { border-color: #eab308; }
-        .presence-item.pending { border-color: #64748b; }
+        .presence-item.present { border-color: var(--green); }
+        .presence-item.absent { border-color: var(--red); }
+        .presence-item.maybe { border-color: var(--gold); }
+        .presence-item.pending { border-color: var(--muted); }
 
         .presence-item .number {
             font-weight: 700;
-            color: #ed8936;
+            color: var(--gold);
         }
 
         .presence-item .name {
@@ -465,7 +386,7 @@
             border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
+            
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
@@ -478,9 +399,9 @@
             transform: translateY(-2px);
         }
 
-        .action-btn.refresh { background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%); color: #0a1929; }
-        .action-btn.whatsapp { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; }
-        .action-btn.email { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; }
+        .action-btn.refresh { background: linear-gradient(135deg, var(--gold) 0%, var(--gold) 100%); color: var(--bg-elev); }
+        .action-btn.whatsapp { background: linear-gradient(135deg, var(--green) 0%, #23a35f 100%); color: white; }
+        .action-btn.email { background: linear-gradient(135deg, var(--blue) 0%, var(--blue) 100%); color: white; }
 
         /* Event Selector */
         .event-select {
@@ -491,18 +412,18 @@
             background: rgba(0, 0, 0, 0.3);
             color: white;
             font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
+            
             cursor: pointer;
             margin-bottom: 1rem;
         }
 
         .event-select:focus {
             outline: none;
-            border-color: #ed8936;
+            border-color: var(--gold);
         }
 
         .event-select option {
-            background: #0a1929;
+            background: var(--bg-elev);
             color: white;
         }
 
@@ -534,10 +455,10 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
-        .admin-btn.yes { background: rgba(34, 197, 94, 0.3); }
-        .admin-btn.yes:hover, .admin-btn.yes.active { background: rgba(34, 197, 94, 0.6); }
-        .admin-btn.maybe { background: rgba(234, 179, 8, 0.3); }
-        .admin-btn.maybe:hover, .admin-btn.maybe.active { background: rgba(234, 179, 8, 0.6); }
+        .admin-btn.yes { background: rgba(47, 191, 113, 0.3); }
+        .admin-btn.yes:hover, .admin-btn.yes.active { background: rgba(47, 191, 113, 0.6); }
+        .admin-btn.maybe { background: rgba(245, 184, 61, 0.3); }
+        .admin-btn.maybe:hover, .admin-btn.maybe.active { background: rgba(245, 184, 61, 0.6); }
         .admin-btn.no { background: rgba(239, 68, 68, 0.3); }
         .admin-btn.no:hover, .admin-btn.no.active { background: rgba(239, 68, 68, 0.6); }
 
@@ -570,7 +491,7 @@
         .loading {
             text-align: center;
             padding: 3rem;
-            color: #94a3b8;
+            color: var(--muted);
         }
 
         .loading::after {
@@ -590,7 +511,7 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 2rem;
             text-align: center;
-            color: #64748b;
+            color: var(--muted);
             margin-top: 2rem;
         }
 
@@ -638,24 +559,24 @@
             background: rgba(0, 0, 0, 0.3);
             color: white;
             font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
+            
             cursor: pointer;
             margin-bottom: 1.5rem;
         }
 
         .trasporti-match-select:focus {
             outline: none;
-            border-color: #ed8936;
+            border-color: var(--gold);
         }
 
         .trasporti-match-select option {
-            background: #0a1929;
+            background: var(--bg-elev);
             color: white;
         }
 
         .vehicle-card {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: rgba(76, 141, 255, 0.1);
+            border: 1px solid rgba(76, 141, 255, 0.3);
             border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1rem;
@@ -679,7 +600,7 @@
         }
 
         .vehicle-seats-badge {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue) 100%);
             color: white;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
@@ -689,7 +610,7 @@
 
         .remove-vehicle-btn {
             background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
+            color: var(--red);
             border: none;
             width: 36px;
             height: 36px;
@@ -718,7 +639,7 @@
         }
 
         .vehicle-form-group label {
-            color: #94a3b8;
+            color: var(--muted);
             font-size: 0.85rem;
             font-weight: 600;
         }
@@ -730,18 +651,18 @@
             border-radius: 10px;
             background: rgba(0, 0, 0, 0.3);
             color: white;
-            font-family: 'Montserrat', sans-serif;
+            
             font-size: 0.9rem;
         }
 
         .vehicle-form-group select:focus,
         .vehicle-form-group input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--blue);
         }
 
         .vehicle-form-group select option {
-            background: #0a1929;
+            background: var(--bg-elev);
         }
 
         .passengers-section {
@@ -751,7 +672,7 @@
         }
 
         .passengers-section h5 {
-            color: #94a3b8;
+            color: var(--muted);
             font-size: 0.85rem;
             margin-bottom: 0.75rem;
             font-weight: 600;
@@ -776,26 +697,26 @@
             border-radius: 8px;
             background: rgba(0, 0, 0, 0.3);
             color: white;
-            font-family: 'Montserrat', sans-serif;
+            
             font-size: 0.85rem;
         }
 
         .passenger-slot select option {
-            background: #0a1929;
+            background: var(--bg-elev);
         }
 
         .add-vehicle-btn {
             width: 100%;
             padding: 1rem;
-            border: 2px dashed rgba(59, 130, 246, 0.4);
+            border: 2px dashed rgba(76, 141, 255, 0.4);
             border-radius: 16px;
             background: transparent;
-            color: #3b82f6;
+            color: var(--blue);
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
+            
             display: flex;
             align-items: center;
             justify-content: center;
@@ -803,8 +724,8 @@
         }
 
         .add-vehicle-btn:hover {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: #3b82f6;
+            background: rgba(76, 141, 255, 0.1);
+            border-color: var(--blue);
         }
 
         .save-trasporti-btn {
@@ -812,24 +733,24 @@
             padding: 1rem 2rem;
             border: none;
             border-radius: 12px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, var(--green) 0%, #23a35f 100%);
             color: white;
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
+            
             margin-top: 1.5rem;
         }
 
         .save-trasporti-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            box-shadow: 0 4px 15px rgba(47, 191, 113, 0.3);
         }
 
         .trasporti-summary {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
+            background: rgba(47, 191, 113, 0.1);
+            border: 1px solid rgba(47, 191, 113, 0.3);
             border-radius: 12px;
             padding: 1rem;
             margin-top: 1rem;
@@ -851,7 +772,7 @@
         }
 
         .summary-label {
-            color: #94a3b8;
+            color: var(--muted);
             font-size: 0.8rem;
         }
 
@@ -863,9 +784,37 @@
                 grid-template-columns: 1fr;
             }
         }
+    
+        /* ---- v61: allineamento al nuovo design ---- */
+        body { background: transparent; }
+        .admin-hero { max-width: var(--page-max); margin: 0 auto; padding: 0.75rem 16px 0.25rem; text-align: left; background: none; }
+        .admin-hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 9vw, 2.6rem); text-transform: uppercase; line-height: 1; background: none; -webkit-text-fill-color: currentColor; color: var(--text); }
+        .admin-hero p { font-size: 0.95rem; }
+        .admin-section { max-width: var(--page-max); margin: 0 auto; padding: 1rem 16px; }
+        .glass-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 1rem; }
+        .glass-card h3 { color: var(--text); font-size: 1.05rem; }
+        .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+        .stat-card { background: var(--surface) !important; border: 1px solid var(--line) !important; border-top: 3px solid !important; border-left: 1px solid var(--line) !important; border-radius: var(--radius-md); padding: 0.85rem 0.5rem; box-shadow: none; }
+        .stat-card.green { border-top-color: var(--green) !important; }
+        .stat-card.red { border-top-color: var(--red) !important; }
+        .stat-card.blue { border-top-color: var(--blue) !important; }
+        .stat-card.yellow, .stat-card.orange { border-top-color: var(--gold) !important; }
+        .stat-card:hover { transform: none; }
+        .stat-value { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; }
+        .stat-label { font-size: 0.72rem; }
+        .tabs { flex-direction: row; gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab-btn { flex: 1 0 auto; width: auto; padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); background: transparent; font-size: 0.85rem; white-space: nowrap; }
+        .tab-btn.active { background: var(--surface-3); color: var(--text); box-shadow: inset 0 -2px 0 var(--gold); }
     </style>
 </head>
 <body>
+<nav class="tab-bar" aria-label="Navigazione principale">
+    <a href="index.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="calendario-completo.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>Calendario</span></a>
+    <a href="calendario.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.2 5.2c1.9 1.7 2.9 4.1 2.9 6.8s-1 5.1-2.9 6.8M17.8 5.2c-1.9 1.7-2.9 4.1-2.9 6.8s1 5.1 2.9 6.8"/></svg><span>Partite</span></a>
+    <a href="area-personale.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Profilo</span></a>
+</nav>
     <script>
         // Ripristina sessione
         if (localStorage.getItem('authenticated') === 'true') {
@@ -911,7 +860,7 @@
             <li><a href="calendario.html">⚾ Partite</a></li>
             <li><a href="presenze.html">📋 Presenze</a></li>
             <li><a href="documento.html">📄 Documento</a></li>
-            <li><a href="gestione-presenze.html" class="active">� Area Admin</a></li>
+            <li><a href="gestione-presenze.html" class="active">🔐 Area Admin</a></li>
         </ul>
         <div class="hamburger">
             <span></span>
@@ -925,7 +874,7 @@
     </div>
 
     <div class="admin-hero">
-        <h1>� Area Admin</h1>
+        <h1>🔐 Area Admin</h1>
         <p>Gestione presenze, trasporti e comunicazioni</p>
     </div>
 
@@ -978,7 +927,7 @@
             <div id="tab-trasporti" class="tab-content">
                 <div class="glass-card">
                     <h3>🚗 Gestione Trasporti Trasferte</h3>
-                    <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.9rem;">Seleziona una partita in trasferta e organizza i veicoli con guidatori e passeggeri.</p>
+                    <p style="color: var(--muted); margin-bottom: 1rem; font-size: 0.9rem;">Seleziona una partita in trasferta e organizza i veicoli con guidatori e passeggeri.</p>
                     
                     <select class="trasporti-match-select" id="trasportiMatchSelect" onchange="loadTrasportiForMatch()">
                         <option value="">-- Seleziona partita in trasferta --</option>
@@ -1026,10 +975,10 @@
             <!-- Test Notifiche (solo admin) -->
             <div class="glass-card">
                 <h3>🔔 Test Notifiche</h3>
-                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.9rem;">Invia una notifica di test per verificare che il sistema funzioni.</p>
+                <p style="color: var(--muted); margin-bottom: 1rem; font-size: 0.9rem;">Invia una notifica di test per verificare che il sistema funzioni.</p>
                 <div class="action-buttons">
-                    <button class="action-btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white;" onclick="testNotificaAdmin()">🧪 Invia Notifica Test</button>
-                    <button class="action-btn" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%); color: white;" onclick="mostraStatoNotificheAdmin()">📊 Stato Sistema</button>
+                    <button class="action-btn" style="background: linear-gradient(135deg, var(--violet) 0%, #7c3aed 100%); color: white;" onclick="testNotificaAdmin()">🧪 Invia Notifica Test</button>
+                    <button class="action-btn" style="background: linear-gradient(135deg, var(--muted) 0%, #475569 100%); color: white;" onclick="mostraStatoNotificheAdmin()">📊 Stato Sistema</button>
                 </div>
                 <div id="notif-status-admin" style="margin-top: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.3); border-radius: 10px; font-size: 0.85rem; display: none;"></div>
             </div>
@@ -1045,7 +994,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=60"></script>
+    <script src="script.js?v=61"></script>
     <script>
         // Firebase URL
         const FIREBASE_URL = 'https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app';
@@ -1273,7 +1222,7 @@
         function loadNextEvent() {
             const nextEvent = getNextEvent();
             if (!nextEvent) {
-                document.getElementById('nextEventInfo').innerHTML = '<p style="color: #94a3b8;">Nessun evento in programma</p>';
+                document.getElementById('nextEventInfo').classList.remove('loading'); document.getElementById('nextEventInfo').innerHTML = '<p style="color: var(--muted);">Nessun evento in programma</p>';
                 return;
             }
 
@@ -1292,11 +1241,11 @@
             const isWednesday = nextEvent.type === 'wednesday-specific';
             const eventTypeLabel = isWednesday ? '🎯 Mercoledì Specifico' : '';
 
-            document.getElementById('nextEventInfo').innerHTML = `
+            document.getElementById('nextEventInfo').classList.remove('loading'); document.getElementById('nextEventInfo').innerHTML = `
                 <div class="event-card">
                     <h4>${nextEvent.title}</h4>
                     <p>📅 ${formatDateLong(nextEvent.date)} - 🕐 ${nextEvent.time}</p>
-                    ${isWednesday ? `<p style="color: #a78bfa; font-size: 0.9rem; margin-top: 0.5rem;">${eventTypeLabel} - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
+                    ${isWednesday ? `<p style="color: var(--violet); font-size: 0.9rem; margin-top: 0.5rem;">${eventTypeLabel} - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
                     <div class="event-stats">
                         <span class="status-badge present">✅ ${presentList.length}</span>
                         <span class="status-badge absent">❌ ${absentList.length}</span>
@@ -1312,7 +1261,7 @@
                                 <span class="name">${p.name} ${p.surname}</span>
                                 <span class="icon">✅</span>
                             </div>
-                        `).join('') || '<p style="color: #64748b; padding: 0.5rem;">Nessuno</p>'}
+                        `).join('') || '<p style="color: var(--muted); padding: 0.5rem;">Nessuno</p>'}
                     </div>
                 </div>
 
@@ -1327,7 +1276,7 @@
                                 <span class="name">${p.name} ${p.surname}</span>
                                 <span class="icon">❌</span>
                             </div>
-                        `).join('') || '<p style="color: #64748b; padding: 0.5rem;">Nessuno</p>'}
+                        `).join('') || '<p style="color: var(--muted); padding: 0.5rem;">Nessuno</p>'}
                     </div>
                 </div>
             `;
@@ -1345,7 +1294,7 @@
             const allEventsWithWed = getAllEventsWithWednesdays();
             const event = allEventsWithWed.find(e => e.date === selectedDate);
             if (!event) {
-                document.getElementById('eventDetails').innerHTML = '<p style="color: #94a3b8;">Evento non trovato</p>';
+                document.getElementById('eventDetails').innerHTML = '<p style="color: var(--muted);">Evento non trovato</p>';
                 return;
             }
             
@@ -1367,7 +1316,7 @@
                 <div class="event-card">
                     <h4>${event.title}</h4>
                     <p>📅 ${formatDateLong(event.date)} - 🕐 ${event.time}</p>
-                    ${isWednesday ? `<p style="color: #a78bfa; font-size: 0.9rem; margin-top: 0.5rem;">🎯 Mercoledì Specifico - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
+                    ${isWednesday ? `<p style="color: var(--violet); font-size: 0.9rem; margin-top: 0.5rem;">🎯 Mercoledì Specifico - Solo giocatori assegnati (${relevantPlayers.length})</p>` : ''}
                     <div class="event-stats">
                         <span class="status-badge present">✅ ${presentList.length}</span>
                         <span class="status-badge absent">❌ ${absentList.length}</span>
@@ -1432,7 +1381,7 @@
                 `;
             }).join('');
 
-            document.getElementById('playerStats').innerHTML = `<div class="players-grid">${playerStatsHtml}</div>`;
+            document.getElementById('playerStats').classList.remove('loading'); document.getElementById('playerStats').innerHTML = `<div class="players-grid">${playerStatsHtml}</div>`;
         }
         
         // ==========================================
@@ -1594,20 +1543,20 @@
             statusDiv.innerHTML = '<p>⏳ Invio notifica test...</p>';
             
             if (!('Notification' in window)) {
-                statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Browser non supporta le notifiche</p>';
+                statusDiv.innerHTML = '<p style="color: var(--red);">❌ Browser non supporta le notifiche</p>';
                 return;
             }
             
             if (Notification.permission === 'default') {
                 const perm = await Notification.requestPermission();
                 if (perm !== 'granted') {
-                    statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Devi autorizzare le notifiche</p>';
+                    statusDiv.innerHTML = '<p style="color: var(--red);">❌ Devi autorizzare le notifiche</p>';
                     return;
                 }
             }
             
             if (Notification.permission === 'denied') {
-                statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Notifiche bloccate. Vai nelle impostazioni del browser.</p>';
+                statusDiv.innerHTML = '<p style="color: var(--red);">❌ Notifiche bloccate. Vai nelle impostazioni del browser.</p>';
                 return;
             }
             
@@ -1621,10 +1570,10 @@
                     vibrate: [200, 100, 200],
                     requireInteraction: false
                 });
-                statusDiv.innerHTML = '<p style="color: #22c55e;">✅ Notifica inviata con successo!</p>';
+                statusDiv.innerHTML = '<p style="color: var(--green);">✅ Notifica inviata con successo!</p>';
             } catch (e) {
                 console.error('Errore notifica:', e);
-                statusDiv.innerHTML = '<p style="color: #ef4444;">❌ Errore: ' + e.message + '</p>';
+                statusDiv.innerHTML = '<p style="color: var(--red);">❌ Errore: ' + e.message + '</p>';
             }
         }
         
@@ -1633,7 +1582,7 @@
             statusDiv.style.display = 'block';
             statusDiv.innerHTML = '<p>⏳ Caricamento stato...</p>';
             
-            let html = '<h4 style="margin: 0 0 1rem 0; color: #ed8936;">📊 Stato Sistema Notifiche</h4>';
+            let html = '<h4 style="margin: 0 0 1rem 0; color: var(--gold);">📊 Stato Sistema Notifiche</h4>';
             
             // Permesso
             const perm = Notification.permission;
@@ -1659,9 +1608,9 @@
             // Riepilogo
             const tuttoOk = perm === 'granted' && swActive && playerData;
             if (tuttoOk) {
-                html += `<p style="color: #22c55e; margin-top: 1rem;"><strong>✅ SISTEMA OK!</strong></p>`;
+                html += `<p style="color: var(--green); margin-top: 1rem;"><strong>✅ SISTEMA OK!</strong></p>`;
             } else {
-                html += `<p style="color: #f59e0b; margin-top: 1rem;"><strong>⚠️ Alcuni componenti non attivi</strong></p>`;
+                html += `<p style="color: var(--gold); margin-top: 1rem;"><strong>⚠️ Alcuni componenti non attivi</strong></p>`;
             }
             
             html += `<p style="margin-top: 1rem; opacity: 0.7; font-size: 0.8rem;"><strong>Ora:</strong> ${new Date().toLocaleString('it-IT')}</p>`;
@@ -1741,7 +1690,7 @@
             const container = document.getElementById('vehiclesList');
             
             if (currentTrasporti.vehicles.length === 0) {
-                container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 2rem;">Nessun veicolo configurato. Clicca "Aggiungi Veicolo" per iniziare.</p>';
+                container.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 2rem;">Nessun veicolo configurato. Clicca "Aggiungi Veicolo" per iniziare.</p>';
                 updateSummary();
                 return;
             }
@@ -1827,7 +1776,7 @@
             if (missingPlayers.length > 0 && currentTrasporti.vehicles.length > 0) {
                 existingSummary.innerHTML = `
                     <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
-                        <h4 style="color: #ef4444; margin: 0 0 0.5rem 0; font-size: 0.95rem;">⚠️ Senza posto (${missingPlayers.length}):</h4>
+                        <h4 style="color: var(--red); margin: 0 0 0.5rem 0; font-size: 0.95rem;">⚠️ Senza posto (${missingPlayers.length}):</h4>
                         <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                             ${missingPlayers.map(p => `<span style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.8rem;">#${p.number} ${p.name}</span>`).join('')}
                         </div>
@@ -1835,8 +1784,8 @@
                 `;
             } else if (currentTrasporti.vehicles.length > 0) {
                 existingSummary.innerHTML = `
-                    <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
-                        <p style="color: #22c55e; margin: 0;">✅ Tutti i giocatori hanno un posto!</p>
+                    <div style="background: rgba(47, 191, 113, 0.1); border: 1px solid rgba(47, 191, 113, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+                        <p style="color: var(--green); margin: 0;">✅ Tutti i giocatori hanno un posto!</p>
                     </div>
                 `;
             } else {

@@ -1,9 +1,12 @@
-// ===== SCRIPT.JS v45 =====
-const APP_VERSION = '60';
-console.log('🚀 Script.js v' + APP_VERSION + ' caricato!');
+// ===== SCRIPT.JS v61 =====
+const APP_VERSION = '61';
+// Log di debug: attivali con localStorage.setItem('lancersDebug', '1')
+const LANCERS_DEBUG = (() => { try { return localStorage.getItem('lancersDebug') === '1'; } catch (e) { return false; } })();
+function debugLog(...args) { if (LANCERS_DEBUG) console.log(...args); }
+debugLog('🚀 Script.js v' + APP_VERSION + ' caricato!');
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 DOMContentLoaded fired');
+    debugLog('📄 DOMContentLoaded fired');
     
     // Controlla se c'è una nuova versione
     setTimeout(() => checkVersionMismatch(), 500);
@@ -52,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if ('caches' in window) {
                         const cacheNames = await caches.keys();
                         await Promise.all(cacheNames.map(name => caches.delete(name)));
-                        console.log('✅ Cache cancellate');
+                        debugLog('✅ Cache cancellate');
                     }
                     
                     // 2. Disregistra i service worker
@@ -61,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         for (const registration of registrations) {
                             await registration.unregister();
                         }
-                        console.log('✅ Service Worker rimossi');
+                        debugLog('✅ Service Worker rimossi');
                     }
                     
                     // 3. Cancella sessionStorage (ma mantieni autenticazione)
@@ -89,18 +92,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===== HAMBURGER MENU =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🍔 Hamburger menu init');
+    debugLog('🍔 Hamburger menu init');
     
     // Usa setTimeout per assicurare che il DOM sia completamente pronto
     setTimeout(function() {
         const hamburger = document.querySelector('.hamburger');
         const navLinks = document.querySelector('.nav-links');
         
-        console.log('   hamburger:', hamburger);
-        console.log('   navLinks:', navLinks);
+        debugLog('   hamburger:', hamburger);
+        debugLog('   navLinks:', navLinks);
 
         if (hamburger && navLinks) {
-            console.log('✅ Hamburger elements found, adding listener');
+            debugLog('✅ Hamburger elements found, adding listener');
             
             // Rimuovi eventuali listener precedenti
             hamburger.replaceWith(hamburger.cloneNode(true));
@@ -109,10 +112,10 @@ document.addEventListener('DOMContentLoaded', function() {
             newHamburger.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('🖱️ Hamburger clicked!');
+                debugLog('🖱️ Hamburger clicked!');
                 navLinks.classList.toggle('active');
                 newHamburger.classList.toggle('active');
-                console.log('   nav-links classes:', navLinks.className);
+                debugLog('   nav-links classes:', navLinks.className);
             });
 
             // Close menu when clicking on a link or button
@@ -131,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         } else {
-            console.log('❌ Hamburger elements NOT found');
+            debugLog('❌ Hamburger elements NOT found');
         }
     }, 100);
 
@@ -142,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
     highlightNextMatch();
     
     // ===== LOAD WEEKLY EVENTS =====
-    console.log('📅 Calling loadWeeklyEvents...');
+    debugLog('📅 Calling loadWeeklyEvents...');
     loadWeeklyEvents();
 });
 
@@ -387,30 +390,30 @@ function getPlayerEvents(playerNumber) {
 // ===== LOAD WEEKLY EVENTS =====
 function getHomeEventTypeInfo(type) {
     const map = {
-        'training':   { label: '🏋️ Allenamento', color: '#3b82f6', cls: 'training' },
+        'training':   { label: '🏋️ Allenamento', color: '#4c8dff', cls: 'training' },
         'specific':   { label: '🎯 Specifico',   color: '#ec4899', cls: 'specific' },
         'battuta':    { label: '🏏 Battuta',      color: '#f59e0b', cls: 'battuta' },
-        'difesa':     { label: '🧤 Difesa',       color: '#22c55e', cls: 'difesa' },
+        'difesa':     { label: '🧤 Difesa',       color: '#2fbf71', cls: 'difesa' },
         'autonomous': { label: '💪 Autonomo',     color: '#a78bfa', cls: 'autonomous' },
-        'friendly':   { label: '🤝 Amichevole',  color: '#dc2626', cls: 'friendly' },
-        'match-home': { label: '🏠 Partita',      color: '#22c55e', cls: 'match-home' },
-        'match-away': { label: '✈️ Trasferta',    color: '#60a5fa', cls: 'match-away' },
-        'event':      { label: '🎪 Evento',       color: '#eab308', cls: 'event' },
+        'friendly':   { label: '🤝 Amichevole',  color: '#e63946', cls: 'friendly' },
+        'match-home': { label: '🏠 Partita',      color: '#2fbf71', cls: 'match-home' },
+        'match-away': { label: '✈️ Trasferta',    color: '#38bdf8', cls: 'match-away' },
+        'event':      { label: '🎪 Evento',       color: '#f5b83d', cls: 'event' },
         'wednesday':  { label: '🎯 Specifico',    color: '#14b8a6', cls: 'wednesday-specific' },
     };
-    return map[type] || { label: '📅 Evento', color: '#64748b', cls: 'training' };
+    return map[type] || { label: '📅 Evento', color: '#7f8ba3', cls: 'training' };
 }
 
 function loadWeeklyEvents() {
-    console.log('📅 loadWeeklyEvents() chiamata');
+    debugLog('📅 loadWeeklyEvents() chiamata');
     const eventsList = document.getElementById('eventsList');
     const weekDatesEl = document.getElementById('weekDates');
 
-    console.log('   eventsList:', eventsList);
-    console.log('   weekDatesEl:', weekDatesEl);
+    debugLog('   eventsList:', eventsList);
+    debugLog('   weekDatesEl:', weekDatesEl);
 
     if (!eventsList || !weekDatesEl) {
-        console.log('❌ Elementi non trovati, esco');
+        debugLog('❌ Elementi non trovati, esco');
         return;
     }
 
@@ -441,7 +444,7 @@ function loadWeeklyEvents() {
             weekDatesEl.textContent = 'Prossimi eventi';
         }
     }
-    console.log('   weekEvents trovati:', weekEvents.length);
+    debugLog('   weekEvents trovati:', weekEvents.length);
 
     if (weekEvents.length === 0) {
         eventsList.innerHTML = `
@@ -644,7 +647,7 @@ function highlightNextMatch() {
 
     if (nextMatch) {
         nextMatch.classList.add('next-match');
-        nextMatch.style.boxShadow = '0 0 0 3px #ed8936, 0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+        nextMatch.style.boxShadow = '0 0 0 3px var(--gold), 0 10px 15px -3px rgba(0, 0, 0, 0.1)';
         
         // Add "Prossima partita" badge
         const badge = document.createElement('div');
@@ -654,7 +657,7 @@ function highlightNextMatch() {
             position: absolute;
             top: -10px;
             right: 10px;
-            background: #ed8936;
+            background: var(--gold);
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
@@ -690,7 +693,7 @@ if ('serviceWorker' in navigator) {
         // Usa path relativo per funzionare ovunque
         navigator.serviceWorker.register('./service-worker.js')
             .then((registration) => {
-                console.log('✅ Service Worker registrato con successo! Scope:', registration.scope);
+                debugLog('✅ Service Worker registrato con successo! Scope:', registration.scope);
                 
                 // Inizializza sistema notifiche
                 initNotificationSystem(registration);
@@ -718,20 +721,20 @@ let notificationsScheduledThisSession = false; // Evita scheduling multipli nell
 async function initNotificationSystem(registration) {
     swRegistration = registration;
     
-    console.log('🔔 Inizializzazione sistema notifiche...');
+    debugLog('🔔 Inizializzazione sistema notifiche...');
     
     // Controlla se le notifiche sono supportate
     if (!('Notification' in window)) {
-        console.log('❌ Notifiche non supportate in questo browser');
+        debugLog('❌ Notifiche non supportate in questo browser');
         return;
     }
     
     // Controlla lo stato attuale del permesso
     const permission = Notification.permission;
-    console.log('🔔 Stato permesso notifiche:', permission);
+    debugLog('🔔 Stato permesso notifiche:', permission);
     
     if (permission === 'granted') {
-        console.log('✅ Notifiche già autorizzate');
+        debugLog('✅ Notifiche già autorizzate');
         
         // NUOVO: Inizializza FCM e salva token
         await initFCM();
@@ -744,11 +747,11 @@ async function initNotificationSystem(registration) {
             await schedulePresenceReminders();
         }
     } else if (permission === 'default') {
-        console.log('📢 Mostro banner richiesta notifiche');
+        debugLog('📢 Mostro banner richiesta notifiche');
         // Mostra banner per richiedere permesso
         showNotificationBanner();
     } else {
-        console.log('🚫 Notifiche bloccate dall\'utente');
+        debugLog('🚫 Notifiche bloccate dall\'utente');
     }
 }
 
@@ -760,7 +763,7 @@ async function initFCM() {
     try {
         // Controlla se LancersFCM è disponibile
         if (typeof LancersFCM === 'undefined' || !LancersFCM) {
-            console.log('⚠️ LancersFCM non disponibile, uso sistema localStorage');
+            debugLog('⚠️ LancersFCM non disponibile, uso sistema localStorage');
             return false;
         }
         
@@ -776,7 +779,7 @@ async function initFCM() {
             // Ottieni token
             const token = await LancersFCM.getToken();
             if (!token) {
-                console.log('⚠️ Impossibile ottenere token FCM');
+                debugLog('⚠️ Impossibile ottenere token FCM');
                 return false;
             }
             
@@ -785,12 +788,12 @@ async function initFCM() {
             if (playerData) {
                 const player = JSON.parse(playerData);
                 await LancersFCM.saveToken(player.number);
-                console.log('✅ FCM configurato per giocatore', player.number);
+                debugLog('✅ FCM configurato per giocatore', player.number);
             }
             
             // Gestisci notifiche in foreground
             LancersFCM.onForegroundMessage((payload) => {
-                console.log('📬 Notifica foreground ricevuta');
+                debugLog('📬 Notifica foreground ricevuta');
                 if (swRegistration) {
                     swRegistration.showNotification(
                         payload.notification?.title || payload.data?.title,
@@ -826,7 +829,7 @@ function startPersistentNotificationCheck() {
         clearInterval(persistentCheckInterval);
     }
     
-    console.log('🔄 Avvio check periodico notifiche (ogni 5 minuti)...');
+    debugLog('🔄 Avvio check periodico notifiche (ogni 5 minuti)...');
     
     // Check immediato
     triggerServiceWorkerCheck();
@@ -834,7 +837,7 @@ function startPersistentNotificationCheck() {
     
     // Check ogni 5 minuti
     persistentCheckInterval = setInterval(() => {
-        console.log('⏰ Check periodico notifiche...');
+        debugLog('⏰ Check periodico notifiche...');
         triggerServiceWorkerCheck();
         checkLocalPendingNotifications();
     }, 5 * 60 * 1000);
@@ -851,11 +854,11 @@ function triggerServiceWorkerCheck() {
 // ==========================================
 
 async function checkLocalPendingNotifications() {
-    console.log('📬 Controllo notifiche pendenti in localStorage...');
+    debugLog('📬 Controllo notifiche pendenti in localStorage...');
     
     const pendingNotifications = localStorage.getItem('pendingNotifications');
     if (!pendingNotifications) {
-        console.log('   Nessuna notifica pendente');
+        debugLog('   Nessuna notifica pendente');
         return;
     }
     
@@ -869,7 +872,7 @@ async function checkLocalPendingNotifications() {
             if (notif.time <= now) {
                 // Notifica scaduta - INVIALE SUBITO anche se in ritardo!
                 const delayMinutes = Math.round((now - notif.time) / 60000);
-                console.log(`⏰ Notifica in ritardo di ${delayMinutes} min - invio ora: ${notif.title}`);
+                debugLog(`⏰ Notifica in ritardo di ${delayMinutes} min - invio ora: ${notif.title}`);
                 
                 // Modifica il titolo per indicare che è in ritardo se > 5 min
                 let title = notif.title;
@@ -883,7 +886,7 @@ async function checkLocalPendingNotifications() {
                 sentCount++;
             } else if (notif.time > now + (7 * 24 * 60 * 60 * 1000)) {
                 // Notifica troppo vecchia (> 7 giorni nel futuro), scarta
-                console.log(`🗑️ Notifica troppo lontana, scartata: ${notif.title}`);
+                debugLog(`🗑️ Notifica troppo lontana, scartata: ${notif.title}`);
             } else {
                 // Notifica ancora nel futuro, mantienila
                 remaining.push(notif);
@@ -897,7 +900,7 @@ async function checkLocalPendingNotifications() {
             localStorage.removeItem('pendingNotifications');
         }
         
-        console.log(`📬 Notifiche inviate: ${sentCount}, rimanenti: ${remaining.length}`);
+        debugLog(`📬 Notifiche inviate: ${sentCount}, rimanenti: ${remaining.length}`);
     } catch (e) {
         console.error('Errore parsing notifiche:', e);
         localStorage.removeItem('pendingNotifications');
@@ -930,7 +933,7 @@ async function sendLocalNotification(title, body, tag) {
 }
 
 function scheduleLocalNotification(title, body, time, tag) {
-    console.log(`📝 Salvo notifica locale: ${title} per ${new Date(time).toLocaleString()}`);
+    debugLog(`📝 Salvo notifica locale: ${title} per ${new Date(time).toLocaleString()}`);
     
     let notifications = [];
     const stored = localStorage.getItem('pendingNotifications');
@@ -955,11 +958,11 @@ function scheduleLocalNotification(title, body, time, tag) {
 function showNotificationBanner() {
     // Non mostrare se già rifiutato permanentemente
     if (localStorage.getItem('notificationsDeclined')) {
-        console.log('🔕 Utente ha già rifiutato le notifiche');
+        debugLog('🔕 Utente ha già rifiutato le notifiche');
         return;
     }
     
-    console.log('📢 Creo banner notifiche...');
+    debugLog('📢 Creo banner notifiche...');
     
     // Aspetta che la pagina sia caricata
     setTimeout(() => {
@@ -987,7 +990,7 @@ function showNotificationBanner() {
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            background: linear-gradient(135deg, var(--surface-2) 0%, #2c5282 100%);
             color: white;
             padding: 1rem 1.5rem;
             border-radius: 16px;
@@ -1040,7 +1043,7 @@ function showNotificationBanner() {
                 transition: all 0.2s;
             }
             .btn-accept {
-                background: #48bb78;
+                background: var(--green);
                 color: white;
             }
             .btn-accept:hover {
@@ -1058,17 +1061,17 @@ function showNotificationBanner() {
         document.head.appendChild(style);
         document.body.appendChild(banner);
         
-        console.log('✅ Banner notifiche aggiunto al DOM');
+        debugLog('✅ Banner notifiche aggiunto al DOM');
         
         // Event listeners
         document.getElementById('acceptNotifications').addEventListener('click', async () => {
-            console.log('👆 Click su Attiva notifiche');
+            debugLog('👆 Click su Attiva notifiche');
             banner.remove();
             await requestNotificationPermission();
         });
         
         document.getElementById('declineNotifications').addEventListener('click', () => {
-            console.log('👆 Click su Rifiuta notifiche');
+            debugLog('👆 Click su Rifiuta notifiche');
             banner.remove();
             localStorage.setItem('notificationsDeclined', 'true');
         });
@@ -1079,7 +1082,7 @@ function showNotificationBanner() {
 async function requestNotificationPermission() {
     try {
         const permission = await Notification.requestPermission();
-        console.log('🔔 Permesso notifiche:', permission);
+        debugLog('🔔 Permesso notifiche:', permission);
         
         if (permission === 'granted') {
             // Mostra notifica di test per confermare che funziona
@@ -1087,7 +1090,7 @@ async function requestNotificationPermission() {
             // Schedula i promemoria
             await schedulePresenceReminders();
         } else {
-            console.log('❌ Permesso notifiche negato');
+            debugLog('❌ Permesso notifiche negato');
         }
     } catch (error) {
         console.error('❌ Errore richiesta permesso:', error);
@@ -1096,7 +1099,7 @@ async function requestNotificationPermission() {
 
 // Mostra notifica di TEST per verificare che funzioni
 async function showTestNotification() {
-    console.log('🧪 Invio notifica di test...');
+    debugLog('🧪 Invio notifica di test...');
     
     // Prova prima con il Service Worker
     if (swRegistration && swRegistration.showNotification) {
@@ -1112,10 +1115,10 @@ async function showTestNotification() {
                     { action: 'open', title: '👍 Perfetto!' }
                 ]
             });
-            console.log('✅ Notifica di test inviata tramite SW');
+            debugLog('✅ Notifica di test inviata tramite SW');
             return;
         } catch (e) {
-            console.log('⚠️ SW notification fallita, provo con Notification API', e);
+            debugLog('⚠️ SW notification fallita, provo con Notification API', e);
         }
     }
     
@@ -1133,7 +1136,7 @@ async function showTestNotification() {
             notification.close();
         };
         
-        console.log('✅ Notifica di test inviata tramite Notification API');
+        debugLog('✅ Notifica di test inviata tramite Notification API');
     } catch (e) {
         console.error('❌ Impossibile inviare notifica di test:', e);
         // Mostra almeno un alert
@@ -1143,18 +1146,18 @@ async function showTestNotification() {
 
 // Schedula promemoria per tutti gli eventi futuri
 async function schedulePresenceReminders() {
-    console.log('📅 schedulePresenceReminders() chiamata');
-    console.log('   - swRegistration:', swRegistration ? 'presente' : 'assente');
-    console.log('   - Notification.permission:', Notification.permission);
+    debugLog('📅 schedulePresenceReminders() chiamata');
+    debugLog('   - swRegistration:', swRegistration ? 'presente' : 'assente');
+    debugLog('   - Notification.permission:', Notification.permission);
     
     if (!swRegistration || Notification.permission !== 'granted') {
-        console.log('❌ Impossibile schedulare: SW o permessi mancanti');
+        debugLog('❌ Impossibile schedulare: SW o permessi mancanti');
         return;
     }
     
     // Evita scheduling multipli nella stessa sessione
     if (notificationsScheduledThisSession) {
-        console.log('⚠️ Notifiche già schedulate in questa sessione');
+        debugLog('⚠️ Notifiche già schedulate in questa sessione');
         return;
     }
     
@@ -1162,7 +1165,7 @@ async function schedulePresenceReminders() {
     const lastCheck = localStorage.getItem('lastNotificationSchedule');
     const today = new Date().toDateString();
     if (lastCheck === today) {
-        console.log('⚠️ Notifiche già schedulate oggi');
+        debugLog('⚠️ Notifiche già schedulate oggi');
         notificationsScheduledThisSession = true;
         return;
     }
@@ -1179,7 +1182,7 @@ async function schedulePresenceReminders() {
         const response = await fetch(`https://lancersareariservata-default-rtdb.europe-west1.firebasedatabase.app/presenze/${player.number}.json`);
         existingPresences = await response.json() || {};
     } catch (e) {
-        console.log('Utilizzo presenze locali');
+        debugLog('Utilizzo presenze locali');
     }
     
     // Filtra eventi futuri che richiedono presenza
@@ -1196,7 +1199,7 @@ async function schedulePresenceReminders() {
         return true;
     });
     
-    console.log(`📅 Eventi senza presenza: ${upcomingEvents.length}`);
+    debugLog(`📅 Eventi senza presenza: ${upcomingEvents.length}`);
     
     let scheduledCount = 0;
     
@@ -1219,7 +1222,7 @@ async function schedulePresenceReminders() {
                     // Per eventi TEST, schedula la prima notifica tra 1 minuto
                     if (isTestEvent && daysBeforeMatch === 1) {
                         notificationTime.setTime(now.getTime() + 60 * 1000);
-                        console.log(`🧪 TEST: notifica partita schedulata tra 1 minuto`);
+                        debugLog(`🧪 TEST: notifica partita schedulata tra 1 minuto`);
                     } else {
                         continue;
                     }
@@ -1251,7 +1254,7 @@ async function schedulePresenceReminders() {
                 if (isTestEvent && isToday) {
                     // Per eventi TEST oggi, schedula tra 1 minuto
                     notificationTime.setTime(now.getTime() + 60 * 1000);
-                    console.log(`🧪 TEST: notifica allenamento schedulata tra 1 minuto`);
+                    debugLog(`🧪 TEST: notifica allenamento schedulata tra 1 minuto`);
                 } else {
                     continue; // Salta notifiche normali già passate
                 }
@@ -1291,7 +1294,7 @@ async function schedulePresenceReminders() {
     // Segna come schedulato per oggi
     localStorage.setItem('lastNotificationSchedule', today);
     notificationsScheduledThisSession = true;
-    console.log(`✅ ${scheduledCount} notifiche schedulate!`);
+    debugLog(`✅ ${scheduledCount} notifiche schedulate!`);
 }
 
 // Invia notifica schedulata - FCM + localStorage fallback
@@ -1313,14 +1316,14 @@ async function scheduleNotificationToSW(title, body, scheduledTime, eventDate, e
         });
         
         if (fcmScheduled) {
-            console.log(`🔥 Notifica schedulata via FCM: ${title} - ${scheduledTime.toLocaleString()}`);
+            debugLog(`🔥 Notifica schedulata via FCM: ${title} - ${scheduledTime.toLocaleString()}`);
             return;
         }
     }
     
     // Fallback: localStorage (funziona solo quando app viene riaperta)
     scheduleLocalNotification(title, body, time, fullTag);
-    console.log(`💾 Notifica schedulata (localStorage fallback): ${title} - ${scheduledTime.toLocaleString()}`);
+    debugLog(`💾 Notifica schedulata (localStorage fallback): ${title} - ${scheduledTime.toLocaleString()}`);
 }
 
 // Helper: emoji per tipo evento
@@ -1373,17 +1376,17 @@ async function checkVersionMismatch() {
         const serverData = await response.json();
         const serverVersion = serverData.version;
         
-        console.log(`📦 Versione locale: ${APP_VERSION}`);
-        console.log(`📦 Versione server: ${serverVersion}`);
+        debugLog(`📦 Versione locale: ${APP_VERSION}`);
+        debugLog(`📦 Versione server: ${serverVersion}`);
         
         if (APP_VERSION !== serverVersion) {
-            console.log('⚠️ Versione non aggiornata!');
+            debugLog('⚠️ Versione non aggiornata!');
             showVersionMismatchBanner(APP_VERSION, serverVersion);
         } else {
-            console.log('✅ Versione aggiornata');
+            debugLog('✅ Versione aggiornata');
         }
     } catch (error) {
-        console.log('Version check skipped:', error.message);
+        debugLog('Version check skipped:', error.message);
     }
 }
 
@@ -1402,7 +1405,7 @@ function showVersionMismatchBanner(localVersion, serverVersion) {
                 <span style="font-size: 0.8rem; opacity: 0.9;">v${localVersion} → v${serverVersion}</span>
             </div>
             <button id="howToUpdateBtn" 
-                    style="background: white; color: #d97706; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 700; cursor: pointer; font-family: inherit;">
+                    style="background: white; color: var(--brand); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 700; cursor: pointer; font-family: inherit;">
                 📖 Come aggiornare
             </button>
             <button id="closeBannerBtn" 
@@ -1415,7 +1418,7 @@ function showVersionMismatchBanner(localVersion, serverVersion) {
         top: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+        background: var(--brand);
         color: white;
         padding: 12px 16px;
         z-index: 10000;
