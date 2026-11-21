@@ -1,98 +1,28 @@
-
-<!-- Tab Bar fissa in basso -->
-<nav class="tab-bar">
-    <a href="index.html" class="tab-bar-item" title="Home">
-        <span>🏠</span>
-        <span>Home</span>
-    </a>
-    <a href="calendario-completo.html" class="tab-bar-item active" title="Calendario">
-        <span>📅</span>
-        <span>Calendario</span>
-    </a>
-    <a href="calendario.html" class="tab-bar-item" title="Partite">
-        <span>⚾</span>
-        <span>Partite</span>
-    </a>
-    <a href="area-personale.html" class="tab-bar-item" title="Profilo">
-        <span>👤</span>
-        <span>Profilo</span>
-    </a>
-</nav>
-<style>
-    .tab-bar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 64px;
-        background: linear-gradient(135deg, #0a1929 0%, #1a365d 100%);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
-        z-index: 9999;
-        width: 100vw;
-        max-width: 100vw;
-        min-width: 0;
-    }
-    .tab-bar-item {
-        flex: 1;
-        text-align: center;
-        color: #94a3b8;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 0.5rem 0;
-        transition: color 0.2s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .tab-bar-item span:first-child {
-        font-size: 1.5rem;
-        margin-bottom: 0.2rem;
-    }
-    .tab-bar-item span:last-child {
-        display: block;
-    }
-    .tab-bar-item:hover, .tab-bar-item.active {
-        color: #f59e0b;
-    }
-    body { padding-bottom: 70px; }
-    html, body {
-        height: 100%;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    @media (max-width: 420px) {
-        .tab-bar {
-            height: 48px;
-            width: 100vw;
-        }
-        .tab-bar-item span:last-child {
-            font-size: 0.7rem;
-        }
-        .tab-bar-item span:first-child {
-            font-size: 1.2rem;
-        }
-    }
-</style>
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Calendario Completo - Lancers Baseball</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0b1120">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a365d">
-<link rel="apple-touch-icon" href="icons/icon-192x192.png"> <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css?v=61">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
 </head>
 <body>
+<nav class="tab-bar" aria-label="Navigazione principale">
+    <a href="index.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="calendario-completo.html" class="tab-bar-item active" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>Calendario</span></a>
+    <a href="calendario.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.2 5.2c1.9 1.7 2.9 4.1 2.9 6.8s-1 5.1-2.9 6.8M17.8 5.2c-1.9 1.7-2.9 4.1-2.9 6.8s1 5.1 2.9 6.8"/></svg><span>Partite</span></a>
+    <a href="area-personale.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Profilo</span></a>
+</nav>
     <script>
         // Ripristina sessione da localStorage se disponibile
         if (localStorage.getItem('authenticated') === 'true') {
@@ -238,8 +168,8 @@
         }
 
         function typeToColor(type) {
-            const m = { 'match-home':'#22c55e','home':'#22c55e','match-away':'#60a5fa','away':'#60a5fa','friendly':'#dc2626','event':'#eab308','autonomous':'#a78bfa','battuta':'#f59e0b','difesa':'#22c55e','specific':'#14b8a6','wednesday':'#14b8a6','training':'#3b82f6' };
-            return m[type] || '#3b82f6';
+            const m = { 'match-home':'#2fbf71','home':'#2fbf71','match-away':'#38bdf8','away':'#38bdf8','friendly':'#e63946','event':'#f5b83d','autonomous':'#a78bfa','battuta':'#f59e0b','difesa':'#2fbf71','specific':'#14b8a6','wednesday':'#14b8a6','training':'#4c8dff' };
+            return m[type] || '#4c8dff';
         }
 
         function typeToLabel(type) {
@@ -494,87 +424,6 @@
         </script>
     </main>
 
-    <!-- Tab Bar fissa in basso -->
-    <nav class="tab-bar">
-    <a href="index.html" class="tab-bar-item" title="Home">
-        <span>🏠</span>
-        <span>Home</span>
-    </a>
-    <a href="calendario-completo.html" class="tab-bar-item active" title="Calendario">
-        <span>📅</span>
-        <span>Calendario</span>
-    </a>
-    <a href="calendario.html" class="tab-bar-item" title="Partite">
-        <span>⚾</span>
-        <span>Partite</span>
-    </a>
-    <a href="area-personale.html" class="tab-bar-item" title="Profilo">
-        <span>👤</span>
-        <span>Profilo</span>
-    </a>
-</nav>
-<style>
-    .tab-bar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 64px;
-        background: linear-gradient(135deg, #0a1929 0%, #1a365d 100%);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
-        z-index: 9999;
-        width: 100vw;
-        max-width: 100vw;
-        min-width: 0;
-    }
-    .tab-bar-item {
-        flex: 1;
-        text-align: center;
-        color: #94a3b8;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 0.5rem 0;
-        transition: color 0.2s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .tab-bar-item span:first-child {
-        font-size: 1.5rem;
-        margin-bottom: 0.2rem;
-    }
-    .tab-bar-item span:last-child {
-        display: block;
-    }
-    .tab-bar-item:hover, .tab-bar-item.active {
-        color: #f59e0b;
-    }
-    body { padding-bottom: 70px; }
-    html, body {
-        height: 100%;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    @media (max-width: 420px) {
-        .tab-bar {
-            height: 48px;
-            width: 100vw;
-        }
-        .tab-bar-item span:last-child {
-            font-size: 0.7rem;
-        }
-        .tab-bar-item span:first-child {
-            font-size: 1.2rem;
-        }
-    }
-</style>
-
     <footer style="padding-bottom: 120px; margin-bottom: 0;">
         <p>⚾ © 2026 Lancers Baseball Club - Serie B Federazione Italiana Baseball Softball</p>
         <p class="footer-motto">"Play Hard, Play Fair, Play Together" 🏆</p>
@@ -609,7 +458,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=60"></script>
+    <script src="script.js?v=61"></script>
     <script>
         // Database info partite
         const matchesInfo = {
@@ -799,7 +648,7 @@
                                 <div class="trasporti-mini" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed rgba(0,0,0,0.1);">
                                     <span style="font-size: 0.8rem;">🚗 ${data.vehicles.length} veicoli • ${totalPeople}/${totalSeats} posti</span>
                                     <button onclick="event.stopPropagation(); openTrasportiModal('${matchId}')" 
-                                            style="margin-left: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                            style="margin-left: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; background: var(--blue); color: white; border: none; border-radius: 4px; cursor: pointer;">
                                         Gestisci
                                     </button>
                                 </div>
@@ -807,9 +656,9 @@
                         } else {
                             matchInfo.insertAdjacentHTML('beforeend', `
                                 <div class="trasporti-mini" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed rgba(0,0,0,0.1);">
-                                    <span style="font-size: 0.8rem; color: #94a3b8;">🚗 Nessun veicolo</span>
+                                    <span style="font-size: 0.8rem; color: var(--muted);">🚗 Nessun veicolo</span>
                                     <button onclick="event.stopPropagation(); openTrasportiModal('${matchId}')" 
-                                            style="margin-left: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                            style="margin-left: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; background: var(--blue); color: white; border: none; border-radius: 4px; cursor: pointer;">
                                         Aggiungi
                                     </button>
                                 </div>
@@ -852,7 +701,7 @@
         
         async function loadModalTrasporti(matchId) {
             const body = document.getElementById('modalBody');
-            body.innerHTML = '<p style="text-align:center; color:#94a3b8;">⏳ Caricamento...</p>';
+            body.innerHTML = '<p style="text-align:center; color:var(--muted);">⏳ Caricamento...</p>';
             
             try {
                 const response = await fetch(`${FIREBASE_URL}/trasporti/${matchId}.json`);
@@ -901,33 +750,33 @@
             
             if (missingPlayers.length > 0) {
                 html += `<div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
-                    <h4 style="color: #ef4444; margin: 0 0 0.5rem 0; font-size: 0.95rem;">⚠️ Senza posto (${missingPlayers.length}):</h4>
+                    <h4 style="color: var(--red); margin: 0 0 0.5rem 0; font-size: 0.95rem;">⚠️ Senza posto (${missingPlayers.length}):</h4>
                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                         ${missingPlayers.map(p => `<span style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.8rem;">#${p.number} ${p.name.split(' ')[0]}</span>`).join('')}
                     </div>
                 </div>`;
             } else if (currentModalTrasporti.vehicles.length > 0) {
-                html += `<p style="color: #22c55e; margin-bottom:1rem;">✅ Tutti i giocatori della lista hanno un posto!</p>`;
+                html += `<p style="color: var(--green); margin-bottom:1rem;">✅ Tutti i giocatori della lista hanno un posto!</p>`;
             }
             
             if (currentModalTrasporti.vehicles.length === 0) {
-                html += '<p style="text-align:center; color:#94a3b8; padding:2rem;">Nessun veicolo configurato.</p>';
+                html += '<p style="text-align:center; color:var(--muted); padding:2rem;">Nessun veicolo configurato.</p>';
             } else {
                 currentModalTrasporti.vehicles.forEach((v, vIdx) => {
                     const driverName = v.driverName || (v.driver ? getPlayerName(v.driver) : null);
                     const hasDriver = v.driver || v.driverName;
                     const isMyDriver = String(v.driver) === myId || (v.driverName && v.driverName.includes(`#${myId}`));
                     
-                    html += `<div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+                    html += `<div style="background: rgba(76, 141, 255, 0.1); border: 1px solid rgba(76, 141, 255, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <span style="font-size: 1.5rem;">🚗</span>
                                 <div>
                                     <h4 style="margin: 0; color: white; font-size: 1rem;">${driverName || 'Autista da assegnare'}</h4>
-                                    <span style="color: #94a3b8; font-size: 0.85rem;">${v.seats} posti totali</span>
+                                    <span style="color: var(--muted); font-size: 0.85rem;">${v.seats} posti totali</span>
                                 </div>
                             </div>
-                            ${isAdmin ? `<button onclick="removeVehicleModal(${vIdx})" style="background:rgba(239,68,68,0.2);color:#ef4444;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
+                            ${isAdmin ? `<button onclick="removeVehicleModal(${vIdx})" style="background:rgba(239,68,68,0.2);color:var(--red);border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
                         </div>
                         
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.5rem;">
@@ -935,18 +784,18 @@
                             ${renderPassengerSeatsCC(v, vIdx, myId, amIAssigned)}
                         </div>
                         
-                        ${v.notes ? `<div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1);"><span style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">📝 ${v.notes}</span></div>` : ''}
+                        ${v.notes ? `<div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1);"><span style="color: var(--muted); font-size: 0.85rem; font-style: italic;">📝 ${v.notes}</span></div>` : ''}
                     </div>`;
                 });
             }
             
-            html += `<div style="background: rgba(34, 197, 94, 0.1); border: 2px dashed rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1.5rem; text-align: center; margin-top: 1rem;">
-                <h4 style="color: #22c55e; margin: 0 0 1rem 0;">➕ Aggiungi il tuo veicolo</h4>
+            html += `<div style="background: rgba(47, 191, 113, 0.1); border: 2px dashed rgba(47, 191, 113, 0.3); border-radius: 12px; padding: 1.5rem; text-align: center; margin-top: 1rem;">
+                <h4 style="color: var(--green); margin: 0 0 1rem 0;">➕ Aggiungi il tuo veicolo</h4>
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                     <select id="newVehicleSeats" style="padding: 0.75rem 1rem; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white;">
                         ${[4,5,6,7,8,9,10,11].map(n => `<option value="${n}">${n} posti</option>`).join('')}
                     </select>
-                    <button onclick="addMyVehicle()" style="padding: 0.75rem 1rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">🚗 Aggiungo la mia auto</button>
+                    <button onclick="addMyVehicle()" style="padding: 0.75rem 1rem; background: linear-gradient(135deg, var(--green) 0%, #23a35f 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">🚗 Aggiungo la mia auto</button>
                 </div>
             </div>`;
             
@@ -959,17 +808,17 @@
             
             if (hasDriver) {
                 if (isMyDriver) {
-                    return `<div style="${baseStyle} background: rgba(234, 179, 8, 0.2); border: 2px solid rgba(234, 179, 8, 0.5); color: #eab308; cursor: pointer;" onclick="leaveDriverSeat(${vIdx})">
+                    return `<div style="${baseStyle} background: rgba(245, 184, 61, 0.2); border: 2px solid rgba(245, 184, 61, 0.5); color: var(--gold); cursor: pointer;" onclick="leaveDriverSeat(${vIdx})">
                         🚗 ${driverName}<br><small>(clicca per lasciare)</small>
                     </div>`;
                 } else {
-                    return `<div style="${baseStyle} background: rgba(59, 130, 246, 0.2); border: 2px solid rgba(59, 130, 246, 0.5); color: #3b82f6;">🚗 ${driverName}</div>`;
+                    return `<div style="${baseStyle} background: rgba(76, 141, 255, 0.2); border: 2px solid rgba(76, 141, 255, 0.5); color: var(--blue);">🚗 ${driverName}</div>`;
                 }
             } else {
                 if (amIAssigned) {
-                    return `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(59, 130, 246, 0.3); color: #94a3b8; opacity: 0.5;">🚗 Libero</div>`;
+                    return `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(76, 141, 255, 0.3); color: var(--muted); opacity: 0.5;">🚗 Libero</div>`;
                 } else {
-                    return `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(59, 130, 246, 0.3); color: #94a3b8; cursor: pointer;" onclick="takeDriverSeat(${vIdx})">🚗 Libero<br><small>(clicca per guidare)</small></div>`;
+                    return `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(76, 141, 255, 0.3); color: var(--muted); cursor: pointer;" onclick="takeDriverSeat(${vIdx})">🚗 Libero<br><small>(clicca per guidare)</small></div>`;
                 }
             }
         }
@@ -988,21 +837,21 @@
                 
                 if (passengerName) {
                     if (isMySeat) {
-                        html += `<div style="${baseStyle} background: rgba(234, 179, 8, 0.2); border: 2px solid rgba(234, 179, 8, 0.5); color: #eab308; cursor: pointer;" onclick="leavePassengerSeat(${vIdx}, ${i})">
+                        html += `<div style="${baseStyle} background: rgba(245, 184, 61, 0.2); border: 2px solid rgba(245, 184, 61, 0.5); color: var(--gold); cursor: pointer;" onclick="leavePassengerSeat(${vIdx}, ${i})">
                             ${passengerName}<br><small>(clicca per lasciare)</small>
                         </div>`;
                     } else if (isAdmin) {
-                        html += `<div style="${baseStyle} background: rgba(34, 197, 94, 0.2); border: 2px solid rgba(34, 197, 94, 0.5); color: #22c55e; cursor: pointer;" onclick="removePassengerAdmin(${vIdx}, ${i})">
+                        html += `<div style="${baseStyle} background: rgba(47, 191, 113, 0.2); border: 2px solid rgba(47, 191, 113, 0.5); color: var(--green); cursor: pointer;" onclick="removePassengerAdmin(${vIdx}, ${i})">
                             ${passengerName}<br><small>(rimuovi)</small>
                         </div>`;
                     } else {
-                        html += `<div style="${baseStyle} background: rgba(34, 197, 94, 0.2); border: 2px solid rgba(34, 197, 94, 0.5); color: #22c55e;">${passengerName}</div>`;
+                        html += `<div style="${baseStyle} background: rgba(47, 191, 113, 0.2); border: 2px solid rgba(47, 191, 113, 0.5); color: var(--green);">${passengerName}</div>`;
                     }
                 } else {
                     if (amIAssigned) {
-                        html += `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(59, 130, 246, 0.3); color: #94a3b8; opacity: 0.5;">Libero</div>`;
+                        html += `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(76, 141, 255, 0.3); color: var(--muted); opacity: 0.5;">Libero</div>`;
                     } else {
-                        html += `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(59, 130, 246, 0.3); color: #94a3b8; cursor: pointer;" onclick="takePassengerSeat(${vIdx}, ${i})">Libero<br><small>(clicca per salire)</small></div>`;
+                        html += `<div style="${baseStyle} background: rgba(0,0,0,0.3); border: 2px dashed rgba(76, 141, 255, 0.3); color: var(--muted); cursor: pointer;" onclick="takePassengerSeat(${vIdx}, ${i})">Libero<br><small>(clicca per salire)</small></div>`;
                     }
                 }
             }
@@ -1162,9 +1011,9 @@
         .trasporti-modal-content {
             max-width: 800px;
             margin: 2rem auto;
-            background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%);
+            background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-2) 100%);
             border-radius: 16px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(76, 141, 255, 0.3);
             overflow: hidden;
         }
         .trasporti-modal-header {
@@ -1173,16 +1022,16 @@
             align-items: center;
             padding: 1rem 1.5rem;
             background: rgba(0,0,0,0.3);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            border-bottom: 1px solid rgba(76, 141, 255, 0.2);
         }
         .trasporti-modal-header h2 {
             margin: 0;
-            color: #60a5fa;
+            color: #8db6ff;
             font-size: 1.2rem;
         }
         .trasporti-modal-close {
             background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
+            color: var(--red);
             border: none;
             width: 40px;
             height: 40px;
@@ -1211,9 +1060,9 @@
         .match-info-modal-content {
             max-width: 600px;
             margin: 2rem auto;
-            background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%);
+            background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-2) 100%);
             border-radius: 16px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(76, 141, 255, 0.3);
             overflow: hidden;
         }
         .match-info-modal-header {
@@ -1222,16 +1071,16 @@
             align-items: center;
             padding: 1rem 1.5rem;
             background: rgba(0,0,0,0.3);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            border-bottom: 1px solid rgba(76, 141, 255, 0.2);
         }
         .match-info-modal-header h2 {
             margin: 0;
-            color: #60a5fa;
+            color: #8db6ff;
             font-size: 1.2rem;
         }
         .match-info-modal-close {
             background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
+            color: var(--red);
             border: none;
             width: 40px;
             height: 40px;
@@ -1250,17 +1099,17 @@
         .match-detail-row:last-child { border-bottom: none; }
         .match-detail-row strong {
             min-width: 120px;
-            color: #60a5fa;
+            color: #8db6ff;
         }
         .match-detail-row span {
-            color: #e2e8f0;
+            color: var(--text-2);
         }
         .match-info-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
-            background: rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
+            background: rgba(76, 141, 255, 0.3);
+            color: #8db6ff;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             border: none;
@@ -1271,11 +1120,11 @@
             transition: all 0.2s;
         }
         .match-info-btn:hover {
-            background: rgba(59, 130, 246, 0.5);
+            background: rgba(76, 141, 255, 0.5);
         }
         .match-map-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            background: linear-gradient(135deg, var(--brand) 0%, var(--red) 100%);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 6px;

@@ -1,19 +1,25 @@
-const CACHE_NAME = 'lancers-app-v35';
-const ASSETS_TO_CACHE = [
+// Cambia APP_VERSION a ogni rilascio: la cache vecchia viene eliminata in automatico.
+const APP_VERSION = '61';
+const CACHE_NAME = 'lancers-app-v' + APP_VERSION;
+const PAGES = [
   './',
   './index.html',
   './login.html',
+  './calendario-completo.html',
   './calendario.html',
   './allenamenti.html',
   './presenze.html',
   './documento.html',
   './area-personale.html',
-  './gestione-presenze.html',
-  './styles.css',
-  './script.js',
+  './gestione-presenze.html'
+];
+const ASSETS_TO_CACHE = [
+  ...PAGES,
+  './styles.css?v=' + APP_VERSION,
+  './script.js?v=' + APP_VERSION,
   './firebase-config.js',
-  './favicon.ico',
-  'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap'
+  './manifest.json',
+  './icons/icon-192x192.png'
 ];
 
 // ===== IndexedDB per notifiche persistenti =====
@@ -152,17 +158,17 @@ async function checkAndSendNotifications() {
 
 // ===== INSTALLAZIONE =====
 self.addEventListener('install', (event) => {
-  console.log('🔧 Service Worker v33 installazione...');
+  // Precache "best effort": un file mancante non blocca l'installazione
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(ASSETS_TO_CACHE.map((url) => cache.add(new Request(url, { cache: 'reload' }))))
+    )
   );
   self.skipWaiting();
 });
 
 // ===== ATTIVAZIONE =====
 self.addEventListener('activate', (event) => {
-  console.log('✅ Service Worker v33 attivato!');
   event.waitUntil(
     Promise.all([
       caches.keys().then((keyList) => {
@@ -197,19 +203,63 @@ function startPeriodicCheck() {
 }
 
 // ===== FETCH =====
+// - Pagine HTML e version.json: prima la rete (contenuti sempre aggiornati),
+//   con la cache come riserva offline.
+// - CSS, JS, immagini e font: subito dalla cache, aggiornati in background.
+// - Firebase e altre API: mai in cache.
 self.addEventListener('fetch', (event) => {
-  // Non cachare Firebase
-  if (event.request.url.includes('firebase')) {
-    return;
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.hostname.includes('firebase')) return;
+
+  const sameOrigin = url.origin === self.location.origin;
+  const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
+  if (!sameOrigin && !isFont) return;
+
+  const isPage = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
+  const isVersion = sameOrigin && url.pathname.endsWith('version.json');
+
+  if (isVersion) return; // lo gestisce il browser (no-store)
+  if (isPage) {
+    event.respondWith(networkFirst(req));
+  } else {
+    event.respondWith(staleWhileRevalidate(req, event));
   }
-  
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        return response || fetch(event.request);
-      })
-  );
 });
+
+// Rete prima, ma se la rete è lenta (oltre 2,5 s) mostra subito la copia in cache:
+// la pagina aggiornata verrà usata alla visita successiva.
+async function networkFirst(req) {
+  const cache = await caches.open(CACHE_NAME);
+  const network = fetch(req).then((res) => {
+    if (res && res.ok) cache.put(req, res.clone());
+    return res;
+  });
+  const cached = cache.match(req, { ignoreSearch: true });
+  const timeout = new Promise((resolve) => setTimeout(resolve, 2500));
+  try {
+    const first = await Promise.race([network, timeout.then(() => cached)]);
+    if (first) return first;
+    return await network;
+  } catch (e) {
+    return (await cached) || (await cache.match('./index.html')) || Response.error();
+  }
+}
+
+async function staleWhileRevalidate(req, event) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(req);
+  const network = fetch(req).then((res) => {
+    if (res && (res.ok || res.type === 'opaque')) cache.put(req, res.clone());
+    return res;
+  }).catch(() => cached);
+  if (cached) {
+    event.waitUntil(network);
+    return cached;
+  }
+  return network;
+}
 
 // ===== PERIODIC BACKGROUND SYNC =====
 self.addEventListener('periodicsync', (event) => {

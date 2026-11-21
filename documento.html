@@ -1,300 +1,78 @@
-    <!-- Tab Bar fissa in basso -->
-    <nav class="tab-bar">
-    <a href="index.html" class="tab-bar-item" title="Home">
-        <span>🏠</span>
-        <span>Home</span>
-    </a>
-    <a href="calendario-completo.html" class="tab-bar-item" title="Calendario">
-        <span>📅</span>
-        <span>Calendario</span>
-    </a>
-    <a href="calendario.html" class="tab-bar-item" title="Partite">
-        <span>⚾</span>
-        <span>Partite</span>
-    </a>
-    <a href="area-personale.html" class="tab-bar-item active" title="Profilo">
-        <span>👤</span>
-        <span>Profilo</span>
-    </a>
-</nav>
-<style>
-    .tab-bar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 64px;
-        background: linear-gradient(135deg, #0a1929 0%, #1a365d 100%);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
-        z-index: 9999;
-        width: 100vw;
-        max-width: 100vw;
-        min-width: 0;
-    }
-    .tab-bar-item {
-        flex: 1;
-        text-align: center;
-        color: #94a3b8;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 0.5rem 0;
-        transition: color 0.2s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .tab-bar-item span:first-child {
-        font-size: 1.5rem;
-        margin-bottom: 0.2rem;
-    }
-    .tab-bar-item span:last-child {
-        display: block;
-    }
-    .tab-bar-item:hover, .tab-bar-item.active {
-        color: #f59e0b;
-    }
-    body { padding-bottom: 70px; }
-    html, body {
-        height: 100%;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    @media (max-width: 420px) {
-        .tab-bar {
-            height: 48px;
-            width: 100vw;
-        }
-        .tab-bar-item span:last-child {
-            font-size: 0.7rem;
-        }
-        .tab-bar-item span:first-child {
-            font-size: 1.2rem;
-        }
-    }
-</style>
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Documento - Lancers Baseball</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0b1120">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a365d">
-<link rel="apple-touch-icon" href="icons/icon-192x192.png"> <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css?v=61">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
     <style>
-        /* Table of Contents - Dark Theme */
-        .toc {
-            background: rgba(15, 40, 71, 0.8);
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            backdrop-filter: blur(10px);
+        .doc-header-banner, .toc, .document-content {
+            width: calc(100% - 32px);
+            max-width: calc(var(--page-max) - 32px);
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        .toc h3 {
-            color: #ffffff;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-        
-        .toc-list {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 0.5rem;
-        }
-        
-        .toc-list li {
-            margin: 0;
-        }
-        
-        .toc-list a {
-            display: block;
-            padding: 0.75rem 1rem;
-            background: rgba(10, 22, 40, 0.6);
-            color: #94a3b8;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-        
-        .toc-list a:hover {
-            background: rgba(59, 130, 246, 0.3);
-            color: #ffffff;
-            border-left-color: #dc2626;
-            transform: translateX(5px);
-        }
-        
-        /* Document specific styles */
         .doc-header-banner {
-            background: linear-gradient(135deg, #0f2847 0%, #1e3a5f 100%);
-            color: white;
-            text-align: center;
-            padding: 3rem 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            margin-top: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 1.5rem 1.25rem 1.25rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--line);
+            background:
+                radial-gradient(120% 120% at 100% 0%, rgba(230, 57, 70, 0.26), transparent 55%),
+                radial-gradient(100% 120% at 0% 100%, rgba(76, 141, 255, 0.2), transparent 55%),
+                var(--surface);
         }
-        
-        .doc-header-banner h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .doc-header-banner .subtitle {
-            font-size: 1.3rem;
-            opacity: 0.9;
-        }
-        
-        .doc-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-        
-        .doc-table th, .doc-table td {
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 0.75rem;
-            text-align: left;
-        }
-        
-        .doc-table th {
-            background: linear-gradient(135deg, #1e3a5f 0%, #3b82f6 100%);
-            color: white;
-        }
-        
-        .doc-table td {
-            background: rgba(10, 22, 40, 0.6);
-            color: #e2e8f0;
-        }
-        
-        .doc-table tr:nth-child(even) td {
-            background: rgba(15, 40, 71, 0.8);
-        }
-        
-        .doc-table tr:hover td {
-            background: rgba(59, 130, 246, 0.2);
-        }
-        
-        .exercise-block {
-            background: rgba(34, 197, 94, 0.15);
-            border-left: 4px solid #22c55e;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .exercise-block h4 {
-            color: #4ade80;
-            margin-bottom: 0.5rem;
-        }
-        
-        .workout-section {
-            background: rgba(220, 38, 38, 0.15);
-            border-left: 4px solid #dc2626;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .workout-section h4 {
-            color: #f87171;
-            margin-bottom: 0.5rem;
-        }
-        
-        .info-box {
-            background: rgba(59, 130, 246, 0.15);
-            border-left: 4px solid #3b82f6;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .info-box h4 {
-            color: #60a5fa;
-            margin-bottom: 0.5rem;
-        }
-        
-        .back-to-top {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-        
-        .back-to-top:hover {
-            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-        }
+        .doc-header-banner h1 { font-family: var(--font-display); font-size: clamp(2.1rem, 9vw, 2.8rem); font-weight: 800; line-height: 1; text-transform: uppercase; margin-bottom: 0.3rem; }
+        .doc-header-banner .subtitle { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-2); }
+        .doc-header-banner .open-external-btn { width: 100%; }
 
-        .chapter-content h3 {
-            margin-top: 1.5rem;
-            color: #ffffff;
-        }
+        .toc { margin-bottom: 1.5rem; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+        .toc h3 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.6rem 0.25rem; }
+        .toc-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2px; }
+        .toc-list a { display: block; padding: 0.65rem 0.75rem; border-radius: var(--radius-sm); color: var(--text-2); font-size: 0.92rem; transition: var(--transition); }
+        .toc-list a:hover { background: var(--surface-2); color: var(--text); }
 
-        .chapter-content ul, .chapter-content ol {
-            margin-left: 1.5rem;
-            color: #e2e8f0;
-        }
-        
-        .chapter-content p {
-            color: #e2e8f0;
-        }
-        
-        .chapter-content li {
-            color: #e2e8f0;
-        }
-        
-        .doc-chapter {
-            background: rgba(15, 40, 71, 0.6);
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-        
-        .chapter-title {
-            color: #ffffff;
-            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
-            padding-bottom: 0.5rem;
-        }
+        .doc-chapter { padding: 0; scroll-margin-top: calc(var(--appbar-h) + 12px); }
+        .doc-chapter > .chapter-title, .doc-chapter > h2 { margin: 0; }
+        .chapter-content h3 { color: var(--text); }
+        .chapter-content p, .chapter-content li, .chapter-content ul, .chapter-content ol { color: var(--text-2); }
 
-        @media (max-width: 768px) {
-            .doc-header-banner h1 {
-                font-size: 1.8rem;
-            }
-            
-            .doc-table {
-                font-size: 0.75rem;
-            }
-            
-            .doc-table th, .doc-table td {
-                padding: 0.5rem;
-            }
-        }
+        .doc-table { width: 100%; margin: 1rem 0; font-size: 0.85rem; border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; display: block; overflow-x: auto; }
+        .doc-table th, .doc-table td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--line); white-space: normal; }
+        .doc-table th { background: var(--surface-2); color: var(--text); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .doc-table td { color: var(--text-2); }
+        .doc-table tr:last-child td { border-bottom: none; }
+
+        .exercise-block, .workout-section, .info-box { margin: 1rem 0; padding: 0.9rem 1rem; border-radius: var(--radius-sm); border-left: 3px solid; }
+        .exercise-block { background: var(--green-soft); border-color: var(--green); }
+        .exercise-block h4 { color: #5ee39a; margin-bottom: 0.4rem; }
+        .workout-section { background: var(--brand-soft); border-color: var(--brand); }
+        .workout-section h4 { color: #ff8a92; margin-bottom: 0.4rem; }
+        .info-box { background: var(--blue-soft); border-color: var(--blue); }
+        .info-box h4 { color: #8db6ff; margin-bottom: 0.4rem; }
+
+        .back-to-top { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 1rem; padding: 0.45rem 0.9rem; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--text-2); font-size: 0.82rem; font-weight: 600; }
+        .back-to-top:hover { background: rgba(255, 255, 255, 0.06); color: var(--text); }
     </style>
 </head>
 <body>
+<nav class="tab-bar" aria-label="Navigazione principale">
+    <a href="index.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+    <a href="calendario-completo.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>Calendario</span></a>
+    <a href="calendario.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.2 5.2c1.9 1.7 2.9 4.1 2.9 6.8s-1 5.1-2.9 6.8M17.8 5.2c-1.9 1.7-2.9 4.1-2.9 6.8s1 5.1 2.9 6.8"/></svg><span>Partite</span></a>
+    <a href="area-personale.html" class="tab-bar-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Profilo</span></a>
+</nav>
     <script>
         // Ripristina sessione da localStorage se disponibile
         if (localStorage.getItem('authenticated') === 'true') {
@@ -335,13 +113,13 @@
         <div class="doc-header-banner">
             <h1>⚾ LANCERS B.C.</h1>
             <p class="subtitle">SERIE B – STAGIONE 2026</p>
-            <a href="https://docs.google.com/document/d/141yUUcVApZp93libWYQBCntqbQOfF9wQ/edit?usp=sharing" target="_blank" class="open-external-btn" style="margin-top: 1rem;">
+            <a href="https://docs.google.com/document/d/141yUUcVApZp93libWYQBCntqbQOfF9wQ/edit?usp=sharing" target="_blank" class="open-external-btn" style="margin-top: 1.1rem;">
                 📄 Apri documento originale in Google Docs
             </a>
         </div>
 
         <!-- Table of Contents -->
-        <div class="toc">
+        <div class="toc" id="top">
             <h3>📑 Sommario - Clicca per navigare</h3>
             <ul class="toc-list">
                 <li><a href="#cap0">📝 0. Piano di Sviluppo Tecnico</a></li>
@@ -1210,7 +988,7 @@
         <button id="logoutBtn" class="footer-logout-btn">🚪 Logout</button>
     </footer>
 
-    <script src="script.js?v=60"></script>
+    <script src="script.js?v=61"></script>
     <script>
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
